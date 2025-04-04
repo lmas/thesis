@@ -1,0 +1,14 @@
+dictionaries = ["en_gb"]
+words = [
+    "benchmarked",
+    "delimitations",
+    "gungor",
+    "javaid",
+    "lasi",
+    "minimizing",
+    "yml",
+]
+flag_words = []
+ignore_paths = []
+ignore_patterns = []
+use_global = true

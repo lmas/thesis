@@ -1,0 +1,53 @@
+
+# For how to use these references, see:
+# https://typst.app/docs/reference/model/bibliography/
+# Description of the file format, see:
+# https://github.com/typst/hayagriva/blob/main/docs/file-format.md
+
+industry4:
+  type: Article
+  title: "Industry 4.0"
+  author:
+    - Dr. Heiner Lasi
+    - Prof. Dr. Hans-Georg Kemper
+    - Privatdozent Dr. Peter Fettke
+    - Dipl.-Inf. Thomas Feld
+    - Dipl.-Hdl. Michael Hoﬀmann
+  date: 2014-06-19
+  serial-number:
+    doi: 10.1007/s12599-014-0334-4
+
+sensors4:
+  type: Article
+  title: "Signiﬁcance of sensors for industry 4.0: Roles, capabilities, and applications"
+  author:
+    - Mohd Javaid
+    - Abid Haleem
+    - Ravi Pratap Singh
+    - Shanay Rab
+    - Rajiv Suman
+  date: 2021-06-17
+  serial-number:
+    doi: 10.1016/j.sintl.2021.100110
+
+sensnets:
+  type: Article
+  title: "Industrial Wireless Sensor Networks: Challenges, Design Principles, and Technical Approaches"
+  author:
+    - Vehbi C. Gungor
+    - Gerhard P. Hancke
+  date: 2009-09-16
+  serial-number:
+    doi: 10.1109/TIE.2009.2015754
+
+temporal:
+  type: Article
+  title: "Outlier Detection for Temporal Data: A Survey"
+  author:
+    - Manish Gupta
+    - Jing Gao
+    - Charu C. Aggarwal
+    - Jiawei Han
+  date: 2013-12-16
+  serial-number:
+    doi: 10.1109/TKDE.2013.184

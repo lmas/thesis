@@ -4,8 +4,6 @@
 #let author = "Alex TODO"
 // #let date = datetime(year: 2025, month: 2, day: 17)
 
-TODO
-
 #set document(
   title: title,
   author: author,
@@ -41,9 +39,10 @@ TODO
 		company xxx
 	])
 ])
-// #pagebreak(to: "odd")
-#pagebreak()
 
+TODO: new title
+
+#pagebreak(to: "even")
 #align(center, [
 	[This page intentionally left blank]
 ])
@@ -52,39 +51,46 @@ TODO
 ////////////////////////////////////////////////////////////////////////////////
 // Preface
 
-// #set text(size: 10pt)
+#set text(size: 12pt)
 #set par(justify: true, first-line-indent: 1em)
-#heading(numbering: none, outlined: false, bookmarked: true, "Preface")
-
-TODO this paper and thanks
-#lorem(50)
-
-#lorem(50)
-
-#lorem(50)
-
-#author
-
-Luleå University of Technology, 2025
 
 #heading(numbering: none, outlined: false, bookmarked: true, "Abstract")
+// Offer a brief description of your thesis or dissertation and a concise summary
+// of its conclusions. Be sure to describe the subject and focus of your work with
+// clear details and avoid including lengthy explanations or opinions.
 
 TODO 
-#lorem(50)
 
 #lorem(50)
 
 #lorem(50)
 
-Keywords: time series, matrix profile, anomaly detection, edge computing
+#lorem(50)
+
+*Keywords*: time series, matrix profile, anomaly detection, edge computing
+
+
+#heading(numbering: none, outlined: false, bookmarked: true, "Preface")
+// A preface is a statement of the author's reasons for undertaking the work and
+// other personal comments that are not directly germane to the materials presented
+// in other sections of the thesis.
+
+TODO this paper and thanks
+
+#lorem(50)
+
+#lorem(50)
+
+- #author, \
+	Luleå University of Technology, 2025
+
+
 #pagebreak()
-
 #heading(numbering: none, outlined: false, bookmarked: true, "Glossary")
 
 TODO
 
 #set terms(separator: ": ")
-/ Edge computing: TODO
 / First: #lorem(25)
 / Second: #lorem(25)
 / Third: #lorem(25)
@@ -96,7 +102,7 @@ TODO
 #pagebreak()
 
 ////////////////////////////////////////////////////////////////////////////////
-// Styling
+// Introduction
 
 #set heading(numbering: "1.")
 #set page(
@@ -108,30 +114,6 @@ TODO
     #author
   ]
 )
-
-// Add inline bibliography
-#let bibitem(body) = figure(kind: "bibitem", body, supplement: none)
-
-// Display the list of references.
-#show figure.where(kind: "bibitem"): it => {
-	align(left,
-		box(width: 2em, it.counter.display("[1]")) + it.body + parbreak()
-	)
-}
-
-// Display citation
-#show ref: it => {
-	let e = it.element
-	if e != none and e.func() == figure and e.kind == "bibitem" {
-		// Display a citation
-		numbering("[1]", ..e.counter.at(e.location()))
-	} else {
-		it // Displays the original reference
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Introduction
 
 // - citations-15973-Anomaly Detection_ A Survey.pdf
 // 	anom. detect related to noise handling, challenges with anom. detection, detailed applications, fault/defect detection, sensor networks, pros/cons
@@ -162,81 +144,134 @@ TODO
 
 // The introduction gives an overview of the area of your problems.
 
+// - Discord detection could offer an alternative to advanced AI models
+// - Introduce the Matrix Profile for anomaly detection
+// - Simple, explainable algorithm
+// - Big claims of having higher performance (and academics' focus on cooked benchmarks)
+// - solving the challenges
+// - measure usefulness of applying it to sensors?
+
 TODO
-
-with an increasing usage of sensors and sensor networks sees an increasing amount
-of data being transfered, sdtored and analysed.
-
-// TODO: need working ref using "increased use of sensors in industry 4.0"
-
 
 == Background
 
 // The background offers the background to why you are working with your problems.
 
-// USED REFS:
-// Gungor: citations-02258-Industrial Wireless Sensor Networks_ Challenges.pdf
+// - Growing sensor networks and increasing amounts of data in the industry
+// search: industry 4.0
+// REFS:
+// Industry 4.0
 
-Gungor et al [TODO] outlines a list of challenges associated with running sensor
-networks in an industrial setting.
-Small sensors have a limited amount of resources available, such as CPU 
-and memory allocation. Most often the sensors also runs on battery power or similar,
-which puts a hard limit on the sensors' lifetime.
-The environment itself can be a limiting factor, with wear and tear degrading the
-data readings from a sensor or causing interference or delays during data transfers.
-The list continues with other issues inherit with running wireless devices,
-such as security and time synchronisation, but these are out of scope for this thesis.
-// TODO: ref other studies/surveys on security in industry 4.0?
+Today the world is experiencing it's fourth industrial revolution.
+If the two previous revolutions were driven by the use of electricity and
+digitisation in the manufacturing industry,
+then today's shift is mainly driven by the large amount of smart, modular, and
+highly connected devices that forms the so called Internet-of-Things.
+Dubbed as "Industry 4.0" by the team of german scientists _Dr. Lasi et al._
+@industry4,
+this new revolution originated from the need of increased flexibility and better 
+efficiency in production systems, in order to better handle quickly shifting
+market demands.
 
-In a later section, Gungor then outlines the (simplified) architecture of a basic
-sensor and notes that "... local data processing is crucial in minimizing power
+_Dr. Lasi et al._ continues in their article with,
+that today's manufacturing plants can be turned into "smart factories"
+thanks to technology pushing towards miniaturisation, digitisation, and automation.
+These factories are utilising a growing number of sensors and digital, decentralised
+systems that allows the factories to become more autonomously monitored and
+controlled remotely.
+
+// - Benefits of sensor networks
+// search: sensors industry 4.0
+// REFS:
+// Significance of sensors for industry 4.0: Roles, capabilities, and applications
+
+_Javaid et al._ @sensors4 also notes an increasing need of intelligent sensor
+systems and networks for the smart factories.
+By using autonomous sensors with higher processing capabilities,
+the industry will be able to reduce their dependency on human operators and thus
+reduce problems caused by the human factor, for example. 
+Another benefit can be realised in the maintenance of increasingly complex systems,
+as more precise detection can send alerts sooner for any failing components and
+thus reduce costly maintenance downtime during production.
+And with wireless sensors, monitoring is made possible for inaccessible locations
+such as remote or hazardous areas.
+
+// - Challenges with sensor networks and noisy data
+// search: costs required to operate larger sensor networks???
+// REFS:
+// Industrial Wireless Sensor Networks: Challenges, Design Principles, and
+// Technical Approaches
+
+Of course, with increasingly larger sensor networks it also follows that the
+amount of data that needs to be processed increases, as mentioned by _Javaid_.
+More raw data requires communication networks with higher processing capacity.
+_Gungor et al._ @sensnets suggests that the sensors should filter their data and
+only send the processed data, as a step towards reducing the network overhead.
+Doing so also has the possible benefit of reducing signal interference, delays,
+and other anomalies that could be caused by faulty components or by the
+environment's wear and tear that degrades the sensors over time.
+In a later section, _Gungor_ continues with a simplified outline of a basic sensor
+and notes that "... local data processing is crucial in minimizing power
 consumption ...".
-Given that sensor data is temporal, it should be possible to run data analysis directly
+This has the potential of extending the lifetime of the sensors that runs on
+battery, or similarly limited power sources, as well as reducing the operational
+costs.
 
-// TODO: finish this paragraph, ref the temporal survey and continue into motivation
+// - Application of anomaly detection to autodetect early warning signs
+// search: anomaly detection temporal data
+// REFS:
+// Outlier Detection for Temporal Data: A Survey
 
-
-== Motivation
-
-//  The motivation gives a motivation to why you are solving the problems.
-
-TODO
+Given that sensor readings are most often timestamped and thus temporal in nature
+as stated by _Gupta et al._ @temporal,
+then the data analysis should focus on ensuring the "temporal continuity" has
+been maintained.
+The analysis should flag any sudden anomalies or observed outliers in the time
+series data.
 
 
 == Related work
 
 // The related work described work which relates to your problems.
 
+// Lots of examples in REF: Outlier Detection for Temporal Data: A Survey
+// - power net example
+// - wireless sensors?
+// - ai example?
 
 TODO
 
 
-== Problem definition
+== Problem definition <definition>
 
-With this project I would like to investigate and try to answer the following questions:
+This thesis looks to investigate and try to answer the following questions:
 
-- Is it possible to run the matrix profile algorithm in a limited hardware environment,
-	such as a small, of-the-shelf microprocessor board, and be able to detect anomalies
-	in the data streams from multiple sensors?
+- Is it possible to run the matrix profile algorithm in a limited hardware
+	environment, such as a small, of-the-shelf microprocessor board, and be able
+	to detect anomalies in the data streams from multiple sensors?
 
-- If so, how efficient would this on-device-detection be in terms of sent data traffic
-	(or lack of) and energy use?
-	The microprocessor board should have it's performance benchmarked against a similar board,
-	but which sends all sensor data continuously to a remote controller instead.
+- If so, how efficient would this on-device-detection be in terms of sent data
+	traffic (or lack of) and energy use?
+	The microprocessor board should have it's performance benchmarked against a
+	similar board, but which sends all sensor data continuously to a remote
+	controller instead.
 
-Positive outcomes to these questions would then indicate that sensor analysis done
-close to the Edge would be beneficial to the individual sensor's lifetime and thus
-reduce the overall amount of spent resources required for operating larger sensor networks.
+Positive outcomes to these questions would then indicate that sensor analysis
+done close to the Edge would be beneficial to the individual sensor's lifetime
+and thus reduce the overall amount of spent resources required for operating
+larger sensor networks.
 
 
 == Delimitations
 
 Due to the limited time available to write a bachelor thesis,
-I have constrained this thesis to only analyse the application of the matrix profile
-algorithm. 
+I have constrained this thesis to only analyse the application of the matrix
+profile algorithm. 
+#strike[
 I also have limited experience with hardware development,
 so I'll only use simple and naive methods for wireless data transfer and power
 monitoring.
+]
 
 
 == Thesis structure
@@ -247,7 +282,8 @@ The rest of the thesis has it's structure organised in the following way.
 how it's applied in the hardware.
 Then the section continues with the collection of data from the hardware sensors. 
 @results documents and analyses the results from the data collection,
-which is then discussed, in relation to the original problem definitions, in @discussion.
+which is then discussed, in relation to the original problem definitions,
+in @discussion.
 A final conclusion is then given in @conclusion, with suggestions for future work.
 
 
@@ -342,15 +378,11 @@ TODO
 
 = References
 
-TODO
-
-// #bibitem[
-// 	Eamonn Keogh,
-// 	_The UCR Matrix Profile Page_,
-// 	undated,
-// 	https://www.cs.ucr.edu/~eamonn/MatrixProfile.html
-// ] <matrix>
-
+#bibliography(
+	"references.yml",
+	style: "ieee",
+	title: none,
+)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Appendices
