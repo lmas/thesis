@@ -381,7 +381,6 @@ TODO
 TODO
 
 - DAMP algo details
-- why python first then C
 - verifying implementation against references
 - caching?
 - handling normalisation issues?
@@ -413,6 +412,13 @@ TODO
 = Discussion <discussion>
 
 TODO
+
+hard to work with matlab code examples:
+- one-based indexing (instead of the more common zero indexing) causing many issues
+	and off-by-one errors.
+- large amount of helper funcs required for performing arithmetic on arrays.
+- doing a fast fourier transform required the use of complex numbers, which was
+	a completely different type in Go and might cause performance problems.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Conclusion
