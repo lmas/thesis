@@ -1,11 +1,14 @@
 dictionaries = ["en_gb"]
 words = [
     "benchmarked",
+    "dbscan",
     "delimitations",
     "gungor",
     "javaid",
     "lasi",
     "minimizing",
+    "subsequences",
+    "yeh",
     "yml",
 ]
 flag_words = []

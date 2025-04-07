@@ -69,18 +69,19 @@ section Work week 5
     Run prototype against audio sensor: 04-21, 5d
 
 section Work week 6
-    TODO: 5d
+    Start analysis: 04-28, 5d
 
 section Work week 7
-    Start analysis: 05-05, 5d
-    Presentation signup: crit, milestone, 05-12, 1d
+    Finish analysis: 05-05, 5d
+    Cleanup results: milestone, 05-09, 23h
+    Send draft: crit, milestone, 05-05, 1d
 
 section Work week 8
-    Finish analysis: 05-12, 5d
-    Cleanup results: milestone, 05-16, 23h
+    Prepare presentation: 05-12, 5d
+    Presentation signup: crit, milestone, 05-12, 1d
 
 section Work week 9
-    Prepare presentation: 05-19, 5d
+    TODO: 05-19, 5d
 
 section Work week 10
     Presentation: crit, 05-27, 2d
@@ -92,9 +93,14 @@ section Work week 10
 
 ## Week 2
 
-- 2025-04-04, xxx h:
-    since 10:00, cleaning up intro (it's now the background) and setting up
-    proper references.
+- 2025-04-06, 3 h:
+    Finished writing the introduction and made more adjustments to the gantt yet
+    again.
+
+- 2025-04-04, 6 h:
+    5 h cleaning up intro (it's now the background), setting up
+    proper references, and updated gantt again.
+    About 1 h in meetings with both supervisors.
 
 - 2025-04-03, 7 h:
     2 h looking up and reading two new papers,

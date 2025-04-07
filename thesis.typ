@@ -91,6 +91,11 @@ TODO this paper and thanks
 TODO
 
 #set terms(separator: ": ")
+/ Industry 4.0: TODO
+/ Internet-of-Things: TODO
+/ PLC: Programmable logic controller.
+/ Edge: TODO
+/ Discord anomaly: TODO
 / First: #lorem(25)
 / Second: #lorem(25)
 / Third: #lorem(25)
@@ -99,7 +104,6 @@ TODO
 
 #heading(numbering: none, outlined: false, bookmarked: true, "Contents")
 #outline(title: none, indent: 2em)
-#pagebreak()
 
 ////////////////////////////////////////////////////////////////////////////////
 // Introduction
@@ -140,18 +144,53 @@ TODO
 // 	large overview and theories, definitions of uni-/multivariate, anomalies, method families, matrix profile finding discord
 
 
+#pagebreak()
 = Introduction, ~3 pages <introduction>
 
 // The introduction gives an overview of the area of your problems.
 
-// - Discord detection could offer an alternative to advanced AI models
-// - Introduce the Matrix Profile for anomaly detection
-// - Simple, explainable algorithm
-// - Big claims of having higher performance (and academics' focus on cooked benchmarks)
-// - solving the challenges
-// - measure usefulness of applying it to sensors?
+// - Increasing amount of data generated in the industry
 
-TODO
+With the shift towards Industry 4.0 @industry4, the manufacturing industries are
+facing new challenges as they move towards decentralised processes.
+This move is partly enabled by the advances with smart devices and the rise of
+the Internet-of-Things.
+By increasing the use of smart sensors a manufacturer can better supervise the
+operation of their equipment and, for example, better predict equipment failure.
+
+// - Need for fast data processing
+// search: large amounts of sensor data in industry
+// REFS:
+// Big Data Challenges and Opportunities in the Hype of Industry 4.0
+
+As _Khan et al._ notes @bigdata, sensors and PLCs are becoming the largest group
+of devices that generates the most data.
+And as the industries scales up their sensor networks there's an increasing need
+to be able to faster process the larger amounts of data,
+in order to provide real-time analysis. 
+
+// - introduce matrix profile
+
+This bachelor thesis will explore the use of anomaly detection on time
+series data, performed on hardware-limited devices closer to the Edge.
+This is an attempt at evaluating the possible usefulness of running data analysis
+directly on smart sensors.
+The method of anomaly detection will revolve around the Matrix Profile,
+as introduced by _Yeh et al._ @matrix,
+which is a family of algorithms that can be used for detecting discord anomalies,
+among other uses.
+They also note that "time series discords are known to be very competitive as
+novelty/anomaly detectors."
+
+The Matrix Profile is a simple algorithm with claims of being easily scaleable
+@matrix and as such might offer a more performant alternative to machine learning
+models or other artificial intelligence solutions that are popular as of today.
+#highlight[
+And being a simple algorithm the Matrix Profile might also be able to run on
+smaller devices and sensors, that have too little processing power required for
+running heavier AI models.
+]
+
 
 == Background
 
@@ -230,16 +269,27 @@ The analysis should flag any sudden anomalies or observed outliers in the time
 series data.
 
 
-== Related work
+// == Related work
 
-// The related work described work which relates to your problems.
+// // The related work described work which relates to your problems.
 
-// Lots of examples in REF: Outlier Detection for Temporal Data: A Survey
-// - power net example
-// - wireless sensors?
-// - ai example?
+// // Lots of examples in REF: Outlier Detection for Temporal Data: A Survey
+// // - power net example
+// // - wireless sensors?
+// // - ai example?
 
-TODO
+// TODO
+
+// Anomaly and outlier detection is a popular subject with a great number of studies
+// and publications available.
+// One of the more cited, but now older, surveys was done by _Chandola et al._ in
+// 2009 [TODO], who evaluated the methods used in the previous decade.
+
+// WRONG PAPER
+// These methods revolved around the use of Machine Learning models that's common
+// for today,
+// such as KNN (proximity) and DBSCAN (clustering), SVM (distribution) and various
+// kinds of trees, and GAN (forecasting).
 
 
 == Problem definition <definition>
@@ -282,14 +332,15 @@ The rest of the thesis has it's structure organised in the following way.
 how it's applied in the hardware.
 Then the section continues with the collection of data from the hardware sensors. 
 @results documents and analyses the results from the data collection,
-which is then discussed, in relation to the original problem definitions,
+which is then discussed --  in relation to the original problem definitions --
 in @discussion.
-A final conclusion is then given in @conclusion, with suggestions for future work.
+// A final conclusion is then given in @conclusion, with suggestions for future work.
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Theory
 
+#pagebreak()
 = Theory, ~7 pages <theory>
 
 // - citations-00242-Revisiting Time Series Outlier Detection_ Definitions and Benchmarks.pdf
@@ -312,6 +363,7 @@ TODO
 ////////////////////////////////////////////////////////////////////////////////
 // Method
 
+#pagebreak()
 = Method, ~8 pages <method>
 
 // The implementation describes how you have implemented a solution to your problems.
@@ -343,6 +395,7 @@ TODO
 
 // The evaluation evaluates whether you have actually solved your problems.
 
+#pagebreak()
 = Results, ~10 pages <results>
 
 TODO
@@ -356,6 +409,7 @@ TODO
 
 // The discussion discusses each individual problem, how you addressed it, alternative solutions and shortcomings, etc.
 
+#pagebreak()
 = Discussion <discussion>
 
 TODO
@@ -365,7 +419,7 @@ TODO
 
 // The conclusions and future work describes the final outcome of how you solved your problems and what is left to do.
 
-= Conclusion <conclusion>
+== Conclusion
 
 TODO
 
@@ -376,6 +430,7 @@ TODO
 ////////////////////////////////////////////////////////////////////////////////
 // References
 
+#pagebreak()
 = References
 
 #bibliography(
@@ -387,6 +442,8 @@ TODO
 ////////////////////////////////////////////////////////////////////////////////
 // Appendices
 
+#pagebreak()
 = Appendix A
 
-TODO
+TODO matlab code and appendix b the prototype?
+
