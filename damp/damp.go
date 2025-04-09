@@ -16,6 +16,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"slices"
 )
@@ -28,11 +29,29 @@ type MatrixProfile []float64
 // and test data.
 // The function returns a Matrix Profile vector, index and score of the highest
 // scoring discord found in the time series.
-func DAMP(t TimeSeries, m int, s int) (amp MatrixProfile, index int, bsf float64) {
+func DAMP(t TimeSeries, m int, s int) (amp MatrixProfile, index int, bsf float64, err error) {
+	// Validate the incoming data and ensure it's in good working condition
+	tlen := len(t)
+	if m <= 10 || m > 1000 {
+		err = fmt.Errorf("subsequence length 'm' must be in the range of 11-999")
+		return
+	}
+	if s < m {
+		err = fmt.Errorf("s must be larger than or equal to m")
+		return
+	}
+	if s > (tlen - m + 1) {
+		err = fmt.Errorf("s must be less than length(t) - m + 1")
+		return
+	}
+	if s/m < 4 {
+		err = fmt.Errorf("s/m must be above 3 (cycles), to prevent false positives")
+		return
+	}
+	// TODO: add in the check for finding constant regions (it required a bunch
+	// of helper utils, so have to wait until there's enough free time)
 
-	// TODO: add the initial condition checks
-
-	tlen, tmpi := len(t), 0
+	tmpi := 0
 	amp = make(MatrixProfile, tlen)
 	bsf = math.Inf(-1) // Negative infinity
 
