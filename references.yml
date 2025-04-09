@@ -80,3 +80,26 @@ matrix:
   date: 2017-02-02
   serial-number:
     doi: 10.1109/ICDM.2016.0179
+
+damp:
+  type: Article
+  title: "Matrix Profile XXIV: Scaling Time Series Anomaly Detection to Trillions of Datapoints and Ultra-fast Arriving Data Streams"
+  author:
+    - Yue Lu
+    - Renjie Wu
+    - Abdullah Mueen
+    - Maria A. Zuluaga
+    - Eamonn Keogh
+  date: 2022-08-14
+  serial-number:
+    doi: 10.1145/3534678.3539271
+
+massv2:
+  type: Article
+  title: "MASS: distance profile of a query over a time series"
+  author:
+    - Sheng Zhong
+    - Abdullah Mueen
+  date: 2024-02-05
+  serial-number:
+    doi: 10.1007/s10618-024-01005-2

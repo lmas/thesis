@@ -353,11 +353,11 @@ in @discussion.
 
 TODO
 
-- anomaly detection
-- discords
-- distance based/nearest neighbour
-- cache optimisation
-- problems with normalisation
+- define discords
+- discord detection using DAMP
+- distance based/nearest neighbour search using MASS v2
+- cache optimisation?
+- problems with normalisation?
 
 
 ////////////////////////////////////////////////////////////////////////////////
