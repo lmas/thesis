@@ -24,32 +24,40 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 const samplesDir string = "samples"
 
-type sample struct {
+type testSample struct {
 	name      string
 	m         int
 	spi       int
 	precision float64
 }
 
-var samples = []sample{
-	{"1-bourkestreetmall", 24, 24 * 7, 0.00000000001},
-}
-
 func TestDAMPWithDatasets(t *testing.T) {
+	samples := []testSample{
+		{"1-bourkestreetmall", 24, 24 * 7, 0.00000000001},
+		{"2-machining", 16, 44056 / 9, 0.000001},
+	}
 	for _, s := range samples {
+		t.Log("Running sample:", s.name)
 		ts, err := readTS(filepath.Join(".", samplesDir, s.name+".in"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		mp, _, _ := DAMP(ts, s.m, s.spi)
+		start := time.Now()
+		mp, _, _, err := DAMP(ts, s.m, s.spi)
+		stop := time.Now()
+		if err != nil {
+			t.Fatalf("DAMP returned error (expected none): %s", err)
+		}
 		err = compareMP(mp, filepath.Join(samplesDir, s.name+".out"), s.precision)
 		if err != nil {
 			t.Fatal(err)
 		}
+		t.Log("Took:", stop.Sub(start))
 	}
 }
 func readTS(path string) (ts TimeSeries, err error) {
@@ -81,7 +89,7 @@ func compareMP(mp MatrixProfile, path string, precision float64) (err error) {
 			return
 		}
 		if !compareFloats(mp[i], f, precision) {
-			return fmt.Errorf("Expected %f, got %f\n", f, mp[i])
+			return fmt.Errorf("Expected %.16f, got %.16f\n", f, mp[i])
 		}
 		i += 1
 	}

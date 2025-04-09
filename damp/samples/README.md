@@ -15,3 +15,12 @@ Datasets:
   https://timeseriesclassification.com/description.php?Dataset=MelbournePedestrian \
   Status:
   The prototype successfully reproduced the results from the reference implementation.
+
+- 2-machining:
+  Another dataset used in the paper, about 2.5 times larger than the previous.
+  This set might be better for benchmarking, but the original source is unknown. \
+  Source:
+  https://sites.google.com/view/discord-aware-matrix-profile/dataset#h.7b6qriohcyr2 \
+  Status:
+  The prototype successfully reproduced the results from the reference implementation,
+  although with lesser precision.
