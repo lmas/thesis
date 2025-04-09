@@ -26,7 +26,7 @@ func TestMASSV2ContainsNaNs(t *testing.T) {
 	got := massv2(data, query)
 	for _, v := range got {
 		if math.IsNaN(v) {
-			t.Fatalf("MASS_v2 returned slice with NaNs")
+			t.Fatalf("slice contains NaNs")
 		}
 	}
 }
@@ -40,11 +40,11 @@ func TestMASSV2IsOK(t *testing.T) {
 	}
 	got := massv2(data, query)
 	if len(got) != len(want) {
-		t.Fatalf("Mismatched sizes")
+		t.Fatalf("mismatched sizes")
 	}
 	for i := range want {
 		if got[i] != want[i] {
-			t.Fatalf("Got %f, expected %f", got[i], want[i])
+			t.Fatalf("got %f, expected %f", got[i], want[i])
 		}
 	}
 }

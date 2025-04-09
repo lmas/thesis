@@ -32,20 +32,17 @@ type MatrixProfile []float64
 func DAMP(t TimeSeries, m int, s int) (amp MatrixProfile, index int, bsf float64, err error) {
 	// Validate the incoming data and ensure it's in good working condition
 	tlen := len(t)
-	if m <= 10 || m > 1000 {
+	switch {
+	case m <= 10 || m > 1000:
 		err = fmt.Errorf("subsequence length 'm' must be in the range of 11-999")
-		return
-	}
-	if s < m {
+	case s < m:
 		err = fmt.Errorf("s must be larger than or equal to m")
-		return
-	}
-	if s > (tlen - m + 1) {
+	case s > (tlen - m + 1):
 		err = fmt.Errorf("s must be less than length(t) - m + 1")
-		return
-	}
-	if s/m < 4 {
+	case s/m < 4:
 		err = fmt.Errorf("s/m must be above 3 (cycles), to prevent false positives")
+	}
+	if err != nil {
 		return
 	}
 	// TODO: add in the check for finding constant regions (it required a bunch
@@ -76,7 +73,7 @@ func DAMP(t TimeSeries, m int, s int) (amp MatrixProfile, index int, bsf float64
 			panic("TODO: testing if break is needed. IT WAS!!")
 			// break
 		}
-		amp[i], tmpi, bsf = searchExpandingSubsequence(t, m, i, bsf)
+		amp[i], tmpi, bsf = processBackward(t, m, i, bsf)
 		if tmpi > -1 {
 			index = tmpi
 		}
@@ -84,7 +81,7 @@ func DAMP(t TimeSeries, m int, s int) (amp MatrixProfile, index int, bsf float64
 	return
 }
 
-func searchExpandingSubsequence(t []float64, m, i int, bsf float64) (float64, int, float64) {
+func processBackward(t []float64, m, i int, bsf float64) (float64, int, float64) {
 	size := nextPowerOfTwo(8 * m)
 	ampi := math.Inf(0) // Positive infinity
 	exp := 0

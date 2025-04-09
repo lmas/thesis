@@ -42,7 +42,7 @@ func TestDAMPWithDatasets(t *testing.T) {
 		{"2-machining", 16, 44056 / 9, 0.000001},
 	}
 	for _, s := range samples {
-		t.Log("Running sample:", s.name)
+		t.Log("running sample:", s.name)
 		ts, err := readTS(filepath.Join(".", samplesDir, s.name+".in"))
 		if err != nil {
 			t.Fatal(err)
@@ -51,24 +51,24 @@ func TestDAMPWithDatasets(t *testing.T) {
 		mp, _, _, err := DAMP(ts, s.m, s.spi)
 		stop := time.Now()
 		if err != nil {
-			t.Fatalf("DAMP returned error (expected none): %s", err)
+			t.Fatalf("expected no errors, got: %s", err)
 		}
 		err = compareMP(mp, filepath.Join(samplesDir, s.name+".out"), s.precision)
 		if err != nil {
 			t.Fatal(err)
 		}
-		t.Log("Took:", stop.Sub(start))
+		t.Log("took:", stop.Sub(start))
 	}
 }
 func readTS(path string) (ts TimeSeries, err error) {
 	r, err := os.Open(path)
 	if err != nil {
-		err = fmt.Errorf("Error opening input: %s\n", err)
+		err = fmt.Errorf("error opening input: %s\n", err)
 		return
 	}
 	ts, err = ReadTimeSeries(r)
 	if err != nil {
-		err = fmt.Errorf("Error reading input: %s\n", err)
+		err = fmt.Errorf("error reading input: %s\n", err)
 	}
 	defer r.Close()
 	return
@@ -77,7 +77,7 @@ func readTS(path string) (ts TimeSeries, err error) {
 func compareMP(mp MatrixProfile, path string, precision float64) (err error) {
 	r, err := os.Open(path)
 	if err != nil {
-		return fmt.Errorf("Error opening output: %w\n", err)
+		return fmt.Errorf("error opening output: %w\n", err)
 	}
 	s := bufio.NewScanner(r)
 	var f float64
@@ -89,7 +89,7 @@ func compareMP(mp MatrixProfile, path string, precision float64) (err error) {
 			return
 		}
 		if !compareFloats(mp[i], f, precision) {
-			return fmt.Errorf("Expected %.16f, got %.16f\n", f, mp[i])
+			return fmt.Errorf("expected %.16f, got %.16f\n", f, mp[i])
 		}
 		i += 1
 	}

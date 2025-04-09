@@ -50,3 +50,12 @@ func nextPowerOfTwo(v int) int {
 	v++
 	return v
 }
+
+// Checks if a number is a power of two
+// Source: https://stackoverflow.com/a/108360
+// func isPowerOfTwo(v int) bool {
+// 	if v == 0 {
+// 		return true
+// 	}
+// 	return v&(v-1) == 0
+// }
