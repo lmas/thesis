@@ -4,7 +4,7 @@
 # Description of the file format, see:
 # https://github.com/typst/hayagriva/blob/main/docs/file-format.md
 
-industry4:
+lasi:
   type: Article
   title: "Industry 4.0"
   author:
@@ -17,7 +17,7 @@ industry4:
   serial-number:
     doi: 10.1007/s12599-014-0334-4
 
-sensors4:
+javaid:
   type: Article
   title: "Signiﬁcance of sensors for industry 4.0: Roles, capabilities, and applications"
   author:
@@ -30,7 +30,7 @@ sensors4:
   serial-number:
     doi: 10.1016/j.sintl.2021.100110
 
-sensnets:
+gungor:
   type: Article
   title: "Industrial Wireless Sensor Networks: Challenges, Design Principles, and Technical Approaches"
   author:
@@ -40,7 +40,7 @@ sensnets:
   serial-number:
     doi: 10.1109/TIE.2009.2015754
 
-temporal:
+gupta:
   type: Article
   title: "Outlier Detection for Temporal Data: A Survey"
   author:
@@ -52,7 +52,7 @@ temporal:
   serial-number:
     doi: 10.1109/TKDE.2013.184
 
-bigdata:
+khan:
   type: Article
   title: "Big Data Challenges and Opportunities in the Hype of Industry 4.0"
   author:
@@ -64,7 +64,7 @@ bigdata:
   serial-number:
     doi: 10.1109/ICC.2017.7996801
 
-matrix:
+yeh:
   type: Article
   title: "Matrix Profile I: All Pairs Similarity Joins for Time Series: A Unifying View that Includes Motifs, Discords and Shapelets"
   author:
@@ -81,7 +81,7 @@ matrix:
   serial-number:
     doi: 10.1109/ICDM.2016.0179
 
-damp:
+lu:
   type: Article
   title: "Matrix Profile XXIV: Scaling Time Series Anomaly Detection to Trillions of Datapoints and Ultra-fast Arriving Data Streams"
   author:
@@ -94,7 +94,7 @@ damp:
   serial-number:
     doi: 10.1145/3534678.3539271
 
-massv2:
+mueen:
   type: Article
   title: "MASS: distance profile of a query over a time series"
   author:
@@ -103,3 +103,54 @@ massv2:
   date: 2024-02-05
   serial-number:
     doi: 10.1007/s10618-024-01005-2
+
+chandola:
+  type: Article
+  title: "Anomaly Detection: A Survey"
+  author:
+    - Varun Chandola
+    - Arindam Banerjee
+    - Vipin Kumar
+  date: 2009-07
+  serial-number:
+    doi: 10.1145/1541880.1541882
+
+lai:
+  type: Article
+  title: "Revisiting Time Series Outlier Detection: Deﬁnitions and Benchmarks"
+  author:
+    - Kwei-Herng Lai
+    - Daochen Zha
+    - Junjie Xu
+    - Yue Zhao
+    - Guanchu Wang
+    - Xia Hu
+  date: 2021-07-29
+  url: https://openreview.net/forum?id=r8IvOsnHchr
+
+################################################################################
+# Surveys
+
+wang:
+  type: Article
+  title: "Progress in Outlier Detection Techniques: A Survey"
+  author:
+    - Hongzhi Wang
+    - Mohamed Jaward Bah
+    - Mohamed Hammad
+  date: 2019-08-02
+  serial-number:
+    doi: 10.1109/ACCESS.2019.2932769
+
+boniol:
+  type: Article
+  title: "Dive into Time-Series Anomaly Detection: A Decade Review"
+  author:
+    - Paul Boniol
+    - Qinghua Liu
+    - Mingyi Huang
+    - Themis Palpanas
+    - John Paparrizos
+  date: 2024-12-29
+  serial-number:
+    arxiv: 2412.20512v1

@@ -23,7 +23,7 @@ gantt
     tickInterval 1day
     axisFormat %d
 
-%% BUG: can't use 1d milestones on fridays?? Had to use 23h instead
+%% BUG: can't use 1d events on fridays?? Had to use 23h instead
 
 section Thesis paper
     Problem definition: 03-25, 4d
@@ -52,9 +52,9 @@ section Work week 1
 
 section Work week 2
     Run Matlab/Python reference: 03-31, 1d
-    Ext. meeting: 04-01, 23h
-    Int. meeting: 04-04, 23h
-    Ext. meeting: 04-04, 23h
+    Ext. meeting: milestone, 04-01, 23h
+    Int. meeting: milestone, 04-04, 23h
+    Ext. meeting: milestone, 04-04, 23h
 
 section Work week 3
     Develop prototype: 04-07, 5d
@@ -70,6 +70,7 @@ section Work week 5
 
 section Work week 6
     Start analysis: 04-28, 5d
+    Check-in meeting: milestone, 04-30, 1d
 
 section Work week 7
     Finish analysis: 05-05, 5d
@@ -91,6 +92,41 @@ section Work week 10
 
 # Activity log
 
+## Week 3
+
+- 2025-04-13, 2 h:
+    Continued writing theory.
+
+- 2025-04-12, 4 h:
+    Continued with the writing and grabbed a nice image as an example.
+
+- 2025-04-11, 3 h:
+    Continued writing the theory and giving examples of related work (but it's
+    slow work having to refer to previous academic sources).
+
+- 2025-04-10, 6 h:
+    2 h running tests against another library (quick benchmark) and doing small
+    refactors of the code,
+    3 h start writing the theory section, it's outline, and finding references
+    for it.
+    1 h watching the thesis writing/presentation lectures.
+
+- 2025-04-09, 5 h:
+    1 h reflecting on the implementation and taking notes for the report,
+    found the original paper for an implementation detail (MASS v2).
+    4 h did small cleanups of the code and pushed the latest commits.
+    Found another dataset, ran it using matlab (gathering reference data) and
+    added it to the tests.
+
+- 2025-04-08, 11 h:
+    7 h continuing with the implementation and was able to run first successful
+    test against reference data,
+    4 h cleaning up the code and wrote some basic tests.
+
+- 2025-04-07, 7 h:
+    7 h started implementing the DAMP algorithm of the Matrix Profile family,
+    in Go.
+
 ## Week 2
 
 - 2025-04-06, 3 h:
@@ -98,8 +134,8 @@ section Work week 10
     again.
 
 - 2025-04-04, 6 h:
-    5 h cleaning up intro (it's now the background), setting up
-    proper references, and updated gantt again.
+    5 h cleaning up intro (it's now the background), setting up proper references,
+    and updated gantt again.
     About 1 h in meetings with both supervisors.
 
 - 2025-04-03, 7 h:

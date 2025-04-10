@@ -53,6 +53,8 @@ TODO: new title
 
 #set text(size: 12pt)
 #set par(justify: true, first-line-indent: 1em)
+#set quote(block: true, quotes: true)
+#show quote: set align(center)
 
 #heading(numbering: none, outlined: false, bookmarked: true, "Abstract")
 // Offer a brief description of your thesis or dissertation and a concise summary
@@ -88,20 +90,18 @@ TODO this paper and thanks
 #pagebreak()
 #heading(numbering: none, outlined: false, bookmarked: true, "Glossary")
 
-TODO
-
 #set terms(separator: ": ")
+// Introduction
 / Industry 4.0: TODO
 / Internet-of-Things: TODO
 / PLC: Programmable logic controller.
 / Edge: TODO
-/ Discord anomaly: TODO
-/ First: #lorem(25)
-/ Second: #lorem(25)
-/ Third: #lorem(25)
+// Theory
+/ Anomaly: An unexpected, non-conforming pattern in data.
+/ Outlier: Common synonym for _anomaly_ in the context of data analysis.
+/ Discord: TODO
 
 #pagebreak()
-
 #heading(numbering: none, outlined: false, bookmarked: true, "Contents")
 #outline(title: none, indent: 2em)
 
@@ -151,7 +151,7 @@ TODO
 
 // - Increasing amount of data generated in the industry
 
-With the shift towards Industry 4.0 @industry4, the manufacturing industries are
+With the shift towards Industry 4.0 @lasi, the manufacturing industries are
 facing new challenges as they move towards decentralised processes.
 This move is partly enabled by the advances with smart devices and the rise of
 the Internet-of-Things.
@@ -163,7 +163,7 @@ operation of their equipment and, for example, better predict equipment failure.
 // REFS:
 // Big Data Challenges and Opportunities in the Hype of Industry 4.0
 
-As _Khan et al._ notes @bigdata, sensors and PLCs are becoming the largest group
+As _Khan et al._ notes @khan, sensors and PLCs are becoming the largest group
 of devices that generates the most data.
 And as the industries scales up their sensor networks there's an increasing need
 to be able to faster process the larger amounts of data,
@@ -176,14 +176,14 @@ series data, performed on hardware-limited devices closer to the Edge.
 This is an attempt at evaluating the possible usefulness of running data analysis
 directly on smart sensors.
 The method of anomaly detection will revolve around the Matrix Profile,
-as introduced by _Yeh et al._ @matrix,
+as introduced by _Yeh et al._ @yeh,
 which is a family of algorithms that can be used for detecting discord anomalies,
 among other uses.
 They also note that "time series discords are known to be very competitive as
 novelty/anomaly detectors."
 
 The Matrix Profile is a simple algorithm with claims of being easily scaleable
-@matrix and as such might offer a more performant alternative to machine learning
+@yeh and as such might offer a more performant alternative to machine learning
 models or other artificial intelligence solutions that are popular as of today.
 #highlight[
 And being a simple algorithm the Matrix Profile might also be able to run on
@@ -192,7 +192,7 @@ running heavier AI models.
 ]
 
 
-== Background
+== Motivation
 
 // The background offers the background to why you are working with your problems.
 
@@ -207,7 +207,7 @@ digitisation in the manufacturing industry,
 then today's shift is mainly driven by the large amount of smart, modular, and
 highly connected devices that forms the so called Internet-of-Things.
 Dubbed as "Industry 4.0" by the team of german scientists _Dr. Lasi et al._
-@industry4,
+@lasi,
 this new revolution originated from the need of increased flexibility and better 
 efficiency in production systems, in order to better handle quickly shifting
 market demands.
@@ -224,7 +224,7 @@ controlled remotely.
 // REFS:
 // Significance of sensors for industry 4.0: Roles, capabilities, and applications
 
-_Javaid et al._ @sensors4 also notes an increasing need of intelligent sensor
+_Javaid et al._ @javaid also notes an increasing need of intelligent sensor
 systems and networks for the smart factories.
 By using autonomous sensors with higher processing capabilities,
 the industry will be able to reduce their dependency on human operators and thus
@@ -244,7 +244,7 @@ such as remote or hazardous areas.
 Of course, with increasingly larger sensor networks it also follows that the
 amount of data that needs to be processed increases, as mentioned by _Javaid_.
 More raw data requires communication networks with higher processing capacity.
-_Gungor et al._ @sensnets suggests that the sensors should filter their data and
+_Gungor et al._ @gungor suggests that the sensors should filter their data and
 only send the processed data, as a step towards reducing the network overhead.
 Doing so also has the possible benefit of reducing signal interference, delays,
 and other anomalies that could be caused by faulty components or by the
@@ -262,34 +262,11 @@ costs.
 // Outlier Detection for Temporal Data: A Survey
 
 Given that sensor readings are most often timestamped and thus temporal in nature
-as stated by _Gupta et al._ @temporal,
+as stated by _Gupta et al._ @gupta,
 then the data analysis should focus on ensuring the "temporal continuity" has
 been maintained.
-The analysis should flag any sudden anomalies or observed outliers in the time
-series data.
-
-
-// == Related work
-
-// // The related work described work which relates to your problems.
-
-// // Lots of examples in REF: Outlier Detection for Temporal Data: A Survey
-// // - power net example
-// // - wireless sensors?
-// // - ai example?
-
-// TODO
-
-// Anomaly and outlier detection is a popular subject with a great number of studies
-// and publications available.
-// One of the more cited, but now older, surveys was done by _Chandola et al._ in
-// 2009 [TODO], who evaluated the methods used in the previous decade.
-
-// WRONG PAPER
-// These methods revolved around the use of Machine Learning models that's common
-// for today,
-// such as KNN (proximity) and DBSCAN (clustering), SVM (distribution) and various
-// kinds of trees, and GAN (forecasting).
+The analysis should flag any sudden anomalies or other kinds of observed outliers
+in the time series data.
 
 
 == Problem definition <definition>
@@ -327,7 +304,7 @@ monitoring.
 == Thesis structure
 
 The rest of the thesis has it's structure organised in the following way.
-@theory introduces the theory and commonly used methods for anomaly detection.
+@background introduces the theory and commonly used methods for anomaly detection.
 @method walks through the implementation of the Matrix Profile algorithm and
 how it's applied in the hardware.
 Then the section continues with the collection of data from the hardware sensors. 
@@ -341,23 +318,160 @@ in @discussion.
 // Theory
 
 #pagebreak()
-= Theory, ~7 pages <theory>
+= Background and related work, ~7 pages <background>
 
-// - citations-00242-Revisiting Time Series Outlier Detection_ Definitions and Benchmarks.pdf
-// 	definitions of outliers, benchmarks, comparison of discord shows better results than deep learning, problems with normalisation
-// 	use in: theory, results
+// - anomaly detection intro
+// REFS:
+// @chandola Anomaly Detection: A Survey
 
-// - citations-00008-A Robust and Explainable Data-Driven Anomaly_Detection Approach For Power Electronics.pdf
-// 	detailed anomalies, MP details, better than transformer model
-// 	use in: weak, analysis? theory?
+Anomaly detection is a broad area that has been studied in great detail during
+the last two decades @wang, @boniol.
+But what is anomaly detection? _Chandola et al._ @chandola offers a definition:
 
-TODO
+#quote[
+	Anomaly detection refers to the problem of ﬁnding patterns in data 
+	that do not conform to expected behavior ...
+	[which] translate to signiﬁcant, and often critical, actionable
+	information in a wide variety of application domains.
+]
 
-- define discords
-- discord detection using DAMP
-- distance based/nearest neighbour search using MASS v2
-- cache optimisation?
-- problems with normalisation?
+Being able to find these non-conforming behaviours and patterns in all kinds of
+data is very useful indeed.
+Any applicable context that have some kind of continuously, periodic data readings
+involved can benefit from anomaly monitoring and detection,
+to prevent problems cropping up in the future.
+
+
+== Applications and challenges
+
+Let's illustrate with a few example applications that are commonly used in the
+literature @chandola, @gupta:
+
+- Network intrusion:
+	A network and it's local resources such as servers, data repositories and even
+	users, can have it's traffic monitored to prevent the unauthorised use of or
+	access to critical components such as private data or administrator users.
+	Common problems in this domain involves being able to handle the large amount
+	of streaming data generated from, for example, data traffic that can cause
+	false alarms.
+	
+- Fraud detection:
+	Here the goal is to detect any criminal activities from users that are looking
+	for ways to fraudulently collect any resources with economical benefits,
+	from other users or companies such as banks and insurance agencies.
+	For example, any excessive communication could be flagged as an anomaly and thus
+	indicate possible insider trading within a company.
+	
+- Medical and public health monitors:
+	Medical symptoms or diseases can be detected and tracked by using medical data,
+	either from patient records or attached health sensors.
+	For example, it's common to monitor a patient's condition over time
+	or tracking the outbreak of diseases in specific areas such as cities.
+	In this scenario, not being able to detect anomalies in the patient's data could
+	have fatal results.
+
+- Industrial damage monitoring and sensor networks:
+	Monitoring the wear and tear on industrial equipment allows for taking preventive
+	action that can minimise the costs of service interruptions or equipment failures.
+	Most often this requires running analysis on online, streaming data from sensor
+	networks, for example, in order to detect the anomalies in a quicker manner.
+
+// Challenges with anomaly detection
+
+But detecting non-conforming patterns in data is a difficult problem.
+_Chandola_ have also noted a set of challenges associated with classifying any
+observed patterns:
+
+- It's hard to distinguish noise in the data from true anomalies, as they can
+	show similar-looking patterns.
+- It's hard to draw a clear boundary between what's a normal or anomalous pattern,
+	while covering all possible normal cases.
+- A set of patterns considered as normal behaviour at the present time can fail
+	to cover any future patterns, due to evolving conditions.
+- Different application domains have different anomalous patterns and thus it's
+	not easy to apply a single set of normal patterns on multiple domains.
+
+_Gupta et al._ @gupta notes a few more challenges:
+
+- The scale of the data can be large in streaming data scenarios, thus requiring
+	better processing capacity.
+- Distributed scenarios requires more communication and thus also requires better
+	processing capacity.
+- Are there any data available with examples of anomalies, which an analysis model
+	can train on?
+
+These challenges then most often result in specific solutions for
+finding anomalies in a single domain.
+It has previously been common to use various kinds of machine learning models,
+for example:
+neural networks, support vector machines (a linear classification model),
+decision trees (a rules-based prediction model),
+k-nearest neighbor (a distance based model), 
+DBSCAN (a clustering model),
+or any mix of multiple models.
+But these models have shared problems of requiring extensive training data before
+being able to run data analysis, which might require human supervision.
+The models could also be too computation heavy for running in
+resource-constrained environments, such as small devices and sensors.
+
+
+== Types of anomalies
+
+// - types of anomalies
+// REFS:
+// Revisiting Time Series Outlier Detection: Deﬁnitions and Benchmarks
+
+Yet another challenge is how to define what is an anomalous pattern.
+Most often it's some kind of outlier that clearly differentiates itself from
+the other data, but it could also be more subtle issues that's harder to spot.
+A definition that is commonly used in the literature @chandola, @gupta
+and summarised by _Lai et al._ @lai:
+
+- Point anomalies:
+	Individual data points with extreme values that make them stand out
+	from all other points in the data.
+	These are the most simplest to detect and have been the largest focus in
+	previous research.
+
+- Contextual anomalies:
+	These are also individual data points, but with values that make them stand out
+	in the local context --
+	which needs to be defined during the analysis --
+	instead of globally.
+	It's considered a harder problem to identify this kind of anomaly.
+
+- Collective anomalies:
+	This is a subsequence of data points, which individually might not stand out
+	but as a group they could differentiate themselves from the rest of the data,
+	globally.
+
+// - define discord anomalies
+
+_Lai_ illustrated these anomalies nicely in @anomalies, shown below. 
+To save time, this thesis will be limited to a group of collective anomalies
+referred to as *discords*, which _Yeh et al._ @yeh defines as "the subsequence
+that has the maximum distance to its nearest neighbor."
+
+#figure(
+	image("images/standard_anomalies.png"),
+	caption: [
+		Examples of anomalies in time series data. \
+		Left = point, middle = contextual, right = collective.
+	]
+) <anomalies>
+
+
+== Detecting discord anomalies
+
+// - discord detection using MP
+
+Discord anomalies can be detected by using the novel method introduced by _Yeh_
+in @yeh, which they call the Matrix Profile.
+A Matrix Profile is a form of metadata array
+
+// - the DAMP algo, an alternative to MP
+// - helper func backwardProcess
+// - helper func MASS v2, nearest neighbour search
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -380,6 +494,8 @@ TODO
 
 TODO
 
+- example plot from matlab
+
 - DAMP algo details
 - verifying implementation against references
 - caching?
@@ -388,6 +504,8 @@ TODO
 - collecting sensor data
 - wireless
 - power monitoring
+- cache optimisation?
+- problems with normalisation?
 
 ////////////////////////////////////////////////////////////////////////////////
 // Results
