@@ -89,7 +89,7 @@ func compareMP(mp MatrixProfile, path string, precision float64) (err error) {
 			return
 		}
 		if !compareFloats(mp[i], f, precision) {
-			return fmt.Errorf("expected %.16f, got %.16f\n", f, mp[i])
+			return fmt.Errorf("expected %.16f, got %.16f (line %d)\n", f, mp[i], i)
 		}
 		i += 1
 	}

@@ -20,12 +20,12 @@ import (
 	"testing"
 )
 
-func TestNextPowerOfTwo(t *testing.T) {
+func TestNextpower2(t *testing.T) {
 	powers := []int{0, 1, 2, 3, 5, 7, 11, 13, 17, 31, 37}
 	for _, p := range powers {
 		exp := math.Ceil(math.Log2(math.Abs(float64(p))))
 		want := int(math.Pow(2, exp))
-		got := nextPowerOfTwo(p)
+		got := nextpower2(p)
 		if got != want {
 			t.Fatalf("expected %d, got %d for test case %d", want, got, p)
 		}

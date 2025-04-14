@@ -52,7 +52,7 @@ func DAMP(t TimeSeries, m int, s int) (amp MatrixProfile, index int, bsf float64
 	amp = make(MatrixProfile, tlen)
 	bsf = math.Inf(-1) // Negative infinity
 
-	// Find the "relatively high" discord score in the training data, that will be the best so far
+	// Find the approximately highest discord score from an initial chunk of the data
 	for i := s - 1; i < s+16*m; i++ {
 		// Stop training if the subsequence attempts to move past the end of the time series
 		if i+m-1 > tlen {
@@ -65,7 +65,7 @@ func DAMP(t TimeSeries, m int, s int) (amp MatrixProfile, index int, bsf float64
 	}
 	bsf = slices.Max(amp)
 
-	// Continue examining the testing data, looking for discords
+	// Continue examining the rest of the testing data, looking for discords
 	for i := s + 16*m; i < tlen-m+1; i++ {
 		// Stop searching if trying to move past the end of the time series
 		if i+m-1 > tlen {
@@ -82,12 +82,12 @@ func DAMP(t TimeSeries, m int, s int) (amp MatrixProfile, index int, bsf float64
 }
 
 func processBackward(t []float64, m, i int, bsf float64) (float64, int, float64) {
-	size := nextPowerOfTwo(8 * m)
+	size := nextpower2(8 * m)
 	ampi := math.Inf(0) // Positive infinity
 	exp := 0
 	query := t[i : i+m]
 	for ampi >= bsf {
-		start := i - size + 1 + (exp * m)
+		start := i - size + (exp * m) + 1
 		stop := i - (size / 2) + (exp * m) + 1
 		switch {
 		case start < 1:
@@ -100,11 +100,9 @@ func processBackward(t []float64, m, i int, bsf float64) (float64, int, float64)
 			return ampi, i, bsf
 		case exp == 0:
 			// Case 2: the segment closest to the current subsequence
-			ampi = slices.Min(massv2(t[i-size+1:i+1], query))
-		default:
-			// Case 3: all other segments in between
-			ampi = slices.Min(massv2(t[start:stop], query))
+			stop = i + 1
 		}
+		ampi = slices.Min(massv2(t[start:stop], query))
 		// Expands the search for the (possibly) next iteration
 		size *= 2
 		exp += 1

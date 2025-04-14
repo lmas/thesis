@@ -40,7 +40,7 @@ func ReadTimeSeries(r io.Reader) (ts TimeSeries, err error) {
 
 // Calculates the next power of two
 // Source: https://stackoverflow.com/a/4398845
-func nextPowerOfTwo(v int) int {
+func nextpower2(v int) int {
 	v--
 	v |= v >> 1
 	v |= v >> 2

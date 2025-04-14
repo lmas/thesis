@@ -27,10 +27,8 @@ import (
 // Source: https://www.cs.unm.edu/~mueen/FastestSimilaritySearch.html
 func massv2(x, y []float64) (dist []float64) {
 	m, n := len(y), len(x)
-	meany := mean(y)
-	sigmay := std(y)
-	meanx := movmean(x, m-1, 0)
-	sigmax := movstd(x, m-1, 0)
+	meany, meanx := mean(y), movmean(x, m-1, 0)
+	sigmay, sigmax := std(y), movstd(x, m-1, 0)
 
 	// WARN: Must make a copy here, as slices.Reverse() will rearrange the underlying array!
 	ry := make([]float64, len(y))
@@ -49,8 +47,7 @@ func massv2(x, y []float64) (dist []float64) {
 		minus(z[m-1:n], timesScalar(float64(m)*meany, meanx[m-1:n])),
 		timesScalar(sigmay, sigmax[m-1:n]),
 	)))
-	dist = sqrt(dist)
-	return
+	return sqrt(dist)
 }
 
 // TODO: one day these funcs will need their own tests

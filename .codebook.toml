@@ -2,6 +2,7 @@ dictionaries = ["en_gb"]
 words = [
     "benchmarked",
     "benchmarking",
+    "bsf",
     "dbscan",
     "delimitations",
     "gungor",
