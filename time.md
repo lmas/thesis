@@ -92,6 +92,14 @@ section Work week 10
 
 # Activity log
 
+## Week 4
+
+- 2025-04-14, 5 h:
+    Added paper metadata and code listings, added simplified and cleaned up
+    pseudo code of the used algorithms to the background section,
+    also had to clean up the actual code and ensure it was still running the tests.
+    Might have spent about 1 h thinking about how to adapt DAMP to streaming data.
+
 ## Week 3
 
 - 2025-04-13, 2 h:

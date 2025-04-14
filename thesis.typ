@@ -1,34 +1,24 @@
-// Metadata
 
-#let title = "Time series anomaly detection for edge computing devices"
-#let author = "Alex TODO"
-// #let date = datetime(year: 2025, month: 2, day: 17)
-
+#let metadata = toml(".metadata.toml")
 #set document(
-  title: title,
-  author: author,
-  // date: date,
+  title: metadata.title,
+  author: metadata.author,
 )
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Title page
 
 #align(center, [
   // #set text(16pt)
   #heading(outlined: false, [
-		#title
+		#metadata.title
 	])
 
 	\
 
-	// #author
 	#columns(2, [
 		By
 
-		#author
+		#metadata.author
 
-		`mail@mail`
+		#metadata.mail
 
 		#colbreak()
 
@@ -36,17 +26,9 @@
 
 		Luleå University of Technology
 
-		company xxx
+		#metadata.company
 	])
 ])
-
-TODO: new title
-
-#pagebreak(to: "even")
-#align(center, [
-	[This page intentionally left blank]
-])
-#pagebreak()
 
 ////////////////////////////////////////////////////////////////////////////////
 // Preface
@@ -56,18 +38,18 @@ TODO: new title
 #set quote(block: true, quotes: true)
 #show quote: set align(center)
 
+#pagebreak(to: "even")
+#align(center, [
+	[This page intentionally left blank]
+])
+#pagebreak()
+
 #heading(numbering: none, outlined: false, bookmarked: true, "Abstract")
 // Offer a brief description of your thesis or dissertation and a concise summary
 // of its conclusions. Be sure to describe the subject and focus of your work with
 // clear details and avoid including lengthy explanations or opinions.
 
 TODO 
-
-#lorem(50)
-
-#lorem(50)
-
-#lorem(50)
 
 *Keywords*: time series, matrix profile, anomaly detection, edge computing
 
@@ -79,11 +61,7 @@ TODO
 
 TODO this paper and thanks
 
-#lorem(50)
-
-#lorem(50)
-
-- #author, \
+- #metadata.author, \
 	Luleå University of Technology, 2025
 
 
@@ -115,7 +93,7 @@ TODO this paper and thanks
     #counter(page).display("1")
     #h(1fr)
     #set text(7pt)
-    #author
+    #metadata.author
   ]
 )
 
@@ -469,9 +447,118 @@ Discord anomalies can be detected by using the novel method introduced by _Yeh_
 in @yeh, which they call the Matrix Profile.
 A Matrix Profile is a form of metadata array
 
+// - example plot
+
 // - the DAMP algo, an alternative to MP
+
+Also known as DAMP.
+This is a new, alternative implementation of Matrix Profiles by _Lu et al._ @lu,
+with a focus on discovering discord anomalies in large scales of streaming data.
+
+== Discord Aware Matrix Profile
+
+// Adds zero-padded line numbers to code blocks
+#show raw.line: it => {
+	let no = str(it.number)
+	let pad = str(it.count).len() - no.len()
+	text(fill: gray)[#{
+		pad * "0" + no
+	}]
+	h(0.5em)
+	it.body
+}
+
+TODO
+// inputs
+// T: Time series
+// m: Subsequence length
+// spIndex: Location of split point between training and test data
+// Output: aMP: Left approximate Matrix Profile
+
+#figure(```go
+func DAMP(ts, m, s):
+	amp = make([]float, length(ts))
+	bsf = -inf
+
+	// Find highest distance profile from the first chunk of data
+	for i = from (s - 1) to (s + 16*m):
+		query = ts[i : i + m]
+		amp[i] = min(massv2(ts[ : i], query))
+	bsf = max(amp)
+
+	// Continue looking for higher distance profiles in the following data
+	for i = from (s + 16*m) to (length(ts) - m + 1):
+		amp[i], bsf = processBackward(ts, m, i, bsf)
+
+	return amp
+```, caption: "The DAMP algorithm.") <dampalgo>
+
+
 // - helper func backwardProcess
+
+TODO
+// inputs
+// T: Time series
+// m: Subsequence length
+// i: Index of current query
+// BSF: Highest discord score so far
+// 
+// outputs
+// aMPi: Discord value at position i
+// BSF: Updated highest discord score so far
+
+#figure(```go
+func processBackward(ts, m, i, bsf):
+	ampi = +inf
+	size = nextpower2(8*m)
+	exp = 0
+	query = ts[i : i + m]
+
+	while ampi >= bsf:
+		start = i - size + exp*m + 1
+		stop = i - size/2 + exp*m + 1
+
+		// Case 1: the segment furthest from the current subsequence
+		if start < 1:
+			ampi = min(massv2(ts[0 : i + 1], query))
+			if ampi > bsf: bst = ampi
+			break loop
+
+		// Case 2: the segment closest to current 
+		if exp == 0: stop = i + 1
+
+		// Get current distance profile and expand the search (if needed)
+		ampi = min(massv2(ts[start : stop], query))
+		size = size*2
+		exp = exp + 1
+	return ampi, bsf
+```, caption: "DAMP backward processing.") <backproc>
+
+
 // - helper func MASS v2, nearest neighbour search
+
+TODO
+// returns: dist []float64
+
+#figure(```go
+func massv2(x []float, y []float):
+	m, n = length(y), length(x)
+	meany, meanx = mean(y), movmean(x, m - 1, 0)
+	sigmay, sigmax = std(y), movstd(x, m - 1, 0)
+
+	// Reverse query and append zeroes until equal size as x
+	y = reverse(y)
+	y[m + 1 : n] = zeroes
+
+	// Calculate dot products in O(n log n) time
+	fx, fy = fft(x), fft(y)
+	fz = fx*fy
+	z = ifft(fz)
+
+	// Calculate the distance profile and return array
+  dist = 2*(m - (z(m:n)-m*meany*meanx(m:n)) / (sigmay*sigmax(m:n)) )
+	return sqrt(dist)
+```, caption: "The MASSv2 distance profile algorithm.") <massv2>
 
 
 ////////////////////////////////////////////////////////////////////////////////
