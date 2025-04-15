@@ -82,17 +82,6 @@ func rdivide(a, b []float64) (r []float64) {
 	return
 }
 
-func times(a, b []float64) (r []float64) {
-	if len(a) != len(b) {
-		panic("mismatched sizes of input slices")
-	}
-	r = make([]float64, len(a))
-	for i := range a {
-		r[i] = a[i] * b[i]
-	}
-	return
-}
-
 func minusScalar(a float64, b []float64) (r []float64) {
 	r = make([]float64, len(b))
 	for i := range b {
