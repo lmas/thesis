@@ -34,7 +34,7 @@
 // Preface
 
 #set text(size: 12pt)
-#set par(justify: true, first-line-indent: 1em)
+#set par(justify: true)
 #set quote(block: true, quotes: true)
 #show quote: set align(center)
 
@@ -97,31 +97,6 @@ TODO this paper and thanks
   ]
 )
 
-// - citations-15973-Anomaly Detection_ A Survey.pdf
-// 	anom. detect related to noise handling, challenges with anom. detection, detailed applications, fault/defect detection, sensor networks, pros/cons
-	
-// - citations-01521-Outlier Detection for Temporal Data_ A Survey.pdf
-// 	other scenarios than sensors, comprehensive definitions, extra focus on streaming/sliding windows/distributed systems, environ/indust sensors and other data,
-
-// - citations-00892-Matrix Profile I_ All Pairs Similarity Joins for Time Series__A Unifying View that Includes Motifs, Discords and Shapelets.pdf
-// 	original MP algo, algo definitions, quirk with window size not power of 2?  other uses than discord discovery, batch vs streams
-
-// - citations-00632-Progress in Outlier Detection Techniques_ A Survey.pdf
-// 	many usage examples, all types, distance-based scales well/flexible, pros/cons, python tools, datasets, no MP
-
-// - citations-00311-Smart anomaly detection in sensor systems A multi-perspective review.pdf
-// 	analysis on sensors, types of sensor data/anomalies,  use at the Edge, energy usage
-
-// - citations-00184-Detecting Sensor Faults, Anomalies and Outliers in_the Internet of Things_ A Survey on the_Challenges and Solutions.pdf
-// 	IoT and sensor networks, events and errors, pros/cons of nearest neighbour, different detection strategies
-
-// - citations-00094-Detecting Anomalies in a Time Series Database.pdf
-// 	"window based discords" outperform predictive/segmentation
-
-// - citations-00003-Dive into Time-Series Anomaly Detection_ A Decade Review.pdf
-// 	large overview and theories, definitions of uni-/multivariate, anomalies, method families, matrix profile finding discord
-
-
 #pagebreak()
 = Introduction, ~3 pages <introduction>
 
@@ -155,19 +130,18 @@ This is an attempt at evaluating the possible usefulness of running data analysi
 directly on smart sensors.
 The method of anomaly detection will revolve around the Matrix Profile,
 as introduced by _Yeh et al._ @yeh,
-which is a family of algorithms that can be used for detecting discord anomalies,
+which is a family of algorithms used for detecting discord anomalies,
 among other uses.
+// Can't fix warnings in a quote.
 They also note that "time series discords are known to be very competitive as
 novelty/anomaly detectors."
 
 The Matrix Profile is a simple algorithm with claims of being easily scaleable
 @yeh and as such might offer a more performant alternative to machine learning
 models or other artificial intelligence solutions that are popular as of today.
-#highlight[
-And being a simple algorithm the Matrix Profile might also be able to run on
-smaller devices and sensors, that have too little processing power required for
-running heavier AI models.
-]
+And since it doesn't require a heavy processing model, it might be able to run
+on smaller devices and sensors that lacks the required processing power for
+running the heavier AI models.
 
 
 == Motivation
@@ -180,8 +154,8 @@ running heavier AI models.
 // Industry 4.0
 
 Today the world is experiencing it's fourth industrial revolution.
-If the two previous revolutions were driven by the use of electricity and
-digitisation in the manufacturing industry,
+If the use of electricity and digitisation pushed the two previous revolutions
+in the manufacturing industry,
 then today's shift is mainly driven by the large amount of smart, modular, and
 highly connected devices that forms the so called Internet-of-Things.
 Dubbed as "Industry 4.0" by the team of german scientists _Dr. Lasi et al._
@@ -190,9 +164,9 @@ this new revolution originated from the need of increased flexibility and better
 efficiency in production systems, in order to better handle quickly shifting
 market demands.
 
-_Dr. Lasi et al._ continues in their article with,
-that today's manufacturing plants can be turned into "smart factories"
-thanks to technology pushing towards miniaturisation, digitisation, and automation.
+_Dr. Lasi et al._ continues in their article with, that technology is pushing 
+towards miniaturisation, digitisation, automation, and as a result,
+turning today's manufacturing plants into tomorrow's "smart factories".
 These factories are utilising a growing number of sensors and digital, decentralised
 systems that allows the factories to become more autonomously monitored and
 controlled remotely.
@@ -207,11 +181,12 @@ systems and networks for the smart factories.
 By using autonomous sensors with higher processing capabilities,
 the industry will be able to reduce their dependency on human operators and thus
 reduce problems caused by the human factor, for example. 
-Another benefit can be realised in the maintenance of increasingly complex systems,
+// Missing subject? Hard to fix passive voice
+And with the availability of wireless sensors, monitoring can be done more easily
+for inaccessible locations such as remote or hazardous areas.
+The maintenance of the increasingly complex systems can also benefit
 as more precise detection can send alerts sooner for any failing components and
 thus reduce costly maintenance downtime during production.
-And with wireless sensors, monitoring is made possible for inaccessible locations
-such as remote or hazardous areas.
 
 // - Challenges with sensor networks and noisy data
 // search: costs required to operate larger sensor networks???
@@ -219,14 +194,14 @@ such as remote or hazardous areas.
 // Industrial Wireless Sensor Networks: Challenges, Design Principles, and
 // Technical Approaches
 
-Of course, with increasingly larger sensor networks it also follows that the
-amount of data that needs to be processed increases, as mentioned by _Javaid_.
-More raw data requires communication networks with higher processing capacity.
+Of course, with increasingly larger sensor networks it also follows that there's
+an increasing amount of data, as mentioned by _Javaid_.
+And more raw data requires communication networks with higher processing capacity.
 _Gungor et al._ @gungor suggests that the sensors should filter their data and
 only send the processed data, as a step towards reducing the network overhead.
 Doing so also has the possible benefit of reducing signal interference, delays,
-and other anomalies that could be caused by faulty components or by the
-environment's wear and tear that degrades the sensors over time.
+and other anomalies, caused by faulty components or simply by the environment's
+wear and tear that degrades the sensors over time.
 In a later section, _Gungor_ continues with a simplified outline of a basic sensor
 and notes that "... local data processing is crucial in minimizing power
 consumption ...".
@@ -241,17 +216,17 @@ costs.
 
 Given that sensor readings are most often timestamped and thus temporal in nature
 as stated by _Gupta et al._ @gupta,
-then the data analysis should focus on ensuring the "temporal continuity" has
-been maintained.
-The analysis should flag any sudden anomalies or other kinds of observed outliers
-in the time series data.
+the focus should be on ensuring that the time series maintains its "temporal
+continuity" during the data analysis.
+It should flag any sudden anomalies or other kinds of observed outliers in the
+time series.
 
 
 == Problem definition <definition>
 
 This thesis looks to investigate and try to answer the following questions:
 
-- Is it possible to run the matrix profile algorithm in a limited hardware
+- Is it possible to run the Matrix Profile algorithm in a limited hardware
 	environment, such as a small, of-the-shelf microprocessor board, and be able
 	to detect anomalies in the data streams from multiple sensors?
 
@@ -269,17 +244,20 @@ larger sensor networks.
 
 == Delimitations
 
-Due to the limited time available to write a bachelor thesis,
-I have constrained this thesis to only analyse the application of the matrix
-profile algorithm. 
-#strike[
-I also have limited experience with hardware development,
-so I'll only use simple and naive methods for wireless data transfer and power
-monitoring.
-]
+// NOTE: can fix this passive voice, missing a subject?
+Due to the limited time available to write a bachelor thesis, this one will
+constrain itself to only analyse the application of the Matrix Profile algorithm
+for detecting anomalies, rather than comparing it to other methods which previous
+surveys already have done extensively.
+
+Also, the thesis will only explore the use of a single off-the-shelf device
+such as a Raspberry Pi and a small set of simple sensors such as temperature,
+humidity and light level.
+Any other, more advanced devices are simply too expensive and possibly too time
+consuming to work with.
 
 
-== Thesis structure
+== Thesis structure <structure>
 
 The rest of the thesis has it's structure organised in the following way.
 @background introduces the theory and commonly used methods for anomaly detection.
@@ -289,21 +267,32 @@ Then the section continues with the collection of data from the hardware sensors
 @results documents and analyses the results from the data collection,
 which is then discussed --  in relation to the original problem definitions --
 in @discussion.
-// A final conclusion is then given in @conclusion, with suggestions for future work.
 
+// REMARK: I've seen comments in social media about the use of dashes - in any
+// form of written text - indicates the presence of "AI enhancements" or tools.
+// I would like to challenge this in this last paragraph, or at least see if I
+// can trap some unsuspecting fish with this bait.
+// NOTE: I'm against the use of AI tools and don't use them myself!
+// Instead I will cite my little handbook:
+// "As a substitute for the comma, _the dash_ signals a stronger, more significant
+// pause."
+// - The new Oxford guide to writing, by Tomas S. Kane
+// REMARK2: Although, while looking at it now it feels like a unnecessarily
+// strong emphasis... But I'll leave it in anyways and see if anyone's going to
+// notice.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Theory
 
-#pagebreak()
+// #pagebreak()
 = Background and related work, ~7 pages <background>
 
 // - anomaly detection intro
 // REFS:
 // @chandola Anomaly Detection: A Survey
 
-Anomaly detection is a broad area that has been studied in great detail during
-the last two decades @wang, @boniol.
+Anomaly detection is a broad area and there exists many, detailed studies on this
+subject from the last two decades @wang, @boniol.
 But what is anomaly detection? _Chandola et al._ @chandola offers a definition:
 
 #quote[
@@ -314,7 +303,7 @@ But what is anomaly detection? _Chandola et al._ @chandola offers a definition:
 ]
 
 Being able to find these non-conforming behaviours and patterns in all kinds of
-data is very useful indeed.
+data is useful indeed.
 Any applicable context that have some kind of continuously, periodic data readings
 involved can benefit from anomaly monitoring and detection,
 to prevent problems cropping up in the future.
@@ -336,9 +325,10 @@ literature @chandola, @gupta:
 - Fraud detection:
 	Here the goal is to detect any criminal activities from users that are looking
 	for ways to fraudulently collect any resources with economical benefits,
-	from other users or companies such as banks and insurance agencies.
-	For example, any excessive communication could be flagged as an anomaly and thus
-	indicate possible insider trading within a company.
+	from other users or companies such as banks or insurance agencies.
+	For example, sudden bank transfers made by an individual inside a company could
+	look like an anomalous pattern from their normal behaviour,
+	indicating a potential insider trader, and analysis should flag it as such.
 	
 - Medical and public health monitors:
 	Medical symptoms or diseases can be detected and tracked by using medical data,
@@ -384,7 +374,7 @@ It has previously been common to use various kinds of machine learning models,
 for example:
 neural networks, support vector machines (a linear classification model),
 decision trees (a rules-based prediction model),
-k-nearest neighbor (a distance based model), 
+k-nearest neighbour (a distance based model), 
 DBSCAN (a clustering model),
 or any mix of multiple models.
 But these models have shared problems of requiring extensive training data before
@@ -418,6 +408,9 @@ and summarised by _Lai et al._ @lai:
 	instead of globally.
 	It's considered a harder problem to identify this kind of anomaly.
 
+// NOTE: About the use of dashes in text, see the comments in @structure
+// (around line 295, up and above).
+
 - Collective anomalies:
 	This is a subsequence of data points, which individually might not stand out
 	but as a group they could differentiate themselves from the rest of the data,
@@ -428,12 +421,13 @@ and summarised by _Lai et al._ @lai:
 _Lai_ illustrated these anomalies nicely in @anomalies, shown below. 
 To save time, this thesis will be limited to a group of collective anomalies
 referred to as *discords*, which _Yeh et al._ @yeh defines as "the subsequence
-that has the maximum distance to its nearest neighbor."
+that has the maximum distance to its nearest neighbor.",
+which the following section will be expanding upon.
 
 #figure(
-	image("images/standard_anomalies.png"),
+	image("images/standard_anomalies.png", width: 100%),
 	caption: [
-		Examples of anomalies in time series data. \
+		Examples of anomalies in time series data @lai. \
 		Left = point, middle = contextual, right = collective.
 	]
 ) <anomalies>
@@ -443,19 +437,74 @@ that has the maximum distance to its nearest neighbor."
 
 // - discord detection using MP
 
-Discord anomalies can be detected by using the novel method introduced by _Yeh_
-in @yeh, which they call the Matrix Profile.
-A Matrix Profile is a form of metadata array
+_Yeh_ introduced a novel algorithm called the _Matrix Profile_ in their paper @yeh,
+as a new alternative for finding data anomalies.
+The Matrix Profile produces a form of metadata array that, in simplified terms,
+represents the minimal Euclidean distances between each subsequence, of size _m_,
+in the analysed time series _ts_.
+The paper contains a more in-depth examination of the details and definitions,
+which is not repeated here for brevity.
 
-// - example plot
+A useful property of this new metadata is that the higher values in the array
+indicates discord anomalies in the time series data, as demonstrated in @mpexample.
+
+#figure(
+	image("images/mp_example.png", width: 90%),
+	caption: [
+		A plotted ECG (top) with accompanying Matrix Profile (bottom). \
+		Note that the highest peak of the MP coincides with the PVC @yeh.
+	]
+) <mpexample>
+
+This example illustrates a scenario where point or contextual anomalies can be
+common and even normal behaviour,
+and it's more useful to watch for collective anomalies instead.
+It also highlights the difficulty of finding anomalies directly in raw data,
+with jitter-ish or noisy values.
+What's also noteworthy is that the detected anomaly coincides exactly with the
+beginning of the pattern in the raw data readings, as commented by _Yeh_.
+
+
+== Discord Aware Matrix Profile
 
 // - the DAMP algo, an alternative to MP
 
-Also known as DAMP.
-This is a new, alternative implementation of Matrix Profiles by _Lu et al._ @lu,
-with a focus on discovering discord anomalies in large scales of streaming data.
+Also known as DAMP, this is a new, alternative implementation of the Matrix
+Profile by _Lu et al._ @lu, with a focus on discovering discord anomalies in
+large scales of either batched or streaming data.
+_Lu_ achieves this higher performance by calculating an approximate Matrix Profile
+from each subsequence's distance to all previous ones only, in a backwards
+processing manner.
 
-== Discord Aware Matrix Profile
+@machining shows an example profile based on sensor data from a milling machine.
+In this example it's harder to observe, by eyes only, the beginning of the
+anomalous pattern.
+More importantly, detection needs to be fast enough to stop the milling process
+sooner and avoid damaging the equipment.
+
+#figure(
+	image("images/machining_plot.png"),
+	caption: [
+		Readings @lu from a vibration sensor attached to a milling machine (above)
+		during 3 minutes. 
+		Near the end the machine starts cutting into other parts of the equipment,
+		as indicated by the tallest discord peak in the profile (bottom).
+	]
+) <machining>
+
+// TODO: mention is based first on paper algo, then matlab example and lastly own code???
+
+// TODO: probably have to explain why splitting data into training/testing
+
+@dampalgo shows pseudo code for the DAMP algorithm.
+The function takes as input a time series _ts_, a subsequence length _m_ and
+a split index _s_ which marks the split between training and testing data in the
+time series. 
+The empty array _amp_ created on line 02 contains the approximate Matrix Profile
+and _bsf_ tracks the highest distances during the process.
+The first loop starting on line 06 finds an initial value for _bsf_, by using the
+MASS function to calculate a first set of distance profiles.
+_Zhong et al._  @mueen created this function and it's shown later in @massv2.
 
 // Adds zero-padded line numbers to code blocks
 #show raw.line: it => {
@@ -468,15 +517,10 @@ with a focus on discovering discord anomalies in large scales of streaming data.
 	it.body
 }
 
-TODO
-// inputs
-// T: Time series
-// m: Subsequence length
-// spIndex: Location of split point between training and test data
-// Output: aMP: Left approximate Matrix Profile
+// TODO: SIMPLIFY to english pseudo code
 
 #figure(```go
-func DAMP(ts, m, s):
+func DAMP(ts []float, m int, s int):
 	amp = make([]float, length(ts))
 	bsf = -inf
 
@@ -493,22 +537,20 @@ func DAMP(ts, m, s):
 	return amp
 ```, caption: "The DAMP algorithm.") <dampalgo>
 
-
 // - helper func backwardProcess
 
-TODO
-// inputs
-// T: Time series
-// m: Subsequence length
-// i: Index of current query
-// BSF: Highest discord score so far
-// 
-// outputs
-// aMPi: Discord value at position i
-// BSF: Updated highest discord score so far
+The second loop on line 12 then iterates through all subsequences in the time
+series and calculates their distance profiles using the _processBackward_ function,
+shown in @backproc.
+This function finds the highest distance profiles by working backwards in an
+expanding search (done on lines 22-23) from the current subsequence,
+starting in the loop on line 07.
+To prevent reading non-existing data, the process has to consider the two special
+cases on line 12 and line 18 which guards against reading data past either
+possible end of the time series.
 
 #figure(```go
-func processBackward(ts, m, i, bsf):
+func processBackward(ts []float, m int, i int, bsf float):
 	ampi = +inf
 	size = nextpower2(8*m)
 	exp = 0
@@ -521,7 +563,7 @@ func processBackward(ts, m, i, bsf):
 		// Case 1: the segment furthest from the current subsequence
 		if start < 1:
 			ampi = min(massv2(ts[0 : i + 1], query))
-			if ampi > bsf: bst = ampi
+			if ampi > bsf: bsf = ampi
 			break loop
 
 		// Case 2: the segment closest to current 
@@ -534,11 +576,17 @@ func processBackward(ts, m, i, bsf):
 	return ampi, bsf
 ```, caption: "DAMP backward processing.") <backproc>
 
+By halting the search as soon as a distance score is lower than the best so far
+value _bsf_, the algorithm also solves the "twin-freak" problem.
+An anomaly will cancel out itself if it appears more than once, hence the name,
+as the nearest neighbour will be itself during the calculations of the distance
+profiles.
 
 // - helper func MASS v2, nearest neighbour search
 
-TODO
-// returns: dist []float64
+Finally, @massv2 displays the MASS function for the sake of completeness.
+The core part is the use of Fast Fourier Transforms @fft,
+enabling efficient distance calculations.
 
 #figure(```go
 func massv2(x []float, y []float):
@@ -557,14 +605,22 @@ func massv2(x []float, y []float):
 
 	// Calculate the distance profile and return array
   dist = 2*(m - (z(m:n)-m*meany*meanx(m:n)) / (sigmay*sigmax(m:n)) )
-	return sqrt(dist)
-```, caption: "The MASSv2 distance profile algorithm.") <massv2>
+	return sqrt(dist) // As a []float
+```, caption: "The MASS v2 distance profile calculation.") <massv2>
+
+It's also noteworthy that this function operates more efficient if the amount of
+data points is a power of two, as mentioned by _Lu_ @lu.
+The DAMP algorithm encourages this, on line 03 in @backproc, by setting the size
+of the processed data to the next power of two that is after the subsequence
+size _m_.
+
+For the sake of brevity, the MASS function is not examined any further.
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Method
 
-#pagebreak()
+// #pagebreak()
 = Method, ~8 pages <method>
 
 // The implementation describes how you have implemented a solution to your problems.
@@ -599,7 +655,7 @@ TODO
 
 // The evaluation evaluates whether you have actually solved your problems.
 
-#pagebreak()
+// #pagebreak()
 = Results, ~10 pages <results>
 
 TODO
@@ -613,7 +669,7 @@ TODO
 
 // The discussion discusses each individual problem, how you addressed it, alternative solutions and shortcomings, etc.
 
-#pagebreak()
+// #pagebreak()
 = Discussion <discussion>
 
 TODO
@@ -623,7 +679,7 @@ hard to work with matlab code examples:
 	and off-by-one errors.
 - large amount of helper funcs required for performing arithmetic on arrays.
 - doing a fast fourier transform required the use of complex numbers, which was
-	a completely different type in Go and might cause performance problems.
+	a different type in Go and might cause performance problems.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Conclusion
@@ -658,3 +714,4 @@ TODO
 
 TODO matlab code and appendix b the prototype?
 
+// TODO: appendix for the code, link to github

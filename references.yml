@@ -128,6 +128,12 @@ lai:
   date: 2021-07-29
   url: https://openreview.net/forum?id=r8IvOsnHchr
 
+fft:
+  type: Web
+  title: "Fast Fourier transform"
+  publisher: Wikipedia
+  url: https://en.wikipedia.org/wiki/Fast_Fourier_transform
+ 
 ################################################################################
 # Surveys
 
