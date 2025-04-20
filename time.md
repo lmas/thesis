@@ -94,6 +94,26 @@ section Work week 10
 
 ## Week 4
 
+- 2025-04-20, 10 h:
+    3 h setting up the raspberry pi and installing influxdb with host monitoring
+    using telegraf,
+    7 h created first logger prototype that can log current lux value from a
+    light sensor.
+
+- 2025-04-17, 3 h:
+    1.5 h meeting with getting feedback and picking up equipment. 
+    1.5 h making corrections in previous sections and was then supposed to start
+    working on the equipment (but missing power supply) so took early weekend.
+
+- 2025-04-16, 6 h:
+    Finished writing the theory section and started cleaning up lots of warnings
+    for passive voice, removed an unused function from the set of mass helpers.
+
+- 2025-04-15, 7 h:
+    2 h refining a matlab plot,
+    5 h start writing up details of the core algorithm for this work and
+    adding yet another plot for it. 
+
 - 2025-04-14, 5 h:
     Added paper metadata and code listings, added simplified and cleaned up
     pseudo code of the used algorithms to the background section,
