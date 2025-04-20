@@ -7,6 +7,8 @@ TARGETS := "$(go list ./... | grep -v /tmp)"
 default:
     @just --list
 
+################################################################################
+
 # Recompile the paper from source
 buildpaper:
     @typst compile "{{PAPER}}.typ"
@@ -14,6 +16,8 @@ buildpaper:
 # Rebuild PDF and refresh the browser
 run: buildpaper
     @xdotool search --all --desktop 0 --name "firefox" key --clearmodifiers "F5"
+
+################################################################################
 
 # Runs source code linters
 lint:
@@ -34,9 +38,31 @@ deps:
     go mod tidy
     go install github.com/securego/gosec/v2/cmd/gosec@latest
 
+################################################################################
+
+MNT := "./mnt"
+
+buildlogger:
+    @test -d "{{MNT}}" || (echo "You must run mount first!" && exit 1)
+    GOOS=linux GOARCH=arm64 go build -o "{{MNT}}/logger" logger/*
+
+# Mounts a remote dir for ease of access
+mount:
+    doas kldload -n fusefs
+    test -d "{{MNT}}" || mkdir "{{MNT}}"
+    sshfs "hallonpaj:{{MNT}}" "{{MNT}}"
+
+# Cleans up the mount
+umount:
+    umount "{{MNT}}"
+    test ! -d "{{MNT}}" || rmdir "{{MNT}}"
+    
+################################################################################
+
 # Removes all built stuff
 clean:
     test ! -f "{{PAPER}}.pdf" || rm "{{PAPER}}.pdf"
     test ! -f "{{COVER}}.*" || rm "{{COVER}}.*"
+    go mod tidy
     go clean
     
