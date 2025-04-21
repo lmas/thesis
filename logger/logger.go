@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -17,22 +18,34 @@ import (
 
 const logPeriod int = 1000
 
+var debug = flag.Bool("debug", false, "Print debug info")
+
 func main() {
+	flag.Parse()
 	db, err := openInfluxdb()
 	if err != nil {
-		log.Fatalln("Error connecting to influxdb: ", err)
+		log.Fatalln("Error connecting to influxdb:", err)
 	}
 	defer db.Close()
 
-	light, err := sensors.NewLight()
+	light, err := sensors.NewLight(*debug)
 	if err != nil {
-		log.Fatalln("Error connecting light sensor: ", err)
+		log.Fatalln("Error connecting light sensor:", err)
 	}
 	defer light.Close()
+	gyro, err := sensors.NewGyro(*debug)
+	if err != nil {
+		log.Fatalln("Error connecting gyro sensor:", err)
+	}
+	defer gyro.Close()
+	list := []sensors.Sensor{
+		light,
+		gyro,
+	}
 
 	log.Println("Logging data...")
-	if err := loop(db, light); err != nil {
-		log.Fatalln("Error logging data: ", err)
+	if err := loop(db, list); err != nil {
+		log.Fatalln("Error logging data:", err)
 	}
 	log.Println("Bye")
 }
@@ -41,7 +54,7 @@ const envFile string = ".logger.env"
 
 // influxdb defaults to 5000, source:
 // https://github.com/influxdata/influxdb-client-go/blob/master/api/write/options.go
-const batchSize int = 900 // 1 point/second * 60 seconds * 15 minutes
+const batchSize int = 2 * 900 // 1 point/second * 60 seconds * 15 minutes
 
 func openInfluxdb() (client influxdb2.Client, err error) {
 	if err := godotenv.Load(envFile); err != nil {
@@ -67,7 +80,7 @@ func openInfluxdb() (client influxdb2.Client, err error) {
 	return
 }
 
-func loop(db influxdb2.Client, light *sensors.Light) error {
+func loop(db influxdb2.Client, list []sensors.Sensor) error {
 	writer := db.WriteAPI(
 		os.Getenv("org"), os.Getenv("bucket"),
 	)
@@ -84,20 +97,14 @@ func loop(db influxdb2.Client, light *sensors.Light) error {
 		}
 
 		now := time.Now().UTC()
-		val, err := light.Value()
-		if err != nil {
-			return fmt.Errorf("error reading lux: ", err)
+		for _, s := range list {
+			p, err := s.NewSample(now)
+			if err != nil {
+				log.Println("Sample sensor:", err)
+				continue
+			}
+			writer.WritePoint(p)
 		}
-		writer.WritePoint(influxdb2.NewPoint(
-			"light", // Measurement
-			map[string]string{ // Tags
-				"unit": "lux",
-			},
-			map[string]any{ // Fields
-				"current": val,
-			},
-			now, // Timestamp
-		))
 
 		select {
 		case <-ticker: // nop
