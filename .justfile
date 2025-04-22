@@ -1,7 +1,8 @@
 
 PAPER := "thesis"
 COVER := ".cover"
-TARGETS := "$(go list ./... | grep -v /tmp)"
+#TARGETS := "$(go list ./... | grep -v /tmp)"
+TARGETS := "code.larus.se/lmas/thesis/damp"
 
 # Show available recipes by default
 default:

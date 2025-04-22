@@ -17,13 +17,18 @@ package main
 
 import (
 	"bufio"
+	"image/color"
 	"io"
 	"strconv"
 	"strings"
+
+	"gonum.org/v1/plot"
+	"gonum.org/v1/plot/plotter"
+	"gonum.org/v1/plot/vg"
 )
 
 // ReadTimeSeries reads values from a Reader r and creates a new TimeSeries.
-func ReadTimeSeries(r io.Reader) (ts TimeSeries, err error) {
+func ReadTimeSeries(r io.Reader) (ts Timeseries, err error) {
 	s := bufio.NewScanner(r)
 	var f float64
 	for s.Scan() {
@@ -32,7 +37,7 @@ func ReadTimeSeries(r io.Reader) (ts TimeSeries, err error) {
 		if err != nil {
 			return
 		}
-		ts = append(ts, f)
+		ts.Append(f)
 	}
 	err = s.Err()
 	return
@@ -59,3 +64,19 @@ func nextpower2(v int) int {
 // 	}
 // 	return v&(v-1) == 0
 // }
+
+func PlotTimeSeries(ts Timeseries, path string) error {
+	pl := plot.New()
+	// pl.Title.Text = "Time series"
+	// pl.X.Label.Text = "Time"
+	// pl.Y.Label.Text = "Value"
+	pl.Add(plotter.NewGrid())
+	line, err := plotter.NewLine(ts)
+	if err != nil {
+		return err
+	}
+	line.Width = vg.Points(1)
+	line.Color = color.RGBA{R: 0, G: 114, B: 189, A: 255}
+	pl.Add(line)
+	return pl.Save(20*vg.Centimeter, 5*vg.Centimeter, path)
+}

@@ -58,9 +58,15 @@ func TestDAMPWithDatasets(t *testing.T) {
 			t.Fatal(err)
 		}
 		t.Log("took:", stop.Sub(start))
+		if err = PlotTimeSeries(ts, s.name+"-in.png"); err != nil {
+			t.Fatal(err)
+		}
+		if err = PlotTimeSeries(mp, s.name+"-mp.png"); err != nil {
+			t.Fatal(err)
+		}
 	}
 }
-func readTS(path string) (ts TimeSeries, err error) {
+func readTS(path string) (ts Timeseries, err error) {
 	r, err := os.Open(path)
 	if err != nil {
 		err = fmt.Errorf("error opening input: %s\n", err)
@@ -74,7 +80,7 @@ func readTS(path string) (ts TimeSeries, err error) {
 	return
 }
 
-func compareMP(mp MatrixProfile, path string, precision float64) (err error) {
+func compareMP(mp Timeseries, path string, precision float64) (err error) {
 	r, err := os.Open(path)
 	if err != nil {
 		return fmt.Errorf("error opening output: %w\n", err)
@@ -88,8 +94,9 @@ func compareMP(mp MatrixProfile, path string, precision float64) (err error) {
 		if err != nil {
 			return
 		}
-		if !compareFloats(mp[i], f, precision) {
-			return fmt.Errorf("expected %.16f, got %.16f (line %d)\n", f, mp[i], i)
+		v := mp.Get(i)
+		if !compareFloats(v, f, precision) {
+			return fmt.Errorf("expected %.16f, got %.16f (line %d)\n", f, v, i)
 		}
 		i += 1
 	}
