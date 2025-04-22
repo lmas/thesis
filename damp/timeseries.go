@@ -25,8 +25,11 @@ import (
 
 	"github.com/gammazero/deque"
 	"gonum.org/v1/plot"
+	"gonum.org/v1/plot/font"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/vg"
+	"gonum.org/v1/plot/vg/draw"
+	"gonum.org/v1/plot/vg/vgimg"
 )
 
 type Timeseries struct {
@@ -65,18 +68,41 @@ func ReadTimeSeries(r io.Reader) (t *Timeseries, err error) {
 	return
 }
 
-func PlotTimeSeries(t *Timeseries, path string) error {
-	pl := plot.New()
-	pl.HideY()
-	pl.Add(plotter.NewGrid())
+func PlotFromTimeseries(t *Timeseries, title string) (p *plot.Plot, err error) {
+	p = plot.New()
+	p.Title.Text = title
+	p.HideY()
+	p.Add(plotter.NewGrid())
 	line, err := plotter.NewLine(t)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	line.Width = vg.Points(1)
 	line.Color = color.RGBA{R: 0, G: 114, B: 189, A: 255}
-	pl.Add(line)
-	return pl.Save(20*vg.Centimeter, 5*vg.Centimeter, path)
+	p.Add(line)
+	return
+}
+
+func SavePlots(plots []*plot.Plot, w io.Writer) (err error) {
+	h := font.Length(len(plots) * 5)
+	img := vgimg.New(20*vg.Centimeter, h*vg.Centimeter)
+	dc := draw.New(img)
+	t := draw.Tiles{
+		Rows: len(plots),
+		Cols: 1,
+	}
+	pc := make([][]*plot.Plot, len(plots))
+	for i, p := range plots {
+		pc[i] = make([]*plot.Plot, 1)
+		pc[i][0] = p
+	}
+	c := plot.Align(pc, t, dc)
+	for i := range plots {
+		pc[i][0].Draw(c[i][0])
+	}
+	png := vgimg.PngCanvas{Canvas: img}
+	_, err = png.WriteTo(w)
+	return
 }
 
 func (t *Timeseries) Max() float64 {

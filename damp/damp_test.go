@@ -25,6 +25,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"gonum.org/v1/plot"
 )
 
 const samplesDir string = "samples"
@@ -55,40 +57,36 @@ func TestDAMPWithDatasets(t *testing.T) {
 		{"2-machining", 44056, 16, 44056 / 9, 0.000001},
 	}
 	for _, s := range samples {
+		// Open the dataset
 		t.Log("running sample:", s.name)
 		ts, err := readTS(filepath.Join(".", samplesDir, s.name+".in"))
 		if err != nil {
 			t.Fatal(err)
 		}
+
+		// Run original DAMP
 		start := time.Now()
-		mp, _, _, err := DAMP(ts, s.m, s.spi)
+		damp, _, _, err := DAMP(ts, s.m, s.spi)
 		stop := time.Now()
 		if err != nil {
 			t.Fatalf("expected no errors, got: %s", err)
 		}
-		err = compareMP(mp, filepath.Join(samplesDir, s.name+".out"), s.precision)
+		err = compareMP(damp, filepath.Join(samplesDir, s.name+".out"), s.precision)
 		if err != nil {
 			t.Fatal(err)
 		}
 		t.Log("original took:", stop.Sub(start))
-		if err = PlotTimeSeries(ts, s.name+"-data.png"); err != nil {
-			t.Fatal(err)
-		}
-		if err = PlotTimeSeries(mp, s.name+"-damp.png"); err != nil {
-			t.Fatal(err)
-		}
 
-		samp := NewTimeSeries(s.samples, false)
+		// Run streaming DAMP
+		sdamp := NewTimeSeries(s.samples, false)
 		sd := NewStreamingDAMP(s.spi, s.m)
 		f, err := os.Open(filepath.Join(".", samplesDir, s.name+".in"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer f.Close()
 		sc := bufio.NewScanner(f)
-
-		start = time.Now()
 		var v float64
+		start = time.Now()
 		for sc.Scan() {
 			line := strings.TrimSpace(sc.Text())
 			v, err = strconv.ParseFloat(line, 64)
@@ -96,17 +94,39 @@ func TestDAMPWithDatasets(t *testing.T) {
 				t.Fatal(err)
 			}
 			val := sd.Push(v)
-			samp.Push(val)
+			sdamp.Push(val)
 		}
 		stop = time.Now()
-
+		f.Close()
 		t.Log("streaming took:", stop.Sub(start))
 		if err = sc.Err(); err != nil {
 			t.Fatal(err)
 		}
-		if err = PlotTimeSeries(samp, s.name+"-damp-stream.png"); err != nil {
+
+		// Plot the data
+		start = time.Now()
+		pdata, err := PlotFromTimeseries(ts, "Data")
+		if err != nil {
 			t.Fatal(err)
 		}
+		pdamp, err := PlotFromTimeseries(damp, "DAMP")
+		if err != nil {
+			t.Fatal(err)
+		}
+		psdamp, err := PlotFromTimeseries(sdamp, "Streaming DAMP")
+		if err != nil {
+			t.Fatal(err)
+		}
+		w, err := os.Create(s.name + "-plots.png")
+		if err != nil {
+			t.Error(err)
+		}
+		if err = SavePlots([]*plot.Plot{pdata, pdamp, psdamp}, w); err != nil {
+			t.Error(err)
+		}
+		w.Close()
+		stop = time.Now()
+		t.Log("plotting took:", stop.Sub(start))
 	}
 }
 func readTS(path string) (ts *Timeseries, err error) {
