@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package damp
 
 import (
 	"bufio"
@@ -34,6 +34,18 @@ type testSample struct {
 	m         int
 	spi       int
 	precision float64
+}
+
+func TestNextpower2(t *testing.T) {
+	powers := []int{0, 1, 2, 3, 5, 7, 11, 13, 17, 31, 37}
+	for _, p := range powers {
+		exp := math.Ceil(math.Log2(math.Abs(float64(p))))
+		want := int(math.Pow(2, exp))
+		got := nextpower2(p)
+		if got != want {
+			t.Fatalf("expected %d, got %d for test case %d", want, got, p)
+		}
+	}
 }
 
 func TestDAMPWithDatasets(t *testing.T) {

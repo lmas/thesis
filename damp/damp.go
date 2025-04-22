@@ -13,90 +13,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package damp
 
 import (
 	"fmt"
 	"math"
 	"slices"
-
-	"github.com/gammazero/deque"
 )
-
-type Timeseries struct {
-	// data []float64
-	data deque.Deque[float64]
-}
-
-func NewTimeSeries(size int) *Timeseries {
-	var d deque.Deque[float64]
-	d.Grow(size)
-	for range size {
-		d.PushBack(0)
-	}
-	return &Timeseries{
-		// data: make([]float64, size),
-		data: d,
-	}
-}
-
-func (t *Timeseries) Max() float64 {
-	m := math.Inf(-1)
-	// for _, v := range t.data {
-	for i := range t.data.Len() {
-		v := t.data.At(i)
-		if v > m {
-			m = v
-		}
-	}
-	return m
-}
-
-func (t *Timeseries) Slice(i, j int) []float64 {
-	// return t.data[i:j]
-	v := make([]float64, j-i)
-	for x := range len(v) {
-		v[x] = t.data.At(i + x)
-	}
-	return v
-}
-
-func (t *Timeseries) Get(i int) float64 {
-	// return t.data[i]
-	return t.data.At(i)
-}
-
-func (t *Timeseries) Set(i int, v float64) {
-	// t.data[i] = v
-	t.data.Set(i, v)
-}
-
-func (t *Timeseries) Append(v float64) {
-	// t.data = append(t.data, v)
-	t.data.PushBack(v)
-}
-
-func (t *Timeseries) Push(v float64) {
-	len := t.data.Len()
-	t.data.PopBack()
-	t.data.PushFront(v)
-	// TODO: asserting that the buffer doesn't grow until confirmed
-	if t.data.Len() != len {
-		panic("Buffer grew in size")
-	}
-}
-
-// Required by plotter interface (can't receive a pointer)
-func (t Timeseries) Len() int {
-	// return len(t.data)
-	return t.data.Len()
-}
-
-// Required by plotter interface (can't receive a pointer)
-func (t Timeseries) XY(i int) (x, y float64) {
-	// return float64(i), t.data[i]
-	return float64(i), t.data.At(i)
-}
 
 // DAMP calculates the left approximate Matrix Profile found in the time series
 // array t, using a subsequence length m and the split point s between training
@@ -184,3 +107,25 @@ func processBackward(t Timeseries, m, i int, bsf float64) (float64, int, float64
 	}
 	return ampi, -1, bsf
 }
+
+// Calculates the next power of two
+// Source: https://stackoverflow.com/a/4398845
+func nextpower2(v int) int {
+	v--
+	v |= v >> 1
+	v |= v >> 2
+	v |= v >> 4
+	v |= v >> 8
+	v |= v >> 16
+	v++
+	return v
+}
+
+// Checks if a number is a power of two
+// Source: https://stackoverflow.com/a/108360
+// func isPowerOfTwo(v int) bool {
+// 	if v == 0 {
+// 		return true
+// 	}
+// 	return v&(v-1) == 0
+// }
