@@ -34,11 +34,13 @@ type Timeseries struct {
 	data deque.Deque[float64]
 }
 
-func NewTimeSeries(size int) *Timeseries {
+func NewTimeSeries(size int, fill bool) *Timeseries {
 	var d deque.Deque[float64]
 	d.Grow(size)
-	for range size {
-		d.PushBack(0)
+	if fill {
+		for range size {
+			d.PushBack(0)
+		}
 	}
 	return &Timeseries{
 		// data: make([]float64, size),
@@ -47,7 +49,8 @@ func NewTimeSeries(size int) *Timeseries {
 }
 
 // ReadTimeSeries reads values from a Reader r and creates a new TimeSeries.
-func ReadTimeSeries(r io.Reader) (ts Timeseries, err error) {
+func ReadTimeSeries(r io.Reader) (t *Timeseries, err error) {
+	t = &Timeseries{}
 	s := bufio.NewScanner(r)
 	var f float64
 	for s.Scan() {
@@ -56,19 +59,17 @@ func ReadTimeSeries(r io.Reader) (ts Timeseries, err error) {
 		if err != nil {
 			return
 		}
-		ts.Append(f)
+		t.Push(f)
 	}
 	err = s.Err()
 	return
 }
 
-func PlotTimeSeries(ts Timeseries, path string) error {
+func PlotTimeSeries(t *Timeseries, path string) error {
 	pl := plot.New()
-	// pl.Title.Text = "Time series"
-	// pl.X.Label.Text = "Time"
-	// pl.Y.Label.Text = "Value"
+	pl.HideY()
 	pl.Add(plotter.NewGrid())
-	line, err := plotter.NewLine(ts)
+	line, err := plotter.NewLine(t)
 	if err != nil {
 		return err
 	}
@@ -109,19 +110,12 @@ func (t *Timeseries) Set(i int, v float64) {
 	t.data.Set(i, v)
 }
 
-func (t *Timeseries) Append(v float64) {
-	// t.data = append(t.data, v)
-	t.data.PushBack(v)
+func (t *Timeseries) Pop() float64 {
+	return t.data.PopFront()
 }
 
 func (t *Timeseries) Push(v float64) {
-	len := t.data.Len()
-	t.data.PopBack()
-	t.data.PushFront(v)
-	// TODO: asserting that the buffer doesn't grow until confirmed
-	if t.data.Len() != len {
-		panic("Buffer grew in size")
-	}
+	t.data.PushBack(v)
 }
 
 // Required by plotter interface (can't receive a pointer)

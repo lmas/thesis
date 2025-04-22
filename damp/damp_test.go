@@ -31,6 +31,7 @@ const samplesDir string = "samples"
 
 type testSample struct {
 	name      string
+	samples   int
 	m         int
 	spi       int
 	precision float64
@@ -50,8 +51,8 @@ func TestNextpower2(t *testing.T) {
 
 func TestDAMPWithDatasets(t *testing.T) {
 	samples := []testSample{
-		{"1-bourkestreetmall", 24, 24 * 7, 0.00000000001},
-		{"2-machining", 16, 44056 / 9, 0.000001},
+		{"1-bourkestreetmall", 17490, 24, 24 * 7, 0.00000000001},
+		{"2-machining", 44056, 16, 44056 / 9, 0.000001},
 	}
 	for _, s := range samples {
 		t.Log("running sample:", s.name)
@@ -69,16 +70,46 @@ func TestDAMPWithDatasets(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		t.Log("took:", stop.Sub(start))
-		if err = PlotTimeSeries(ts, s.name+"-in.png"); err != nil {
+		t.Log("original took:", stop.Sub(start))
+		if err = PlotTimeSeries(ts, s.name+"-data.png"); err != nil {
 			t.Fatal(err)
 		}
-		if err = PlotTimeSeries(mp, s.name+"-mp.png"); err != nil {
+		if err = PlotTimeSeries(mp, s.name+"-damp.png"); err != nil {
+			t.Fatal(err)
+		}
+
+		samp := NewTimeSeries(s.samples, false)
+		sd := NewStreamingDAMP(s.spi, s.m)
+		f, err := os.Open(filepath.Join(".", samplesDir, s.name+".in"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer f.Close()
+		sc := bufio.NewScanner(f)
+
+		start = time.Now()
+		var v float64
+		for sc.Scan() {
+			line := strings.TrimSpace(sc.Text())
+			v, err = strconv.ParseFloat(line, 64)
+			if err != nil {
+				t.Fatal(err)
+			}
+			val := sd.Push(v)
+			samp.Push(val)
+		}
+		stop = time.Now()
+
+		t.Log("streaming took:", stop.Sub(start))
+		if err = sc.Err(); err != nil {
+			t.Fatal(err)
+		}
+		if err = PlotTimeSeries(samp, s.name+"-damp-stream.png"); err != nil {
 			t.Fatal(err)
 		}
 	}
 }
-func readTS(path string) (ts Timeseries, err error) {
+func readTS(path string) (ts *Timeseries, err error) {
 	r, err := os.Open(path)
 	if err != nil {
 		err = fmt.Errorf("error opening input: %s\n", err)
@@ -92,7 +123,7 @@ func readTS(path string) (ts Timeseries, err error) {
 	return
 }
 
-func compareMP(mp Timeseries, path string, precision float64) (err error) {
+func compareMP(mp *Timeseries, path string, precision float64) (err error) {
 	r, err := os.Open(path)
 	if err != nil {
 		return fmt.Errorf("error opening output: %w\n", err)

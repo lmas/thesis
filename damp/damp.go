@@ -26,7 +26,7 @@ import (
 // and test data.
 // The function returns a Matrix Profile vector, index and score of the highest
 // scoring discord found in the time series.
-func DAMP(t Timeseries, m int, s int) (amp Timeseries, index int, bsf float64, err error) {
+func DAMP(t *Timeseries, m int, s int) (amp *Timeseries, index int, bsf float64, err error) {
 	// Validate the incoming data and ensure it's in good working condition
 	tlen := t.Len()
 	switch {
@@ -45,10 +45,8 @@ func DAMP(t Timeseries, m int, s int) (amp Timeseries, index int, bsf float64, e
 	// TODO: add in the check for finding constant regions (it required a bunch
 	// of helper utils, so have to wait until there's enough free time)
 
-	amp = *NewTimeSeries(tlen)
-	bsf = math.Inf(-1) // Negative infinity
-
 	// Find the approximately highest discord score from an initial chunk of the data
+	amp = NewTimeSeries(tlen, true)
 	for i := s - 1; i < s+16*m; i++ {
 		// Stop training if the subsequence attempts to move past the end of the time series
 		if i+m-1 > tlen {
@@ -79,7 +77,7 @@ func DAMP(t Timeseries, m int, s int) (amp Timeseries, index int, bsf float64, e
 	return
 }
 
-func processBackward(t Timeseries, m, i int, bsf float64) (float64, int, float64) {
+func processBackward(t *Timeseries, m, i int, bsf float64) (float64, int, float64) {
 	size := nextpower2(8 * m)
 	ampi := math.Inf(0) // Positive infinity
 	exp := 0
@@ -129,3 +127,49 @@ func nextpower2(v int) int {
 // 	}
 // 	return v&(v-1) == 0
 // }
+
+type StreamingDAMP struct {
+	data      *Timeseries
+	maxSize   int
+	trainSize int
+	seqSize   int
+	bsf       float64
+	index     int
+}
+
+func NewStreamingDAMP(trainSize, seqSize int) *StreamingDAMP {
+	maxSize := trainSize * 2 // Works good enough for the test datasets
+	return &StreamingDAMP{
+		data:      NewTimeSeries(maxSize, false),
+		maxSize:   maxSize,
+		trainSize: trainSize,
+		seqSize:   seqSize,
+	}
+}
+
+func (a *StreamingDAMP) Push(v float64) float64 {
+	tlen := a.data.Len()
+	if tlen == a.maxSize {
+		a.data.Pop()
+		// a.index--
+		// if a.index < 0 {
+		// 	// Drops the score once in-data value is popped from the buffer
+		// 	a.bsf = 0
+		// }
+	} else {
+		tlen++
+	}
+	a.data.Push(v)
+
+	if tlen < a.trainSize {
+		// Keep waiting for more training data
+		return 0
+	}
+
+	val, index, bsf := processBackward(a.data, a.seqSize, tlen-a.seqSize, a.bsf)
+	if bsf > a.bsf {
+		a.bsf = bsf
+		a.index = index
+	}
+	return val
+}
