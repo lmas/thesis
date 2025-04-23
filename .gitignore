@@ -1,5 +1,5 @@
 .metadata.toml
 *.pdf
-*.env
+*.toml
 mnt/*
 damp/*.png
