@@ -23,5 +23,6 @@ import (
 
 type Sensor interface {
 	Close() error
+	PeriodTime() time.Duration
 	NewSample(time.Time) (*write.Point, error)
 }

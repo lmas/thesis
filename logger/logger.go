@@ -72,14 +72,14 @@ func main() {
 		log.Fatalln("Error connecting light sensor:", err)
 	}
 	defer light.Close()
-	gyro, err := sensors.NewGyro(*debug)
-	if err != nil {
-		log.Fatalln("Error connecting gyro sensor:", err)
-	}
-	defer gyro.Close()
+	// gyro, err := sensors.NewGyro(logPeriod, *debug)
+	// if err != nil {
+	// 	log.Fatalln("Error connecting gyro sensor:", err)
+	// }
+	// defer gyro.Close()
 	list := []sensors.Sensor{
 		light,
-		gyro,
+		// gyro,
 	}
 
 	log.Println("Logging data...")
