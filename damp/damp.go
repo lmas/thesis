@@ -38,6 +38,8 @@ func DAMP(t *Timeseries, m int, s int) (amp *Timeseries, index int, bsf float64,
 		err = fmt.Errorf("s must be less than length(t) - m + 1")
 	case s/m < 4:
 		err = fmt.Errorf("s/m must be above 3 (cycles), to prevent false positives")
+	case containsConstantRegions(t, m) == true:
+		err = fmt.Errorf("t contains near constant regions, which can cause false positives/negatives and other bad values")
 	}
 	if err != nil {
 		return
@@ -137,14 +139,25 @@ type StreamingDAMP struct {
 	index     int
 }
 
-func NewStreamingDAMP(trainSize, seqSize int) *StreamingDAMP {
-	maxSize := trainSize * 2 // Works good enough for the test datasets
-	return &StreamingDAMP{
+func NewStreamingDAMP(maxSize, seqSize, trainSize int) (sd *StreamingDAMP, err error) {
+	switch {
+	case seqSize <= 10 || seqSize > 1000:
+		err = fmt.Errorf("subsequence length 'm' must be in the range of 11-999")
+	case trainSize < seqSize:
+		err = fmt.Errorf("s must be larger than or equal to m")
+	case trainSize/seqSize < 4:
+		err = fmt.Errorf("s/m must be above 3 (cycles), to prevent false positives")
+	}
+	if err != nil {
+		return
+	}
+	sd = &StreamingDAMP{
 		data:      NewTimeSeries(maxSize, false),
 		maxSize:   maxSize,
 		trainSize: trainSize,
 		seqSize:   seqSize,
 	}
+	return
 }
 
 func (a *StreamingDAMP) Push(v float64) float64 {

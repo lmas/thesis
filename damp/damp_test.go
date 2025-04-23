@@ -29,16 +29,6 @@ import (
 	"gonum.org/v1/plot"
 )
 
-const samplesDir string = "samples"
-
-type testSample struct {
-	name      string
-	samples   int
-	m         int
-	spi       int
-	precision float64
-}
-
 func TestNextpower2(t *testing.T) {
 	powers := []int{0, 1, 2, 3, 5, 7, 11, 13, 17, 31, 37}
 	for _, p := range powers {
@@ -51,10 +41,63 @@ func TestNextpower2(t *testing.T) {
 	}
 }
 
+func TestDAMPWithConstantRegions(t *testing.T) {
+	data := []float64{
+		96.4512, 96.4512, 96.4512, 96.4512, 96.4512, 96.4512, 96.4512, 96.4512,
+		96.4512, 96.4512, 100.53120000000001, 100.53120000000001, 100.53120000000001,
+		100.53120000000001, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002, 93.84000000000002,
+		93.84000000000002, 93.84000000000002, 93.84000000000002,
+	}
+	seq := 11
+	ts := NewTimeSeries(len(data), false)
+	for _, d := range data {
+		ts.Push(d)
+	}
+	if !containsConstantRegions(ts, seq) {
+		t.Fatal("Expected data to have constant regions")
+	}
+	_, _, _, err := DAMP(ts, seq, seq*4)
+	if !strings.Contains(err.Error(), "constant regions") {
+		t.Fatalf("expected DAMP to fail on constant regions, got err: %v", err)
+	}
+	sd, err := NewStreamingDAMP(len(data), seq, seq*4)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i, d := range data {
+		v := sd.Push(d)
+		if i >= sd.trainSize-1 && !math.IsNaN(v) {
+			t.Fatalf("expected NaN, got %v", v)
+		}
+	}
+}
+
+const samplesDir string = "samples"
+
+type testSample struct {
+	name      string
+	samples   int
+	maxSize   int
+	seqSize   int
+	trainSize int
+	precision float64
+}
+
 func TestDAMPWithDatasets(t *testing.T) {
 	samples := []testSample{
-		{"1-bourkestreetmall", 17490, 24, 24 * 7, 0.00000000001},
-		{"2-machining", 44056, 16, 44056 / 9, 0.000001},
+		{"1-bourkestreetmall", 17490, 512, 24, 24 * 7, 0.00000000001},
+		{"2-machining", 44056, 8192, 16, 44056 / 9, 0.000001},
 	}
 	for _, s := range samples {
 		// Open the dataset
@@ -66,7 +109,7 @@ func TestDAMPWithDatasets(t *testing.T) {
 
 		// Run original DAMP
 		start := time.Now()
-		damp, _, _, err := DAMP(ts, s.m, s.spi)
+		damp, _, _, err := DAMP(ts, s.seqSize, s.trainSize)
 		stop := time.Now()
 		if err != nil {
 			t.Fatalf("expected no errors, got: %s", err)
@@ -79,7 +122,10 @@ func TestDAMPWithDatasets(t *testing.T) {
 
 		// Run streaming DAMP
 		sdamp := NewTimeSeries(s.samples, false)
-		sd := NewStreamingDAMP(s.spi, s.m)
+		sd, err := NewStreamingDAMP(s.maxSize, s.seqSize, s.trainSize)
+		if err != nil {
+			t.Fatal(err)
+		}
 		f, err := os.Open(filepath.Join(".", samplesDir, s.name+".in"))
 		if err != nil {
 			t.Fatal(err)

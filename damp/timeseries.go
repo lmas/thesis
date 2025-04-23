@@ -20,6 +20,7 @@ import (
 	"image/color"
 	"io"
 	"math"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -154,4 +155,46 @@ func (t Timeseries) Len() int {
 func (t Timeseries) XY(i int) (x, y float64) {
 	// return float64(i), t.data[i]
 	return float64(i), t.data.At(i)
+}
+
+func containsConstantRegions(ts *Timeseries, seqSize int) bool {
+	var data []float64
+	for i := range ts.Len() {
+		data = append(data, ts.Get(i))
+	}
+	var vertcat []float64
+	vertcat = append(vertcat, 1)
+	vertcat = append(vertcat, diff(data)...)
+	vertcat = append(vertcat, 1)
+	idx := find(vertcat)
+	len := slices.Max(diff(idx))
+	return len >= float64(seqSize)
+}
+
+// in: [1, 2, 4, 7, 0]
+// out: [ 1,  2,  3, -7]
+//
+// in: [1 1 2 3 5 8 13 21]
+// out:  0     1     1     2     3     5     8
+func diff(list []float64) (val []float64) {
+	prev := math.NaN()
+	for _, v := range list {
+		if math.IsNaN(prev) {
+			prev = v
+			continue
+		}
+		val = append(val, v-prev)
+		prev = v
+	}
+	return val
+}
+
+func find(list []float64) (val []float64) {
+	for i, v := range list {
+		if v == 0.0 {
+			continue
+		}
+		val = append(val, float64(i))
+	}
+	return val
 }
