@@ -18,7 +18,6 @@ package sensors
 import (
 	"fmt"
 	"log"
-	"math"
 	"time"
 
 	"code.larus.se/lmas/thesis/damp"
@@ -29,7 +28,8 @@ import (
 
 const (
 	lightPeriod int = 1000
-	lightSeq    int = 60
+	lightSeq    int = 60 * 10
+	lightTrain  int = lightSeq * 2
 )
 
 type Light struct {
@@ -39,7 +39,7 @@ type Light struct {
 }
 
 func NewLight(debug bool) (dev *Light, err error) {
-	sdamp, err := damp.NewStreamingDAMP(lightSeq*60, lightSeq, lightSeq*4)
+	sdamp, err := damp.NewStreamingDAMP(lightSeq*3, lightSeq, lightTrain)
 	if err != nil {
 		return nil, err
 	}
@@ -53,6 +53,12 @@ func NewLight(debug bool) (dev *Light, err error) {
 	})
 	if err != nil {
 		return nil, fmt.Errorf("error opening tsl2591 device: %w", err)
+	}
+	if debug {
+		log.Printf("light sensor\t sequence size=%v\t training until=%v\n",
+			time.Duration(lightSeq)*time.Second,
+			time.Now().Add(time.Duration(lightTrain)*time.Second),
+		)
 	}
 	return
 }
@@ -71,12 +77,9 @@ func (dev *Light) NewSample(now time.Time) (point *write.Point, err error) {
 		return nil, fmt.Errorf("error reading tsl2591 value: %w", err)
 	}
 	dist := dev.sdamp.Push(val)
-	if math.IsNaN(dist) {
-		dist = -1
-	}
 
 	if dev.debug {
-		log.Printf("light=%f lux\t discord=%f\n", val, dist)
+		log.Printf("light=%f lux (%f)\n", val, dist)
 	}
 	point = influxdb2.NewPoint(
 		"light", // Measurement

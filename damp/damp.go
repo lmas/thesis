@@ -141,12 +141,12 @@ type StreamingDAMP struct {
 
 func NewStreamingDAMP(maxSize, seqSize, trainSize int) (sd *StreamingDAMP, err error) {
 	switch {
-	case seqSize <= 10 || seqSize > 1000:
-		err = fmt.Errorf("subsequence length 'm' must be in the range of 11-999")
+	case seqSize < 10 || seqSize > 1000:
+		err = fmt.Errorf("subsequence length must be in the range of 10-999")
 	case trainSize < seqSize:
-		err = fmt.Errorf("s must be larger than or equal to m")
-	case trainSize/seqSize < 4:
-		err = fmt.Errorf("s/m must be above 3 (cycles), to prevent false positives")
+		err = fmt.Errorf("training size must be larger than subsequence length")
+	case trainSize/seqSize < 2:
+		err = fmt.Errorf("training size must be at least twice the size of the subsequence")
 	}
 	if err != nil {
 		return
@@ -164,11 +164,13 @@ func (a *StreamingDAMP) Push(v float64) float64 {
 	tlen := a.data.Len()
 	if tlen == a.maxSize {
 		a.data.Pop()
-		// a.index--
-		// if a.index < 0 {
-		// 	// Drops the score once in-data value is popped from the buffer
-		// 	a.bsf = 0
-		// }
+		if a.index > -1 {
+			a.index--
+			if a.index < 0 {
+				// Drops the score once in-data value is popped from the buffer
+				a.bsf = 0
+			}
+		}
 	} else {
 		tlen++
 	}
@@ -180,6 +182,10 @@ func (a *StreamingDAMP) Push(v float64) float64 {
 	}
 
 	val, index, bsf := processBackward(a.data, a.seqSize, tlen-a.seqSize, a.bsf)
+	if math.IsNaN(val) {
+		// This happens when there's constant regions in the data
+		val = 0
+	}
 	if bsf > a.bsf {
 		a.bsf = bsf
 		a.index = index
