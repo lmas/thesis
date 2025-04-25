@@ -77,8 +77,8 @@ func TestDAMPWithConstantRegions(t *testing.T) {
 	}
 	for i, d := range data {
 		v := sd.Push(d)
-		if i >= sd.trainSize-1 && !math.IsNaN(v) {
-			t.Fatalf("expected NaN, got %v", v)
+		if i >= sd.trainSize-1 && v != 0 {
+			t.Fatalf("expected zero from constant regions, got %v", v)
 		}
 	}
 }
