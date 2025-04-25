@@ -9,6 +9,9 @@ require (
 	github.com/influxdata/influxdb-client-go/v2 v2.14.0
 	github.com/mjibson/go-dsp v0.0.0-20180508042940-11479a337f12
 	gonum.org/v1/plot v0.16.0
+	periph.io/x/conn/v3 v3.7.2
+	periph.io/x/devices/v3 v3.7.4
+	periph.io/x/host/v3 v3.8.3
 )
 
 require (
@@ -25,10 +28,6 @@ require (
 	github.com/oapi-codegen/runtime v1.0.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/image v0.25.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
-	periph.io/x/conn/v3 v3.7.0 // indirect
-	periph.io/x/host/v3 v3.8.0 // indirect
 )
-
-replace github.com/kidoman/embd v0.0.0-20170508013040-d3d8c0c5c68d => github.com/lmas/embd v0.0.0-20250421112644-8f3ea197cda7

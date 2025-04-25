@@ -72,8 +72,14 @@ func main() {
 		log.Fatalln("Error connecting light sensor:", err)
 	}
 	defer light.Close()
+	bme, err := sensors.NewBME(*debug)
+	if err != nil {
+		log.Fatalln("Error connecting bme sensor:", err)
+	}
+	defer bme.Close()
 	list := []sensors.Sensor{
 		light,
+		bme,
 	}
 
 	log.Println("Logging data...")
@@ -129,7 +135,7 @@ func loop(conf config, db influxdb2.Client, list []sensors.Sensor) error {
 		// Drain any writer errors (NOTE: MUST BE DONE BEFORE A WRITE!)
 		for len(errChan) > 0 {
 			err := <-errChan
-			return fmt.Errorf("error from writer: ", err)
+			log.Println("error from writer:", err)
 		}
 		select {
 		case <-flusher:
