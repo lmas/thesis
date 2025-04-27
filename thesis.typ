@@ -469,6 +469,9 @@ beginning of the pattern in the raw data readings, as commented by _Yeh_.
 
 // - the DAMP algo, an alternative to MP
 
+TODO: higher distance score similarity means the subsequence pattern is atypical
+and there is no similar subsequence in the data
+
 Also known as DAMP, this is a new, alternative implementation of the Matrix
 Profile by _Lu et al._ @lu, with a focus on discovering discord anomalies in
 large scales of either batched or streaming data.
@@ -637,8 +640,6 @@ For the sake of brevity, the MASS function is not examined any further.
 
 TODO
 
-- example plot from matlab
-
 - DAMP algo details
 - verifying implementation against references
 - caching?
@@ -660,6 +661,19 @@ TODO
 
 TODO
 
+#figure(
+	image("damp/1-bourkestreetmall-plots.png", width: 80%),
+	caption: [
+		test
+	]
+)
+
+#figure(
+	image("damp/2-machining-plots.png", width: 80%),
+	caption: [
+		test
+	]
+)
 == Analysis
 
 TODO

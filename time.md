@@ -92,6 +92,38 @@ section Work week 10
 
 # Activity log
 
+## Week 5
+
+- 2025-04-25, 3 h:
+    3 tried recording audio for amplitude measurement but couldn't get built-in
+    driver or ext. DAC device to work, fixed a test and adding initial result plots.
+
+- 2025-04-24, 6 h:
+    Discussed the used sensors, cleaned out the gyro as it worked too poorly
+    and added temp., press., and humidity sensors instead.
+
+-2025-04-23, 9 h:
+    Plotted the test data to single png per dataset instead and then a long day
+    trying to run DAMP against the sensors, but kept getting NaNs in the discord
+    results. Eventually I found it to originate from using a time series with
+    constant regions.
+
+- 2025-04-22, 10 h:
+    1 h looking up ring buffers, plotting in Go and thinking through the new changes.
+    3 h added plotting util and refactored timeseries datatype into a ring buffer.
+    6 h creating new streaming alternative to the algo, which was surprisingly 
+    hard to have it plot a similar graph as the original algo! Had to settle with
+    a close-but-not-perfect solution as this was eating up too much time.
+
+- 2025-04-21, 7 h:
+    1 h added dhcp server to the raspberry's LAN port so it's easy to access
+    during travel to foreign networks.
+    1 h troubleshooting why the raspberry didn't accept SSH connections over
+    eduroam (it was a mismatch between subnets).
+    4 h adding gyro sensor to the logger, although the dep. library is quite buggy.
+    1 h fixing dhcp issues at home with the devices, cleaning up code and start
+    running the logger live and adjusting influx dashboard for the sensors.
+
 ## Week 4
 
 - 2025-04-20, 10 h:
