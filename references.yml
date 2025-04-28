@@ -133,7 +133,32 @@ fft:
   title: "Fast Fourier transform"
   publisher: Wikipedia
   url: https://en.wikipedia.org/wiki/Fast_Fourier_transform
- 
+
+go:
+  type: Web
+  title: "The Go Programming Language"
+  publisher: Google
+  url: https://go.dev/
+
+lan:
+  type: Article
+  title: "Anomaly Detection on IT Operation Series via Online Matrix Profile"
+  author:
+    - Shi-Ying Lan
+    - Run-Qing Chen
+    - Wan-Lei Zhao
+  date: 2021-09-06
+  serial-number:
+    arxiv: 2108.12093v2
+
+gillis:
+  type: Web
+  title: "deque"
+  author:
+    - Andrew Gilis
+  publisher: Github
+  url: https://github.com/gammazero/deque
+
 ################################################################################
 # Surveys
 

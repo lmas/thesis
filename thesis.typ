@@ -78,6 +78,8 @@ TODO this paper and thanks
 / Anomaly: An unexpected, non-conforming pattern in data.
 / Outlier: Common synonym for _anomaly_ in the context of data analysis.
 / Discord: TODO
+// Method
+/ Ring-buffer: A fixed-size buffer where both ends acts as if they were connected.
 
 #pagebreak()
 #heading(numbering: none, outlined: false, bookmarked: true, "Contents")
@@ -479,6 +481,8 @@ _Lu_ achieves this higher performance by calculating an approximate Matrix Profi
 from each subsequence's distance to all previous ones only, in a backwards
 processing manner.
 
+TODO: time and space complexities
+
 @machining shows an example profile based on sensor data from a milling machine.
 In this example it's harder to observe, by eyes only, the beginning of the
 anomalous pattern.
@@ -509,6 +513,8 @@ The first loop starting on line 06 finds an initial value for _bsf_, by using th
 MASS function to calculate a first set of distance profiles.
 _Zhong et al._  @mueen created this function and it's shown later in @massv2.
 
+TODO: explain that first loop is the training phase
+
 // Adds zero-padded line numbers to code blocks
 #show raw.line: it => {
 	let no = str(it.number)
@@ -520,7 +526,7 @@ _Zhong et al._  @mueen created this function and it's shown later in @massv2.
 	it.body
 }
 
-// TODO: SIMPLIFY to english pseudo code
+TODO: SIMPLIFY to english pseudo code
 
 #figure(```go
 func DAMP(ts []float, m int, s int):
@@ -538,7 +544,7 @@ func DAMP(ts []float, m int, s int):
 		amp[i], bsf = processBackward(ts, m, i, bsf)
 
 	return amp
-```, caption: "The DAMP algorithm.") <dampalgo>
+```, caption: [The DAMP algorithm.]) <dampalgo>
 
 // - helper func backwardProcess
 
@@ -577,7 +583,7 @@ func processBackward(ts []float, m int, i int, bsf float):
 		size = size*2
 		exp = exp + 1
 	return ampi, bsf
-```, caption: "DAMP backward processing.") <backproc>
+```, caption: [DAMP backward processing.]) <backproc>
 
 By halting the search as soon as a distance score is lower than the best so far
 value _bsf_, the algorithm also solves the "twin-freak" problem.
@@ -609,11 +615,12 @@ func massv2(x []float, y []float):
 	// Calculate the distance profile and return array
   dist = 2*(m - (z(m:n)-m*meany*meanx(m:n)) / (sigmay*sigmax(m:n)) )
 	return sqrt(dist) // As a []float
-```, caption: "The MASS v2 distance profile calculation.") <massv2>
+```, caption: [The MASS v2 distance profile calculation.]) <massv2>
 
 It's also noteworthy that this function operates more efficient if the amount of
 data points is a power of two, as mentioned by _Lu_ @lu.
-The DAMP algorithm encourages this, on line 03 in @backproc, by setting the size
+If it's not, the MASS function would be hit with a hefty performance drop.
+The DAMP algorithm avoids this, on line 03 in @backproc, by setting the size
 of the processed data to the next power of two that is after the subsequence
 size _m_.
 
@@ -623,60 +630,203 @@ For the sake of brevity, the MASS function is not examined any further.
 ////////////////////////////////////////////////////////////////////////////////
 // Method
 
-// #pagebreak()
+#pagebreak()
 = Method, ~8 pages <method>
 
-// The implementation describes how you have implemented a solution to your problems.
+// - running matlab reference and gathering ref. data
 
-// - citations-00060-Matrix Profile XXIV_ Scaling Time Series Anomaly Detection_to Trillions of Datapoints and Ultra-fast Arriving Data Streams.pdf
-// 	DAMP algo, fast/high scale, complexity, learning warning threshold
-// 	use in: theory, method
-//
-// - citations-00006-Anomaly Detection on IT Operation Series_via Online Matrix Profile.pdf
-// 	detailed cache optimisation for MP, complexity and problems with normalisation, positive results
-// 	use in: theory, method
-//
-// - need references for HW, wireless transfer, power monitoring, data logging
+_Lu et al._ have provided an example of their DAMP algorithm in the form of a
+Matlab file, as a complement to their paper @lu.
+Running that example produced the data used for creating the plot in @machining,
+as shown previously.
+Both the raw in-data and the output Matrix Profile data was then saved as a
+reference dataset, used for verifying future implementations.
+The appendix in @appendixrepo has a link to the repository that stores this dataset.
 
-TODO
+// - implement original algo and verify it against ref.
+With reference data available, the original DAMP algorithm was then implemented
+in Go @go as outlined in @dampalgo and @backproc.
+Go is famously known for it's simple syntax and large standard library,
+which lends itself well to the purpose of making quick but production-ready prototypes.
+This, along with this author's previous experiences and familiarity, was the reason
+for selecting Go for the practical aspects of this thesis and provides both
+a stable environment and an alternative to Matlab.
 
-- DAMP algo details
-- verifying implementation against references
-- caching?
-- handling normalisation issues?
-- hardware setup
-- collecting sensor data
-- wireless
-- power monitoring
-- cache optimisation?
-- problems with normalisation?
+The Go implementation also includes a complementary test suite which verifies,
+against the reference data, the correctness of the implemented algorithm.
+@results will later go into details of these results and provide an expanded analysis.
+
+
+== Adapting the algorithm
+
+// - adapt algo to streaming data using ring buffer
+
+As @introduction previously mentioned, the DAMP algorithm should run in a live
+scenario and be able to handle live sensor data.
+The original algorithm would produce a Matrix Profile contained in a data array
+that is of equal size as the in-data, so appending new in-data would then grow
+the output array.
+Eventually the computer would either run out of memory, when it fills up with
+the arrays, or reprocessing the increasingly larger in-data array would consume
+too much time and energy to be of any practical use in a live scenario.
+
+In order to handle this scenario, the Go implementation must be adapted to handle
+continuously arriving data without running out of computing resources.
+_Lan et al._ suggests @lan, as a basic strategy, to use a cache of any sort and
+limit the amount of data processed.
+
+_Gillis_ offers a simple to use double-ended queue in Go @gillis and it can
+operate as an efficient ring-buffer.
+@deque illustrates the queue and it's worth noting that it operates in $O(1)$ time
+when pushing or popping from either end.
+The internal buffer is always a power of two too, so this queue fits in nicely
+with the use of the previously mentioned MASS function and its operation requirements.
+
+#figure(
+	image("images/deque.png"),
+	caption: [Double-ended queue by _Gillis_ @gillis, operating as a ring-buffer.],
+) <deque>
+
+By using this new data structure in place of the previously used data arrays and
+making adaptations to the DAMP algorithm, an alternative implementation could
+then process the continuously streaming data from the hardware sensors.
+
+TODO: rewrite into plain english and explain details in a paragraph or two
+
+#figure(```go
+func (a *StreamingDAMP) Push(v float64) float64:
+	if a.data.Len() == a.maxSize:
+		a.data.Pop()
+		a.amp.Pop()
+		if a.index > -1:
+			a.index--
+			if a.index < 0:
+				// Drops the score once in-data value is popped from the buffer
+				a.bsf, a.index = a.amp.Max()
+
+	a.data.Push(v)
+	tlen = a.data.Len()
+	if tlen < a.trainSize:
+		// Keep waiting for more training data
+		a.amp.Push(0)
+		return 0
+
+	val, index, bsf = processBackward(a.data, a.seqSize, tlen-a.seqSize, a.bsf)
+
+	if math.IsNaN(val):
+		// This happens when there's constant regions in the data
+		val = 0
+
+	if bsf > a.bsf:
+		a.bsf = bsf
+		a.index = index
+
+	a.amp.Push(val)
+	return val
+```, caption: [The DAMP algorithm adapted to handle streaming data.]) <streamdamp>
+
+
+== Setting up hardware environment
+
+Running the adapted DAMP algorithm in a live-test scenario requires the setup of
+a hardware environment.
+This thesis uses cheap, consumer-grade devices that can be commonly found
+off-the-shelf and the bill of materials includes:
+
+TODO: needs links/refs?
+
+- *Raspberry Pi 4, model B with 1GB RAM.* \
+	It's versatile enough and allows for running high-level programming languages,
+	thus not restricting the user to work with closer-to-the-metal environments such
+	as with assembly or plain C programming. Saves a great amount of time.
+
+- *Environment Sensor HAT, by Waveshare.* \
+	This is an addon module equipped with a TSL25911 ambient light sensor, a BME280
+	temperature, humidity, and air pressure combination sensor, a ICM20948 gyroscopic
+	motion sensor, an LTR390-UV-1 uv sensor, and finally a SGP40 volatile organic
+	compound sensor. Provides many alternative sensors in a single package.
+
+- *IQaudio Codec Zero, by Raspberry Pi.* \
+	TODO: couldn't get it to work even?? remove altogether?
+
+
+=== Setup
+- download image from:
+
+    https://www.raspberrypi.com/software/operating-systems/
+
+- verify downloaded image wasn't corrupted:
+
+    `sha256sum <img name>.sha`
+
+- decompress:
+
+    `unxz <img name>.xz`
+
+- and then flash the image to a SD card:
+
+    `dd if=<img name> of=/dev/<device> bs=1M`
+
+- now boot the raspberry and follow it's first time setup and create a user.
+
+- Connect to wifi using networkmanager, https://wiki.debian.org/NetworkManager
+
+- First create the new connection:
+
+    `sudo nmtui`
+
+- if wifi SSID is hidden, must force active the connection:
+
+    `sudo nmcli connection up <network>`
+
+- with internet available, fetch and install updates:
+
+		`sudo apt update && sudo apt upgrade`
+
+// - setting up influx and logging sensor data
+
+- finally install influxdb, see appendix XXX for install instructions.
+
+- once influx is installed, open URL and follow in-browser setup and done.
+
+== Logging sensor data
+
+// - applying streaming algo to live sensors
+// - gyro didn't work out, had constant regions
+// - constant regions causing NaNs and had to add region check, ignored in streaming algo
+
+// EXTRA:
+// - hardware setup
+// - collecting sensor data
+// - power monitoring
+// - handling normalisation issues?
+// - damp paper suggest learning threshold values for the scores
 
 ////////////////////////////////////////////////////////////////////////////////
 // Results
 
 // The evaluation evaluates whether you have actually solved your problems.
 
-// #pagebreak()
+#pagebreak()
 = Results, ~10 pages <results>
 
 TODO
 
 #figure(
 	image("damp/1-bourkestreetmall-plots.png", width: 80%),
-	caption: [
-		test
-	]
+	caption: [test],
 )
 
 #figure(
 	image("damp/2-machining-plots.png", width: 80%),
-	caption: [
-		test
-	]
+	caption: [test],
 )
 == Analysis
 
 TODO
+
+- algo too heavy for raspberry pi (and 4 sensors)
+- surprised that the ring-buffer didn't affect performance
 
 ////////////////////////////////////////////////////////////////////////////////
 // Discussion
@@ -695,6 +845,18 @@ hard to work with matlab code examples:
 - doing a fast fourier transform required the use of complex numbers, which was
 	a different type in Go and might cause performance problems.
 
+algo:
+- can't handle constant regions, causing NaNs.
+- especially gyro worked poorly, as it kept to it's baseline all the time.
+- but one happy accident was that the new streaming algo could recover from the
+	constant region problems thanks to the ring-buffer cycling through data.
+- surprised the deque library didn't add bad performance overhead.
+- hard to pick good seq.size, need more research and detailing effects of it.
+
+sensors:
+- the choice of hardware sensors was poorly made, should had researched better.
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Conclusion
 
@@ -707,6 +869,9 @@ TODO
 == Future work
 
 TODO
+
+- research the effects of different seq. sizes.
+- need more applications in real scenarios.
 
 ////////////////////////////////////////////////////////////////////////////////
 // References
@@ -724,8 +889,16 @@ TODO
 // Appendices
 
 #pagebreak()
-= Appendix A
+= Appendix A <appendixrepo>
 
-TODO matlab code and appendix b the prototype?
+TODO: link to repo and any other instructions
 
-// TODO: appendix for the code, link to github
+#pagebreak()
+= Appendix B <appendixb>
+
+TODO: source for algo implementation?
+
+#figure(
+	raw(read("damp/damp.go"), lang: "go", block: true),
+	caption: "testing",
+)
