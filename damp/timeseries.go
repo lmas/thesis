@@ -106,16 +106,17 @@ func SavePlots(plots []*plot.Plot, w io.Writer) (err error) {
 	return
 }
 
-func (t *Timeseries) Max() float64 {
-	m := math.Inf(-1)
+func (t *Timeseries) Max() (max float64, index int) {
+	max = math.Inf(-1)
 	// for _, v := range t.data {
 	for i := range t.data.Len() {
 		v := t.data.At(i)
-		if v > m {
-			m = v
+		if v > max {
+			max = v
+			index = i
 		}
 	}
-	return m
+	return
 }
 
 func (t *Timeseries) Slice(i, j int) []float64 {

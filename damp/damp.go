@@ -59,7 +59,7 @@ func DAMP(t *Timeseries, m int, s int) (amp *Timeseries, index int, bsf float64,
 		query := t.Slice(i, i+m)
 		amp.Set(i, slices.Min(massv2(t.Slice(0, i), query)))
 	}
-	bsf = amp.Max()
+	bsf, _ = amp.Max()
 
 	tmpi, val := 0, 0.0
 	// Continue examining the rest of the testing data, looking for discords
@@ -132,6 +132,7 @@ func nextpower2(v int) int {
 
 type StreamingDAMP struct {
 	data      *Timeseries
+	amp       *Timeseries
 	maxSize   int
 	trainSize int
 	seqSize   int
@@ -153,6 +154,7 @@ func NewStreamingDAMP(maxSize, seqSize, trainSize int) (sd *StreamingDAMP, err e
 	}
 	sd = &StreamingDAMP{
 		data:      NewTimeSeries(maxSize, false),
+		amp:       NewTimeSeries(maxSize, false),
 		maxSize:   maxSize,
 		trainSize: trainSize,
 		seqSize:   seqSize,
@@ -164,11 +166,12 @@ func (a *StreamingDAMP) Push(v float64) float64 {
 	tlen := a.data.Len()
 	if tlen == a.maxSize {
 		a.data.Pop()
+		a.amp.Pop()
 		if a.index > -1 {
 			a.index--
 			if a.index < 0 {
 				// Drops the score once in-data value is popped from the buffer
-				a.bsf = 0
+				a.bsf, a.index = a.amp.Max()
 			}
 		}
 	} else {
@@ -178,6 +181,7 @@ func (a *StreamingDAMP) Push(v float64) float64 {
 
 	if tlen < a.trainSize {
 		// Keep waiting for more training data
+		a.amp.Push(0)
 		return 0
 	}
 
@@ -190,5 +194,6 @@ func (a *StreamingDAMP) Push(v float64) float64 {
 		a.bsf = bsf
 		a.index = index
 	}
+	a.amp.Push(val)
 	return val
 }
