@@ -33,6 +33,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Preface
 
+#let TODO(msg) = {
+	[#text(fill: red, weight: "bold")[TODO: #msg]]
+}
 #set text(size: 12pt)
 #set par(justify: true)
 #set quote(block: true, quotes: true)
@@ -49,7 +52,7 @@
 // of its conclusions. Be sure to describe the subject and focus of your work with
 // clear details and avoid including lengthy explanations or opinions.
 
-TODO 
+#TODO("")
 
 *Keywords*: time series, matrix profile, anomaly detection, edge computing
 
@@ -59,7 +62,7 @@ TODO
 // other personal comments that are not directly germane to the materials presented
 // in other sections of the thesis.
 
-TODO this paper and thanks
+#TODO("this paper and thanks")
 
 - #metadata.author, \
 	Luleå University of Technology, 2025
@@ -70,16 +73,16 @@ TODO this paper and thanks
 
 #set terms(separator: ": ")
 // Introduction
-/ Industry 4.0: TODO
-/ Internet-of-Things: TODO
-/ PLC: Programmable logic controller.
-/ Edge: TODO
+/ Industry 4.0: #TODO("")
+/ Internet-of-Things: #TODO("")
+/ Edge: #TODO("")
 // Theory
-/ Anomaly: An unexpected, non-conforming pattern in data.
+/ Anomaly: An unexpected, non-conforming point or pattern in data.
 / Outlier: Common synonym for _anomaly_ in the context of data analysis.
-/ Discord: TODO
+/ Discord: #TODO("")
 // Method
 / Ring-buffer: A fixed-size buffer where both ends acts as if they were connected.
+/ $I^2C$: Inter-integrated circuit, a simple, serial communication bus.
 
 #pagebreak()
 #heading(numbering: none, outlined: false, bookmarked: true, "Contents")
@@ -88,7 +91,8 @@ TODO this paper and thanks
 ////////////////////////////////////////////////////////////////////////////////
 // Introduction
 
-#set heading(numbering: "1.")
+#pagebreak()
+#set heading(numbering: "1.1")
 #set page(
 	numbering: "1",
   footer: context [
@@ -99,8 +103,7 @@ TODO this paper and thanks
   ]
 )
 
-#pagebreak()
-= Introduction, ~3 pages <introduction>
+= Introduction <introduction>
 
 // The introduction gives an overview of the area of your problems.
 
@@ -118,8 +121,8 @@ operation of their equipment and, for example, better predict equipment failure.
 // REFS:
 // Big Data Challenges and Opportunities in the Hype of Industry 4.0
 
-As _Khan et al._ notes @khan, sensors and PLCs are becoming the largest group
-of devices that generates the most data.
+As _Khan et al._ notes @khan, sensors and programmable logic controllers (PLCs)
+are becoming the largest group of devices that generates the most data.
 And as the industries scales up their sensor networks there's an increasing need
 to be able to faster process the larger amounts of data,
 in order to provide real-time analysis. 
@@ -287,7 +290,7 @@ in @discussion.
 // Theory
 
 // #pagebreak()
-= Background and related work, ~7 pages <background>
+= Background and related work <background>
 
 // - anomaly detection intro
 // REFS:
@@ -471,8 +474,8 @@ beginning of the pattern in the raw data readings, as commented by _Yeh_.
 
 // - the DAMP algo, an alternative to MP
 
-TODO: higher distance score similarity means the subsequence pattern is atypical
-and there is no similar subsequence in the data
+#TODO("higher distance score similarity means the subsequence pattern is atypical
+and there is no similar subsequence in the data")
 
 Also known as DAMP, this is a new, alternative implementation of the Matrix
 Profile by _Lu et al._ @lu, with a focus on discovering discord anomalies in
@@ -481,7 +484,7 @@ _Lu_ achieves this higher performance by calculating an approximate Matrix Profi
 from each subsequence's distance to all previous ones only, in a backwards
 processing manner.
 
-TODO: time and space complexities
+#TODO("time and space complexities")
 
 @machining shows an example profile based on sensor data from a milling machine.
 In this example it's harder to observe, by eyes only, the beginning of the
@@ -499,9 +502,9 @@ sooner and avoid damaging the equipment.
 	]
 ) <machining>
 
-// TODO: mention is based first on paper algo, then matlab example and lastly own code???
+#TODO("mention is based first on paper algo, then matlab example and lastly own code???")"
 
-// TODO: probably have to explain why splitting data into training/testing
+#TODO("probably have to explain why splitting data into training/testing")
 
 @dampalgo shows pseudo code for the DAMP algorithm.
 The function takes as input a time series _ts_, a subsequence length _m_ and
@@ -513,7 +516,7 @@ The first loop starting on line 06 finds an initial value for _bsf_, by using th
 MASS function to calculate a first set of distance profiles.
 _Zhong et al._  @mueen created this function and it's shown later in @massv2.
 
-TODO: explain that first loop is the training phase
+#TODO("explain that first loop is the training phase")
 
 // Adds zero-padded line numbers to code blocks
 #show raw.line: it => {
@@ -526,7 +529,7 @@ TODO: explain that first loop is the training phase
 	it.body
 }
 
-TODO: SIMPLIFY to english pseudo code
+#TODO("SIMPLIFY to english pseudo code")
 
 #figure(```go
 func DAMP(ts []float, m int, s int):
@@ -630,8 +633,8 @@ For the sake of brevity, the MASS function is not examined any further.
 ////////////////////////////////////////////////////////////////////////////////
 // Method
 
-#pagebreak()
-= Method, ~8 pages <method>
+// #pagebreak()
+= Method <method>
 
 // - running matlab reference and gathering ref. data
 
@@ -641,7 +644,7 @@ Running that example produced the data used for creating the plot in @machining,
 as shown previously.
 Both the raw in-data and the output Matrix Profile data was then saved as a
 reference dataset, used for verifying future implementations.
-The appendix in @appendixrepo has a link to the repository that stores this dataset.
+@app-repo contains a link to the repository that stores this dataset.
 
 // - implement original algo and verify it against ref.
 With reference data available, the original DAMP algorithm was then implemented
@@ -691,7 +694,7 @@ By using this new data structure in place of the previously used data arrays and
 making adaptations to the DAMP algorithm, an alternative implementation could
 then process the continuously streaming data from the hardware sensors.
 
-TODO: rewrite into plain english and explain details in a paragraph or two
+#TODO("rewrite into plain english and explain details in a paragraph or two")
 
 #figure(```go
 func (a *StreamingDAMP) Push(v float64) float64:
@@ -733,12 +736,14 @@ a hardware environment.
 This thesis uses cheap, consumer-grade devices that can be commonly found
 off-the-shelf and the bill of materials includes:
 
-TODO: needs links/refs?
+#TODO("needs links/refs?")
 
 - *Raspberry Pi 4, model B with 1GB RAM.* \
 	It's versatile enough and allows for running high-level programming languages,
 	thus not restricting the user to work with closer-to-the-metal environments such
 	as with assembly or plain C programming. Saves a great amount of time.
+
+	#TODO("picture")
 
 - *Environment Sensor HAT, by Waveshare.* \
 	This is an addon module equipped with a TSL25911 ambient light sensor, a BME280
@@ -746,71 +751,179 @@ TODO: needs links/refs?
 	motion sensor, an LTR390-UV-1 uv sensor, and finally a SGP40 volatile organic
 	compound sensor. Provides many alternative sensors in a single package.
 
-- *IQaudio Codec Zero, by Raspberry Pi.* \
-	TODO: couldn't get it to work even?? remove altogether?
+	#TODO("picture")
 
+With the sensor HAT mounted on top as shown in @hatonrasp, the Raspberry Pi was
+then set up with standard settings by following the getting started guide
+@raspberry and then connected to a locally available WIFI network.
 
-=== Setup
-- download image from:
+#TODO("note that CPU sits directly under sensor board and will affect sensors.")
 
-    https://www.raspberrypi.com/software/operating-systems/
+#figure(
+	// image("images/"),
+	text[#TODO("")],
+	caption: [Environment sensor HAT mounted on Raspberry Pi.],
+) <hatonrasp>
 
-- verify downloaded image wasn't corrupted:
+InfluxDB was then installed in a similar way by following it's setup guide @influxdb.
+InfluxDB is a simple to use time series database with a built in data explorer.
+It's a suitable choice for monitoring the Raspberry Pi's performance and logging
+both raw sensor data and corresponding Matrix Profiles.
 
-    `sha256sum <img name>.sha`
+Finally, Telegraf was installed @telegraf.
+It's a monitoring agent that can collect various statistics such as memory usage,
+CPU times and other performance-related data from the Raspberry Pi.
+The collected data is then sent to InfluxDB for logging and monitoring purposes.
+@app-telegraf shows the configuration file used for Telegraf.
 
-- decompress:
+// === Setup TODO: remove??
+// - download image from:
+//     https://www.raspberrypi.com/software/operating-systems/
+// - verify downloaded image wasn't corrupted:
+//     `sha256sum <img name>.sha`
+// - decompress:
+//     `unxz <img name>.xz`
+// - and then flash the image to a SD card:
+//     `dd if=<img name> of=/dev/<device> bs=1M`
+// - now boot the raspberry and follow it's first time setup and create a user.
+// - Connect to wifi using networkmanager, https://wiki.debian.org/NetworkManager
+// - First create the new connection:
+//     `sudo nmtui`
+// - if wifi SSID is hidden, must force active the connection:
+//     `sudo nmcli connection up <network>`
+// - with internet available, fetch and install updates:
+// 		`sudo apt update && sudo apt upgrade`
+// - finally install influxdb, see appendix XXX for install instructions.
+// - once influx is installed, open URL and follow in-browser setup and done.
 
-    `unxz <img name>.xz`
-
-- and then flash the image to a SD card:
-
-    `dd if=<img name> of=/dev/<device> bs=1M`
-
-- now boot the raspberry and follow it's first time setup and create a user.
-
-- Connect to wifi using networkmanager, https://wiki.debian.org/NetworkManager
-
-- First create the new connection:
-
-    `sudo nmtui`
-
-- if wifi SSID is hidden, must force active the connection:
-
-    `sudo nmcli connection up <network>`
-
-- with internet available, fetch and install updates:
-
-		`sudo apt update && sudo apt upgrade`
-
-// - setting up influx and logging sensor data
-
-- finally install influxdb, see appendix XXX for install instructions.
-
-- once influx is installed, open URL and follow in-browser setup and done.
 
 == Logging sensor data
 
 // - applying streaming algo to live sensors
-// - gyro didn't work out, had constant regions
-// - constant regions causing NaNs and had to add region check, ignored in streaming algo
 
-// EXTRA:
-// - hardware setup
-// - collecting sensor data
-// - power monitoring
-// - handling normalisation issues?
+With the hardware set up and ready, the stream-adapted DAMP implementation could
+start processing the sensor data.
+@lightsensor shows example code for collecting the shifting ambient light level
+from the TSL25911 sensor.
+The code is running continuously on the Raspberry Pi in order to log the data
+for later analysis.
+Please note that any error handling was omitted for brevity.
+
+Line 05 sets up an instance of the streaming DAMP algorithm, which can continuously
+calculate the Matrix Profile of the sensor data.
+Line 09 and 23 creates instances for the sensor driver and writable client for
+InfluxDB, respectively.
+The block spanning lines 26-35 then runs an infinite loop, with an iteration
+once per second, that reads the current light level and calculates the latest
+discord score from the Matrix Profile.
+Both values are then sent to InfluxDB for storage and analysis.
+
+#figure(```go
+// Initialise DAMP
+sequenceSize := 600 // in seconds (10 minutes)
+queueSize := sequenceSize * 3
+trainingSize := sequenceSize * 2
+sdamp := damp.NewStreamingDAMP(queueSize, sequenceSize, trainingSize)
+
+// Initialise sensor device driver provided by:
+// github.com/JenswBE/golang-tsl2591
+sensor := tsl2591.NewTSL2591(&tsl2591.Opts{
+	Gain:   tsl2591.GainLow,
+	Timing: tsl2591.IntegrationTime100MS,
+})
+
+// Initialise influxdb client using the official client:
+// github.com/influxdata/influxdb-client-go/v2
+host := "http://localhost:8086/"
+token := "supersecretAPItoken"
+organisation := "exampleorg"
+bucket := "examplebucket"
+client := influxdb2.NewClientWithOptions(
+	host, token, influxdb2.DefaultOptions(),
+)
+writer := client.WriteAPI(organisation, bucket)
+
+// Collect sensor data and Matrix Profile in a loop
+for {
+	value := sensor.Lux()
+	discord := sdamp.Push(value)
+	point := influxdb2.NewPointWithMeasurement("light").
+					 AddField("current", value).
+					 AddField("discord", discord).
+					 SetTime(time.Now())
+	writer.WritePoint(p)
+	time.Sleep(1 * time.Second)
+}
+```, caption: [Example in Go for collecting data from the TSL25911 ambient light sensor.],
+) <lightsensor>
+
 // - damp paper suggest learning threshold values for the scores
+#TODO("note that instead of sending data to influx, warning threshold could be set
+and cause alerts?")
+
+@bmesensor illustrates a similar example for collecting data from the BME280 device
+which has multiple built-in sensors.
+
+Lines 04-12 connects to the $I^2C$ bus the devices communicates over and disables
+all sensor filters.
+Lines 18-20 then reads the raw values from the three sensors and normalises them
+to more manageable units.
+Lines 23-25 calculates discord scores as usual, but using individual instances
+of the Streaming DAMP algorithm.
+The initialisation of these instances was similar to the setup done in @lightsensor,
+but was again omitted for the sake of brevity.
+All six values was then sent to InfluxDB.
+
+#figure(```go
+// Initialise new sensor driver provided by:
+// periph.io/x/devices/v3/bmxx80
+// and all it's associated libraries.
+host.Init()
+bus := i2creg.Open("")
+address := 0x76
+sensor = bmxx80.NewI2C(bus, address, &bmxx80.Opts{
+	Temperature: bmxx80.O1x,
+	Pressure:    bmxx80.O1x,
+	Humidity:    bmxx80.O1x,
+	Filter:      bmxx80.NoFilter,
+})
+
+var env physic.Env
+for {
+	// Collect new data readings from the various sensors
+	sensor.Sense(&env)
+	temp := env.Temperature.Celsius()
+	pres := float64(env.Pressure) / float64(physic.Pascal)
+	humi := float64(env.Humidity) / float64(physic.PercentRH)
+
+	// And calculate new discord scores
+	tempDiscord := sdampTemp.Push(temp)
+	presDiscord := sdampPres.Push(pres)
+	humiDiscord := sdampHumi.Push(humi)
+
+	point := influxdb2.NewPointWithMeasurement(...)
+	writer.WritePoint(p)
+	time.Sleep(1 * time.Second)
+}
+```, caption: [Example for collecting multiple values from the BME280 combination sensor.],
+) <bmesensor>
+
+#TODO("disregard the last 3 sensors as being poor examples and having constant regions")
 
 ////////////////////////////////////////////////////////////////////////////////
 // Results
 
 // The evaluation evaluates whether you have actually solved your problems.
 
-#pagebreak()
-= Results, ~10 pages <results>
+// #pagebreak()
+= Results <results>
 
-TODO
+#TODO("")
+
+// - gyro didn't work out, had constant regions
+// - constant regions causing NaNs and had to add region check, ignored in streaming algo
+
+== Validating algorithms
 
 #figure(
 	image("damp/1-bourkestreetmall-plots.png", width: 80%),
@@ -821,9 +934,62 @@ TODO
 	image("damp/2-machining-plots.png", width: 80%),
 	caption: [test],
 )
-== Analysis
 
-TODO
+cpu: `Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz`
+
+#figure(
+	table(
+		columns: (5),
+		align: left,
+		inset: 8pt,
+		table.header(
+			[*Dataset*], [*Size*], [*DAMP*], [*Streaming DAMP*], [*Plotting*],
+		),
+		[1-bourkestreetmall], [17490 points], [2.52 s ±0.1 s], [2.40 s ±0.1 s], [0.99 s ±0.01 s],
+		[2-machining], [44056 points], [5.70 s ±0.1 s], [3.44 s ±0.1 s], [4.82 s ±0.1 s],
+	),
+	caption: [Runtime performance of dataset analysis.],
+)
+
+#TODO("note that the plusminus values was just eyeballed from multiple runs?")
+
+
+=== Analysis
+
+#TODO("")
+
+== Live sensor performance
+
+#TODO("dropped spike near 09:40 on the 28th was a restart, should disappear after a week")
+
+#figure(
+	image("images/plot-light.png"),
+	caption: [Light level (top) and corresponding Matrix Profile (bottom) aggregated
+	in InfluxDB.],
+)
+
+#figure(
+	image("images/plot-temperature.png"),
+	caption: [Temperature (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
+)
+
+#figure(
+	image("images/plot-humidity.png"),
+	caption: [Humidity (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
+)
+
+#figure(
+	image("images/plot-pressure.png"),
+	caption: [Air pressure (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
+)
+
+=== Analysis
+
+#TODO("")
+
+== Conclusion of results
+
+#TODO("")
 
 - algo too heavy for raspberry pi (and 4 sensors)
 - surprised that the ring-buffer didn't affect performance
@@ -836,7 +1002,7 @@ TODO
 // #pagebreak()
 = Discussion <discussion>
 
-TODO
+#TODO("")
 
 hard to work with matlab code examples:
 - one-based indexing (instead of the more common zero indexing) causing many issues
@@ -862,13 +1028,13 @@ sensors:
 
 // The conclusions and future work describes the final outcome of how you solved your problems and what is left to do.
 
-== Conclusion
+== Final conclusion
 
-TODO
+#TODO("")
 
 == Future work
 
-TODO
+#TODO("")
 
 - research the effects of different seq. sizes.
 - need more applications in real scenarios.
@@ -888,17 +1054,33 @@ TODO
 ////////////////////////////////////////////////////////////////////////////////
 // Appendices
 
+#set heading(numbering: "A.1", supplement: [Appendix])
+#show heading: it => {
+	if it.level == 1 and it.numbering != none {
+		[#it.supplement #counter(heading).display(): ]
+	} else if it.numbering != none {
+		[#counter(heading).display() ]
+	}
+	it.body
+}
+#counter(heading).update(0)
+
 #pagebreak()
-= Appendix A <appendixrepo>
+= Project repository <app-repo>
 
-TODO: link to repo and any other instructions
+#TODO("link to repo and any other instructions")
 
 #pagebreak()
-= Appendix B <appendixb>
+= Source code for streaming DAMP <app-sdamp>
 
-TODO: source for algo implementation?
+#TODO("source for algo implementation?")
 
 #figure(
 	raw(read("damp/damp.go"), lang: "go", block: true),
 	caption: "testing",
 )
+
+#pagebreak()
+= Telegraf configuration <app-telegraf>
+
+#TODO("")

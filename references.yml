@@ -159,6 +159,30 @@ gillis:
   publisher: Github
   url: https://github.com/gammazero/deque
 
+raspberry:
+  type: Web
+  title: "Getting started - Raspberry Pi Documentation"
+  author:
+    - Raspberry Pi contributors
+  publisher: Raspberry Pi
+  url: https://www.raspberrypi.com/documentation/computers/getting-started.html
+
+influxdb:
+  type: Web
+  title: "Install InfluxDB OSS v2 | InfluxDB OSS v2 Documentation"
+  author:
+    - InfluxData Inc.
+  publisher: InfluxData, Inc.
+  url: https://docs.influxdata.com/influxdb/v2/install/
+
+telegraf:
+  type: Web
+  title: "Get started | Telegraf Documentation"
+  author:
+    - InfluxData Inc.
+  publisher: InfluxData, Inc.
+  url: https://docs.influxdata.com/telegraf/v1/get-started/
+  
 ################################################################################
 # Surveys
 
