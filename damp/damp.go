@@ -18,7 +18,6 @@ package damp
 import (
 	"fmt"
 	"math"
-	"slices"
 )
 
 // DAMP calculates the left approximate Matrix Profile found in the time series
@@ -26,7 +25,7 @@ import (
 // and test data.
 // The function returns a Matrix Profile vector, index and score of the highest
 // scoring discord found in the time series.
-func DAMP(t *Timeseries, m int, s int) (amp *Timeseries, index int, bsf float64, err error) {
+func DAMP(t *Timeseries, m int, s int) (amp *Timeseries, err error) {
 	// Validate the incoming data and ensure it's in good working condition
 	tlen := t.Len()
 	switch {
@@ -57,11 +56,11 @@ func DAMP(t *Timeseries, m int, s int) (amp *Timeseries, index int, bsf float64,
 			// break
 		}
 		query := t.Slice(i, i+m)
-		amp.Set(i, slices.Min(massv2(t.Slice(0, i), query)))
+		amp.Set(i, massv2(t.Slice(0, i), query))
 	}
-	bsf, _ = amp.Max()
+	bsf, _ := amp.Max()
 
-	tmpi, val := 0, 0.0
+	val := 0.0
 	// Continue examining the rest of the testing data, looking for discords
 	for i := s + 16*m; i < tlen-m+1; i++ {
 		// Stop searching if trying to move past the end of the time series
@@ -70,16 +69,13 @@ func DAMP(t *Timeseries, m int, s int) (amp *Timeseries, index int, bsf float64,
 			panic("TODO: testing if break is needed. IT WAS!!")
 			// break
 		}
-		val, tmpi, bsf = processBackward(t, m, i, bsf)
+		val, bsf = processBackward(t, m, i, bsf)
 		amp.Set(i, val)
-		if tmpi > -1 {
-			index = tmpi
-		}
 	}
 	return
 }
 
-func processBackward(t *Timeseries, m, i int, bsf float64) (float64, int, float64) {
+func processBackward(t *Timeseries, m, i int, bsf float64) (float64, float64) {
 	size := nextpower2(8 * m)
 	ampi := math.Inf(0) // Positive infinity
 	exp := 0
@@ -91,21 +87,21 @@ func processBackward(t *Timeseries, m, i int, bsf float64) (float64, int, float6
 		case start < 1:
 			// Case 1: the segment furthest from the current subsequence
 			// a.k.a. the start of the time series
-			ampi = slices.Min(massv2(t.Slice(0, i+1), query))
+			ampi = massv2(t.Slice(0, i+1), query)
 			if ampi > bsf {
 				bsf = ampi
 			}
-			return ampi, i, bsf
+			return ampi, bsf
 		case exp == 0:
 			// Case 2: the segment closest to the current subsequence
 			stop = i + 1
 		}
-		ampi = slices.Min(massv2(t.Slice(start, stop), query))
+		ampi = massv2(t.Slice(start, stop), query)
 		// Expands the search for the (possibly) next iteration
 		size *= 2
 		exp += 1
 	}
-	return ampi, -1, bsf
+	return ampi, bsf
 }
 
 // Calculates the next power of two
@@ -129,71 +125,3 @@ func nextpower2(v int) int {
 // 	}
 // 	return v&(v-1) == 0
 // }
-
-type StreamingDAMP struct {
-	data      *Timeseries
-	amp       *Timeseries
-	maxSize   int
-	trainSize int
-	seqSize   int
-	bsf       float64
-	index     int
-}
-
-func NewStreamingDAMP(maxSize, seqSize, trainSize int) (sd *StreamingDAMP, err error) {
-	switch {
-	case seqSize < 10 || seqSize > 1000:
-		err = fmt.Errorf("subsequence length must be in the range of 10-999")
-	case trainSize < seqSize:
-		err = fmt.Errorf("training size must be larger than subsequence length")
-	case trainSize/seqSize < 2:
-		err = fmt.Errorf("training size must be at least twice the size of the subsequence")
-	}
-	if err != nil {
-		return
-	}
-	sd = &StreamingDAMP{
-		data:      NewTimeSeries(maxSize, false),
-		amp:       NewTimeSeries(maxSize, false),
-		maxSize:   maxSize,
-		trainSize: trainSize,
-		seqSize:   seqSize,
-	}
-	return
-}
-
-func (a *StreamingDAMP) Push(v float64) float64 {
-	tlen := a.data.Len()
-	if tlen == a.maxSize {
-		a.data.Pop()
-		a.amp.Pop()
-		if a.index > -1 {
-			a.index--
-			if a.index < 0 {
-				// Drops the score once in-data value is popped from the buffer
-				a.bsf, a.index = a.amp.Max()
-			}
-		}
-	} else {
-		tlen++
-	}
-	a.data.Push(v)
-
-	if tlen < a.trainSize {
-		// Keep waiting for more training data
-		a.amp.Push(0)
-		return 0
-	}
-
-	val, index, bsf := processBackward(a.data, a.seqSize, tlen-a.seqSize, a.bsf)
-	if math.IsNaN(val) {
-		// This happens when there's constant regions in the data
-		val = 0
-	}
-	if bsf > a.bsf {
-		a.bsf = bsf
-		a.index = index
-	}
-	a.amp.Push(val)
-	return val
-}

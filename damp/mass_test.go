@@ -16,35 +16,25 @@
 package damp
 
 import (
-	"math"
+	"slices"
 	"testing"
 )
-
-func TestMASSV2ContainsNaNs(t *testing.T) {
-	data := []float64{91, 260, 621, 647, 984, 1353, 2535, 3027, 2201, 2073}
-	query := []float64{16, 101, 346}
-	got := massv2(data, query)
-	for _, v := range got {
-		if math.IsNaN(v) {
-			t.Fatalf("slice contains NaNs")
-		}
-	}
-}
 
 func TestMASSV2IsOK(t *testing.T) {
 	data := []float64{91, 260, 621, 647, 984, 1353, 2535, 3027, 2201, 2073}
 	query := []float64{16, 101, 346}
-	want := []float64{
+	results := []float64{
 		0.11561068885697222, 1.2468697081392321, 0.3224088232756958, 0.42634912677251185,
 		0.03625190113738389, 0.8680563733942075, 3.1310107439040085, 3.270034910001683,
 	}
+	want := slices.Min(results)
 	got := massv2(data, query)
-	if len(got) != len(want) {
-		t.Fatalf("mismatched sizes")
+	if got != want {
+		t.Fatalf("got %f, expected %f", got, want)
 	}
-	for i := range want {
-		if got[i] != want[i] {
-			t.Fatalf("got %f, expected %f", got[i], want[i])
-		}
-	}
+	// for i := range want {
+	// 	if got[i] != want[i] {
+	// 		t.Fatalf("got %f, expected %f", got[i], want[i])
+	// 	}
+	// }
 }

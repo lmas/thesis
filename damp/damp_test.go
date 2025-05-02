@@ -67,19 +67,9 @@ func TestDAMPWithConstantRegions(t *testing.T) {
 	if !containsConstantRegions(ts, seq) {
 		t.Fatal("Expected data to have constant regions")
 	}
-	_, _, _, err := DAMP(ts, seq, seq*4)
+	_, err := DAMP(ts, seq, seq*4)
 	if !strings.Contains(err.Error(), "constant regions") {
 		t.Fatalf("expected DAMP to fail on constant regions, got err: %v", err)
-	}
-	sd, err := NewStreamingDAMP(len(data), seq, seq*4)
-	if err != nil {
-		t.Fatal(err)
-	}
-	for i, d := range data {
-		v := sd.Push(d)
-		if i >= sd.trainSize-1 && v != 0 {
-			t.Fatalf("expected zero from constant regions, got %v", v)
-		}
 	}
 }
 
@@ -109,7 +99,7 @@ func TestDAMPWithDatasets(t *testing.T) {
 
 		// Run original DAMP
 		start := time.Now()
-		damp, _, _, err := DAMP(ts, s.seqSize, s.trainSize)
+		damp, err := DAMP(ts, s.seqSize, s.trainSize)
 		stop := time.Now()
 		if err != nil {
 			t.Fatalf("expected no errors, got: %s", err)
@@ -121,8 +111,7 @@ func TestDAMPWithDatasets(t *testing.T) {
 		t.Log("original took:", stop.Sub(start))
 
 		// Run streaming DAMP
-		sdamp := NewTimeSeries(s.samples, false)
-		sd, err := NewStreamingDAMP(s.maxSize, s.seqSize, s.trainSize)
+		sd, err := NewStreamDAMP(s.maxSize, s.seqSize, s.trainSize, true)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -139,8 +128,7 @@ func TestDAMPWithDatasets(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			val := sd.Push(v)
-			sdamp.Push(val)
+			sd.Push(v)
 		}
 		stop = time.Now()
 		f.Close()
@@ -159,7 +147,7 @@ func TestDAMPWithDatasets(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		psdamp, err := PlotFromTimeseries(sdamp, "Streaming DAMP")
+		psdamp, err := PlotFromTimeseries(sd.amp, fmt.Sprintf("Stream DAMP, normalised=%v", sd.norm))
 		if err != nil {
 			t.Fatal(err)
 		}

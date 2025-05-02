@@ -5,6 +5,7 @@ go 1.24.2
 require (
 	github.com/BurntSushi/toml v1.5.0
 	github.com/JenswBE/golang-tsl2591 v0.0.0-20230415120237-14a517a709e8
+	github.com/fale/sit v0.0.0-20210120172342-025ffdac3d0c
 	github.com/gammazero/deque v1.0.0
 	github.com/influxdata/influxdb-client-go/v2 v2.14.0
 	github.com/mjibson/go-dsp v0.0.0-20180508042940-11479a337f12

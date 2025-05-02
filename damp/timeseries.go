@@ -24,6 +24,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/fale/sit"
 	"github.com/gammazero/deque"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/font"
@@ -60,14 +61,19 @@ func ReadTimeSeries(r io.Reader, max int) (t *Timeseries, err error) {
 	var count int
 	for s.Scan() {
 		line := strings.TrimSpace(s.Text())
+		if len(line) < 1 {
+			continue
+		}
 		f, err = strconv.ParseFloat(line, 64)
 		if err != nil {
 			return
 		}
 		t.Push(f)
-		count++
-		if count >= max {
-			break
+		if max > 0 {
+			count++
+			if count >= max {
+				break
+			}
 		}
 	}
 	err = s.Err()
@@ -77,7 +83,12 @@ func ReadTimeSeries(r io.Reader, max int) (t *Timeseries, err error) {
 func PlotFromTimeseries(t *Timeseries, title string) (p *plot.Plot, err error) {
 	p = plot.New()
 	p.Title.Text = title
-	p.HideY()
+	p.Y.Tick.Marker = sit.Ticker{}
+	p.Y.Min = sit.Min(p.Y.Min, p.Y.Max)
+	p.Y.Max = sit.Max(p.Y.Min, p.Y.Max)
+	p.X.Tick.Marker = sit.Ticker{}
+	p.X.Min = sit.Min(p.X.Min, p.X.Max)
+	p.X.Max = sit.Max(p.X.Min, p.X.Max)
 	p.Add(plotter.NewGrid())
 	line, err := plotter.NewLine(t)
 	if err != nil {

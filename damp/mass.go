@@ -25,7 +25,7 @@ import (
 // massv2 runs "Mueen's Algorithm for Similarity Search, v2" on a subsequence of
 // a time series X and returns an array with the distance profiles for a query Y.
 // Source: https://www.cs.unm.edu/~mueen/FastestSimilaritySearch.html
-func massv2(x, y []float64) (dist []float64) {
+func massv2(x, y []float64) float64 {
 	m, n := len(y), len(x)
 	meany, meanx := mean(y), movmean(x, m-1, 0)
 	sigmay, sigmax := std(y), movstd(x, m-1, 0)
@@ -38,16 +38,23 @@ func massv2(x, y []float64) (dist []float64) {
 		ry = append(ry, 0.0)
 	}
 
-	fx := fft.FFT(toComplex(x))
-	fy := fft.FFT(toComplex(ry))
-	fz := timesComplex(fx, fy)
-	z := fromComplex(fft.IFFT(fz))
+	// Convolve x with the reversed and padded y array
+	fz := fft.Convolve(toComplex(x), toComplex(ry))
+	z := fromComplex(fz)
 
-	dist = timesScalar(2, minusScalar(float64(m), rdivide(
+	// Calculate the z-normalised distance
+	dist := timesScalar(2, minusScalar(float64(m), rdivide(
 		minus(z[m-1:n], timesScalar(float64(m)*meany, meanx[m-1:n])),
 		timesScalar(sigmay, sigmax[m-1:n]),
 	)))
-	return sqrt(dist)
+	distSqrt := sqrt(dist)
+
+	val := slices.Min(distSqrt)
+	if math.IsNaN(val) {
+		// This happens when there's constant regions in the data
+		return 0
+	}
+	return val
 }
 
 // TODO: one day these funcs will need their own tests
