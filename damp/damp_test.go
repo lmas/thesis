@@ -96,13 +96,13 @@ type testSample struct {
 
 func TestDAMPWithDatasets(t *testing.T) {
 	samples := []testSample{
-		{"1-bourkestreetmall", 17490, 512, 24, 24 * 7, 0.00000000001},
-		{"2-machining", 44056, 8192, 16, 44056 / 9, 0.000001},
+		{"1-bourkestreetmall", 17490, 17490, 24, 24 * 7, 0.00000000001},
+		{"2-machining", 44056, 44056, 16, 44056 / 9, 0.000001},
 	}
 	for _, s := range samples {
 		// Open the dataset
 		t.Log("running sample:", s.name)
-		ts, err := readTS(filepath.Join(".", samplesDir, s.name+".in"))
+		ts, err := readTS(filepath.Join(".", samplesDir, s.name+".in"), s.maxSize)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -175,13 +175,14 @@ func TestDAMPWithDatasets(t *testing.T) {
 		t.Log("plotting took:", stop.Sub(start))
 	}
 }
-func readTS(path string) (ts *Timeseries, err error) {
+
+func readTS(path string, size int) (ts *Timeseries, err error) {
 	r, err := os.Open(path)
 	if err != nil {
 		err = fmt.Errorf("error opening input: %s\n", err)
 		return
 	}
-	ts, err = ReadTimeSeries(r)
+	ts, err = ReadTimeSeries(r, size)
 	if err != nil {
 		err = fmt.Errorf("error reading input: %s\n", err)
 	}

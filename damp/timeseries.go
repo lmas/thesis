@@ -53,10 +53,11 @@ func NewTimeSeries(size int, fill bool) *Timeseries {
 }
 
 // ReadTimeSeries reads values from a Reader r and creates a new TimeSeries.
-func ReadTimeSeries(r io.Reader) (t *Timeseries, err error) {
+func ReadTimeSeries(r io.Reader, max int) (t *Timeseries, err error) {
 	t = &Timeseries{}
 	s := bufio.NewScanner(r)
 	var f float64
+	var count int
 	for s.Scan() {
 		line := strings.TrimSpace(s.Text())
 		f, err = strconv.ParseFloat(line, 64)
@@ -64,6 +65,10 @@ func ReadTimeSeries(r io.Reader) (t *Timeseries, err error) {
 			return
 		}
 		t.Push(f)
+		count++
+		if count >= max {
+			break
+		}
 	}
 	err = s.Err()
 	return
