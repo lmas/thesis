@@ -41,6 +41,17 @@
 #set quote(block: true, quotes: true)
 #show quote: set align(center)
 
+// Adds zero-padded line numbers to code blocks
+#show raw.line: it => {
+	let no = str(it.number)
+	let pad = str(it.count).len() - no.len()
+	text(fill: gray)[#{
+		pad * "0" + no
+	}]
+	h(0.5em)
+	it.body
+}
+
 #pagebreak(to: "even")
 #align(center, [
 	[This page intentionally left blank]
@@ -400,25 +411,28 @@ and summarised by _Lai et al._ @lai:
 	It's considered a harder problem to identify this kind of anomaly.
 
 - Collective anomalies:
-	This is a subsequence of data points, which individually might not stand out
-	but as a group they could differentiate themselves from the rest of the data,
-	globally.
+	A subsequence of data points which individually might not stand out
+	but as a group they could differentiate themselves from the rest of the data
+	series.
+
+@anomalies illustrates these anomalies.
+
+#figure(
+	image("images/anomalies-example.png", width: 100%),
+	caption: [
+		Examples of anomalies in time series data.
+	]
+) <anomalies>
+
 
 // - define discord anomalies
 
-_Lai_ illustrated these anomalies nicely in @anomalies, shown below. 
+#TODO("This and the following paragraphs needs to be rewritten as point anomalies are also sought after")
+
 To save time, this thesis will be limited to a group of collective anomalies
 referred to as *discords*, which _Yeh et al._ @yeh defines as "the subsequence
 that has the maximum distance to its nearest neighbor.",
 which the following section will be expanding upon.
-
-#figure(
-	image("images/standard_anomalies.png", width: 100%),
-	caption: [
-		Examples of anomalies in time series data @lai. \
-		Left = point, middle = contextual, right = collective.
-	]
-) <anomalies>
 
 
 == Detecting discord anomalies
@@ -469,7 +483,7 @@ processing manner.
 
 #TODO("time and space complexities")
 
-@machining shows an example profile based on sensor data from a milling machine.
+@matlab shows an example profile based on sensor data from a milling machine.
 In this example it's harder to observe, by eyes only, the beginning of the
 anomalous pattern.
 More importantly, detection needs to be fast enough to stop the milling process
@@ -483,7 +497,7 @@ sooner and avoid damaging the equipment.
 		After 2.5 minutes the machine starts cutting into other parts of the equipment,
 		as indicated by the tallest discord peak in the profile (bottom).
 	]
-) <machining>
+) <matlab>
 
 #TODO("mention is based first on paper algo, then matlab example and lastly own code???")"
 
@@ -500,17 +514,6 @@ MASS function to calculate a first set of distance profiles.
 _Zhong et al._  @mueen created this function and it's shown later in @massv2.
 
 #TODO("explain that first loop is the training phase")
-
-// Adds zero-padded line numbers to code blocks
-#show raw.line: it => {
-	let no = str(it.number)
-	let pad = str(it.count).len() - no.len()
-	text(fill: gray)[#{
-		pad * "0" + no
-	}]
-	h(0.5em)
-	it.body
-}
 
 #TODO("SIMPLIFY to english pseudo code")
 
@@ -624,7 +627,7 @@ For the sake of brevity, the MASS function is not examined any further.
 
 _Lu et al._ have provided an example of their DAMP algorithm in the form of a
 Matlab file, as a complement to their paper @lu.
-Running that example produced the data used for creating the plot in @machining,
+Running that example produced the data used for creating the plot in @matlab,
 as shown previously.
 Both the raw in-data and the output Matrix Profile data was then saved as a
 reference dataset, used for verifying future implementations.
@@ -1063,6 +1066,24 @@ optimisations:
 = Project repository <app-repo>
 
 #TODO("link to repo and any other instructions")
+
+- Generate @anomalies using:
+
+	go run experiments/generate_anomalies.go \
+	./experiments/plot_anomalies.sh
+
+- Generate @mpexample using:
+
+	#TODO("")
+
+- Generate @matlab using:
+
+	./experiments/plot_matlab.sh
+	
+- Generate "TODO: PLOTS IN RESULTS" using:
+
+		go run experiments/generate_samples.go \
+		./experiments/plot_samples.sh
 
 #pagebreak()
 = Source code for streaming DAMP <app-sdamp>

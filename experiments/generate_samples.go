@@ -13,6 +13,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+// ABOUT:
+// An experiment to compare both implementations of the DAMP algorithm.
+// Plain DAMP returns output that matches with the Matlab code provided
+// alongside with the original paper.
+
 package main
 
 import (
@@ -22,11 +27,6 @@ import (
 
 	"code.larus.se/lmas/thesis/damp"
 )
-
-// ABOUT:
-// An experiment to compare both implementations of the DAMP algorithm.
-// Plain DAMP returns output that matches with the Matlab code provided
-// alongside with the original paper.
 
 type testSample struct {
 	name      string
