@@ -40,7 +40,7 @@ cover:
 
 # Run benchmark suites and save both CPU and MEM usage stats
 bench:
-    go test -test.benchmem -bench=. -cpuprofile "{{CPU}}" -memprofile "{{MEM}}" "./damp"
+    go test -test.benchmem -bench=. -cpuprofile "{{CPU}}" -memprofile "{{MEM}}" -count 10 "./damp"
 
 cpuprof:
     go tool pprof -lines -show "damp" -http=:8080 "{{CPU}}"
