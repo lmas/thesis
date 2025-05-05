@@ -73,7 +73,7 @@ func ReadTimeseries(r io.Reader, max int) (t *Timeseries, err error) {
 }
 
 func ReadTimeseriesFromFile(path string, size int) (ts *Timeseries, err error) {
-	r, err := os.Open(path)
+	r, err := os.Open(path) // #nosec G304
 	if err != nil {
 		err = fmt.Errorf("error opening input: %s\n", err)
 		return
@@ -88,7 +88,9 @@ func ReadTimeseriesFromFile(path string, size int) (ts *Timeseries, err error) {
 
 func (t *Timeseries) Write(w io.Writer) error {
 	for i := range t.Len() {
-		w.Write([]byte(fmt.Sprintf("%f\n", t.Get(i))))
+		if _, err := w.Write([]byte(fmt.Sprintf("%f\n", t.Get(i)))); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -139,6 +141,9 @@ func (t Timeseries) XY(i int) (x, y float64) {
 	return float64(i), t.data.At(i)
 }
 
+// Finds the indices for the k top values in the time series.
+// Trades CPU time for less memory usage (rather than simply sorting a full copy
+// of the data array)
 func (t Timeseries) TopIndices(k int) []int {
 	if k > t.Len() {
 		k = t.Len()
