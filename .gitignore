@@ -1,7 +1,10 @@
 .metadata.toml
 *.pdf
+
 *.toml
 *.damp
 *.sdamp
 *.svg
+*.test
+*.prof
 mnt/*
