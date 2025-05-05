@@ -105,17 +105,6 @@ func timesScalar(a float64, b []float64) (r []float64) {
 	return
 }
 
-func timesComplex(a, b []complex128) (r []complex128) {
-	if len(a) != len(b) {
-		panic("mismatched sizes of input slices")
-	}
-	r = make([]complex128, len(a))
-	for i := range a {
-		r[i] = a[i] * b[i]
-	}
-	return
-}
-
 // Inspired by: https://stackoverflow.com/a/31022598
 func toComplex(a []float64) (b []complex128) {
 	b = make([]complex128, len(a))
