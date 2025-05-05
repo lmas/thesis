@@ -21,8 +21,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"time"
 
 	"code.larus.se/lmas/thesis/damp"
@@ -38,13 +40,15 @@ type testSample struct {
 var plotSamples = []testSample{
 	{"damp/samples/1-bourkestreetmall", 17490, 24, 24 * 7},
 	{"damp/samples/2-machining", 44056, 16, 44056 / 9},
+	{"damp/samples/knutstorp-tonga", 1024, 16, 512},
 }
 
 func main() {
+	var times []timing
 	for _, s := range plotSamples {
 		// Open the dataset
 		log.Println("running sample:", s.name)
-		tsData, err := damp.ReadTimeseriesFromFile(s.name+".in", s.maxSize)
+		tsData, err := damp.ReadTimeseriesFromFile(s.name+".in", 0)
 		if err != nil {
 			panic(err)
 		}
@@ -56,7 +60,8 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		log.Println("original took:", stop.Sub(start))
+		dur1 := stop.Sub(start)
+		log.Println("original took:", dur1)
 		if err := writeTS(s.name+".1.damp", tsDamp); err != nil {
 			panic(err)
 		}
@@ -73,7 +78,8 @@ func main() {
 			tsSDamp1.Push(discord)
 		}
 		stop = time.Now()
-		log.Print("streaming (normalised=true) took:", stop.Sub(start))
+		dur2 := stop.Sub(start)
+		log.Print("streaming (normalised=true) took:", dur2)
 		if err := writeTS(s.name+".2.damp", tsSDamp1); err != nil {
 			panic(err)
 		}
@@ -90,10 +96,18 @@ func main() {
 			tsSDamp2.Push(discord)
 		}
 		stop = time.Now()
-		log.Print("streaming (normalised=false) took:", stop.Sub(start))
+		dur3 := stop.Sub(start)
+		log.Print("streaming (normalised=false) took:", dur3)
 		if err := writeTS(s.name+".3.damp", tsSDamp2); err != nil {
 			panic(err)
 		}
+		times = append(times, timing{
+			dataset: s.name,
+			dur:     []time.Duration{dur1, dur2, dur3},
+		})
+	}
+	if err := writeTimings("tmp/timings.in", times); err != nil {
+		panic(err)
 	}
 }
 
@@ -105,6 +119,29 @@ func writeTS(path string, ts *damp.Timeseries) error {
 	defer f.Close()
 	if err := ts.Write(f); err != nil {
 		return err
+	}
+	return f.Sync()
+}
+
+type timing struct {
+	dataset string
+	dur     []time.Duration
+}
+
+func writeTimings(path string, times []timing) error {
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	for _, t := range times {
+		_, err := fmt.Fprintf(f, "%s\t %f\t %f\t %f\n",
+			filepath.Base(t.dataset), t.dur[0].Seconds(),
+			t.dur[1].Seconds(), t.dur[2].Seconds(),
+		)
+		if err != nil {
+			return err
+		}
 	}
 	return f.Sync()
 }

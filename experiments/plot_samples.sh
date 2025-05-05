@@ -20,35 +20,43 @@
 
 set -eu
 
-# The list of data samples to plot
-samples=$(cat << EOF
-damp/samples/1-bourkestreetmall
-damp/samples/2-machining
-EOF
-)
-
-################################################################################
-
-plot=$(cat << EOF
-set key off;
-set style data line;
-set linetype 1 lc rgb "#0072bd";
-set ytics format "";
-set grid;
-
-set term png size 1280, 720 font "Default,14";
-set output '%s.png';
-set multiplot layout 4,1;
-set title "Data"; plot "%s.in";
-set title "DAMP"; plot "%s.1.damp";
-set title "Stream DAMP (normalised=true)"; plot "%s.2.damp";
-set title "Stream DAMP (normalised=false)"; plot "%s.3.damp";
-EOF
-)
-
-echo "$samples" | while read sample; do
+while read sample; do
   name=$(basename "$sample")
   echo "Plotting $name..."
-  cmd=$(printf "$plot\n" "images/$name" "$sample" "$sample" "$sample" "$sample")
-  gnuplot -e "$cmd"
-done
+  gnuplot <<- EOF
+  set key off;
+  set style data line;
+  set linetype 1 lc rgb "#0072bd";
+  set grid;
+  set term png size 720, 1280 font "Default,14";
+  set output "images/analysis-$name.png";
+  set multiplot layout 4,1;
+  set xlabel "Time (T)"
+  set title "Data"; plot "$sample.in";
+  set ylabel "Discord score (arb. unit)"
+  set title "DAMP"; plot "$sample.1.damp";
+  set title "Stream DAMP (normalised=true)"; plot "$sample.2.damp";
+  set title "Stream DAMP (normalised=false)"; plot "$sample.3.damp";
+EOF
+done << EOF
+damp/samples/1-bourkestreetmall
+damp/samples/2-machining
+damp/samples/knutstorp-tonga
+tmp/data/humidity
+tmp/data/pressure
+tmp/data/temperature
+EOF
+
+gnuplot <<- EOF
+set style data histogram;
+set style fill solid;
+set key left reverse Left;
+set ylabel "Time (s)";
+set term png size 1280,720 font "Default,14";
+set output 'images/analysis-timings.png';
+plot "tmp/timings.in" using 2:xtic(1) title "DAMP", \
+"tmp/timings.in" using 3 title "Stream DAMP (normalised=true)", \
+"tmp/timings.in" using 4 title "Stream DAMP (normalised=false)";
+EOF
+
+# TODO: note N samples used for each dataset!

@@ -46,7 +46,7 @@ cpuprof:
     go tool pprof -lines -show "damp" -http=:8080 "{{CPU}}"
 
 memprof:
-    go tool pprof -lines -show "damp" -http=:8080 "{{MEM}}"
+    go tool pprof -lines -show "damp" -http=:8081 "{{MEM}}"
     
 
 ################################################################################

@@ -18,30 +18,28 @@
 # ABOUT:
 # Generates example plots for the different types of anomalies in time series data.
 
-plot=$(cat << EOF
-set key off;
-set style data line;
-set linetype 1 linecolor rgb "#0072bd" linewidth 3;
-set xtics 0,20,100;
-set ytics -1.5,1.5 format "";
-set grid;
+gnuplot <<- EOF
+set style data line
+set linetype 1 linecolor rgb "#0072bd" linewidth 3
+set xlabel "Time (T)"
+set xtics 0,20,100
+set ylabel "y = sin(T)"
+set yrange [-1.0:1.5]
+set grid
+set key off
+set term png size 1280, 360 font "Default,14"
+set output "images/example-anomalies.png"
+set multiplot layout 1,3
 
-set term png size 1280, 360 font "Default,14";
-set output "images/anomalies-example.png";
-set multiplot layout 1,3;
+set object 1 circle at 65,1.25 size 2 fillcolor rgb "#ff7f7f" fillstyle solid
+set title "Point Anomaly"; plot "tmp/point.sine"
+unset object 1
 
-set object 1 circle at 65,1.25 size 2 fillcolor rgb "#ff7f7f" fillstyle solid;
-set title "Point Anomaly"; plot "tmp/point.sine";
-unset object 1;
+set object 2 circle at 63,0.7 size 2 fillcolor rgb "#ff7f7f" fillstyle solid
+set title "Context Anomaly"; plot "tmp/context.sine"
+unset object 2
 
-set object 2 circle at 63,0.7 size 2 fillcolor rgb "#ff7f7f" fillstyle solid;
-set title "Context Anomaly"; plot "tmp/context.sine";
-unset object 2;
-
-set object 3 circle at 65,0 size 7 fillcolor rgb "#ff7f7f" fillstyle solid;
-set title "Collective Anomaly"; plot "tmp/collective.sine";
-unset object 3;
+set object 3 circle at 65,0 size 7 fillcolor rgb "#ff7f7f" fillstyle solid
+set title "Collective Anomaly"; plot "tmp/collective.sine"
+unset object 3
 EOF
-)
-
-gnuplot -e "$plot"
