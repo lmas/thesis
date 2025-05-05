@@ -2,7 +2,6 @@
 *.pdf
 
 *.toml
-*.damp
 *.png
 *.test
 *.prof

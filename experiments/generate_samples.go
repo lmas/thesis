@@ -62,7 +62,8 @@ func main() {
 		}
 		dur1 := stop.Sub(start)
 		log.Println("original took:", dur1)
-		if err := writeTS(s.name+".1.damp", tsDamp); err != nil {
+		err = writeTS("tmp/"+filepath.Base(s.name)+".1.damp", tsDamp)
+		if err != nil {
 			panic(err)
 		}
 
@@ -80,7 +81,8 @@ func main() {
 		stop = time.Now()
 		dur2 := stop.Sub(start)
 		log.Print("streaming (normalised=true) took:", dur2)
-		if err := writeTS(s.name+".2.damp", tsSDamp1); err != nil {
+		err = writeTS("tmp/"+filepath.Base(s.name)+".2.damp", tsSDamp1)
+		if err != nil {
 			panic(err)
 		}
 
@@ -98,7 +100,8 @@ func main() {
 		stop = time.Now()
 		dur3 := stop.Sub(start)
 		log.Print("streaming (normalised=false) took:", dur3)
-		if err := writeTS(s.name+".3.damp", tsSDamp2); err != nil {
+		err = writeTS("tmp/"+filepath.Base(s.name)+".3.damp", tsSDamp2)
+		if err != nil {
 			panic(err)
 		}
 		d := time.Duration(tsData.Len())
@@ -139,8 +142,8 @@ func writeTimings(path string, times []timing) error {
 	defer f.Close()
 	for _, t := range times {
 		_, err := fmt.Fprintf(f, "%s\t %f\t %f\t %f\n",
-			filepath.Base(t.dataset), t.dur[0].Seconds(),
-			t.dur[1].Seconds(), t.dur[2].Seconds(),
+			filepath.Base(t.dataset), t.dur[0].Seconds()*1000,
+			t.dur[1].Seconds()*1000, t.dur[2].Seconds()*1000,
 		)
 		if err != nil {
 			return err
