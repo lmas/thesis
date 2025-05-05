@@ -494,8 +494,8 @@ sooner and avoid damaging the equipment.
 	caption: [
 		Readings @lu from a vibration sensor attached to a milling machine (above)
 		during 3 minutes. 
-		After 2.5 minutes the machine starts cutting into other parts of the equipment,
-		as indicated by the tallest discord peak in the profile (bottom).
+		Near the end the machine starts cutting into other parts of the equipment
+		and generated a tall discord peak in the profile (bottom).
 	]
 ) <matlab>
 
@@ -666,15 +666,36 @@ _Lan et al._ suggests @lan, as a basic strategy, to use a cache of any sort and
 limit the amount of data processed.
 
 _Gillis_ offers a simple to use double-ended queue in Go @gillis and it can
-operate as an efficient ring-buffer.
-@deque illustrates the queue and it's worth noting that it operates in $O(1)$ time
+operate as an efficient first-in, first-out (FIFO) queue, as illustrated in @deque.
+It's worth noting that it operates in $O(1)$ time
 when pushing or popping from either end.
 The internal buffer is always a power of two too, so this queue fits in nicely
 with the use of the previously mentioned MASS function and its operation requirements.
 
+// pkg source: https://typst.app/universe/package/fletcher
+#import "@preview/fletcher:0.5.7" as fletcher: diagram, node, edge
 #figure(
-	image("images/deque.png"),
-	caption: [Double-ended queue by _Gillis_ @gillis, operating as a ring-buffer.],
+	diagram(
+	  // debug: 1,
+	  node-stroke: 1pt,
+	  node((-0.8,0), " ", shape: rect),
+	  node((-0.4,0), " ", shape: rect),
+	  node((0,0), "0", shape: rect),
+	  node((0.4,0), "1", shape: rect),
+	  node((0.8,0), "2", shape: rect),
+	  node((1.2,0), "3", shape: rect),
+	  node((1.6,0), "4", shape: rect),
+	  node((2.0,0), "5", shape: rect),
+	  node((2.4,0), " ", shape: rect),
+	  node((2.8,0), " ", shape: rect),
+	  edge((0,1), (0,0), "-|>", [Front]),
+	  edge((2,1), (2,0), "-|>", [Back]),
+	  edge((-2.8,0), (-0.8,0), "<|-", [Pop Front]),
+	  edge((2.8,0), (4.8,0), "<|-", [Push Back]),
+	  edge((0,-0.4), (2,-0.4), "|-|", [Length]),
+	  edge((-0.8, -1), (2.8, -1), "|-|", [Capacity]),
+	),
+	caption: [Double-ended queue by _Gillis_, operating as a FIFO queue.],
 ) <deque>
 
 By using this new data structure in place of the previously used data arrays and

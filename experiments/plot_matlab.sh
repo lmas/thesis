@@ -31,6 +31,7 @@ set term png size 1280, 720 font "Default,14";
 set output 'images/matlab-example.png';
 set multiplot layout 2,1;
 set title "Data"; plot "damp/samples/2-machining.in";
+set arrow from 32000,2.4 to 36000,2.75 linewidth 2;
 set title "DAMP"; plot "damp/samples/2-machining.out";
 EOF
 )
