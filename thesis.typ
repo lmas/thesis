@@ -89,9 +89,10 @@
 // Theory
 / Anomaly: An unexpected, non-conforming point or pattern in data.
 / Outlier: Common synonym for _anomaly_ in the context of data analysis.
-/ Discord: #TODO("")
+/ Discord: An anomalous subsequence with the largest distance to neighbours.
+/ Matrix Profile: A vector of calculated Euclidean distances between subsequence parts of a time series.
+/ DAMP: Discord Aware Matrix Profile, an efficient algorithm for calculating a Matrix Profile.
 // Method
-/ Ring-buffer: A fixed-size buffer where both ends acts as if they were connected.
 / $I^2C$: Inter-integrated circuit, a simple, serial communication bus.
 
 #pagebreak()
@@ -438,13 +439,17 @@ represents the minimal Euclidean distances between each subsequence, of size _m_
 in the analysed time series _ts_.
 Then it's just a matter of finding the largest distance for each subsequence,
 in order to discover any possible discord anomaly.
-A larger distance means that the subsequence is an unusual pattern in the data
-and that there is a lower probability of a duplicate.
-The paper contains a more in-depth examination of the details and definitions,
-which is not repeated here for brevity.
+A larger distance, _the discord score_, means that the subsequence is an unusual
+pattern in the data and that there is a lower probability of a duplicate.
+_Yeh's_ paper contains more in-depth definitions and details of the original
+algorithm which is not repeated here for brevity, but later sections will provide
+practical examinations of an improved algorithm.
 
-@examplepoint demonstrates what the Matrix Profile looks like after having
-analysed a time series.
+Let's instead take a look at what kind of results the Matrix Profile can produce.
+@examplepoint demonstrates the result after having run the algorithm on a time
+series.
+// @examplepoint demonstrates what the Matrix Profile looks like after having
+// analysed a time series.
 The data used in this example is the atmospheric pressure recorded by IRF Kiruna
 @irf, during January the 15th in 2022, and it contains two noticeable pressure
 drops after the 1000'th and 1500'th marks.
@@ -483,10 +488,10 @@ Also known as DAMP, this is a new, alternative implementation of the Matrix
 Profile by _Lu et al._ @lu, with a focus on discovering discord anomalies in
 large scales of either batched or streaming data.
 _Lu_ achieves this higher performance by calculating an approximate Matrix Profile
-from each subsequence's distance to all previous ones only, in a backwards
+from each subsequence's distance to all _previous ones only_, in a backwards
 processing manner.
 
-#TODO("time and space complexities")
+#TODO("time and space complexities? but their claims is a bit fluffy")
 
 @matlab shows an example profile based on sensor data from a milling machine.
 In this example it's harder to observe, by eyes only, the beginning of the
@@ -506,43 +511,48 @@ sooner and avoid damaging the equipment.
 
 #TODO("mention is based first on paper algo, then matlab example and lastly own code???")"
 
-#TODO("probably have to explain why splitting data into training/testing")
+@dampalgo shows pseudocode for the DAMP algorithm.
+The function calculates the Matrix Profile of the analysed time series _ts_ and
+is temporarily kept in the _amp_ array, which the function returns to the user
+at the end.
 
-@dampalgo shows pseudo code for the DAMP algorithm.
-The function takes as input a time series _ts_, a subsequence length _m_ and
-a split index _s_ which marks the split between training and testing data in the
-time series. 
-The empty array _amp_ created on line 02 contains the approximate Matrix Profile
-and _bsf_ tracks the highest distances during the process.
-The first loop starting on line 06 finds an initial value for _bsf_, by using the
-MASS function to calculate a first set of distance profiles.
+The first loop starting on line 10 finds the initially highest discord score _best_
+for the first subsequence, after the split point between the "training sequence"
+in the beginning of _ts_ and it's end.
+The training sequence acts as a warm up for the algorithm, so it doesn't produce
+erroneous scores that might skew the following scores.
+The MASS function finds the scores by calculating the Euclidean distances between
+the subsequences.
 _Zhong et al._  @mueen created this function and it's shown later in @massv2.
 
-#TODO("explain that first loop is the training phase")
-
-#TODO("SIMPLIFY to english pseudo code")
-
 #figure(```go
-func DAMP(ts []float, m int, s int):
-	amp = make([]float, length(ts))
-	bsf = -inf
+ts = time series array
+m = subsequence length
+s = split index between training and testing data
 
-	// Find highest distance profile from the first chunk of data
-	for i = from (s - 1) to (s + 16*m):
-		query = ts[i : i + m]
-		amp[i] = min(massv2(ts[ : i], query))
-	bsf = max(amp)
+function DAMP (ts, m, s):
+	amp = new array (of same size as ts, but filled with zeroes)
+	i = temporary index
 
-	// Continue looking for higher distance profiles in the following data
-	for i = from (s + 16*m) to (length(ts) - m + 1):
-		amp[i], bsf = processBackward(ts, m, i, bsf)
+	// Quickly find the discord score for the first subsequence
+	for i = loop from s-1 to s+m:
+		query = subsequence of ts[from i, to i+m]
+		amp[i] = minimum score from MASSv2(ts, query)
+	best = maximum score in amp
 
+	// Find scores for all following subsequences until the end of ts
+	for i = loop from s+m to length(ts)-m+1:
+		amp[i], best = processBackward(ts, m, i, best)
+
+	// Output full matrix profile of ts
 	return amp
-```, caption: [The DAMP algorithm.]) <dampalgo>
+	```, caption: [The DAMP algorithm.],
+) <dampalgo>
+
 
 // - helper func backwardProcess
 
-The second loop on line 12 then iterates through all subsequences in the time
+The second loop on line 16 then iterates through all subsequences in the time
 series and calculates their distance profiles using the _processBackward_ function,
 shown in @backproc.
 This function finds the highest distance profiles by working backwards in an
