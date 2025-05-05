@@ -488,16 +488,14 @@ func DAMP(t []float64, s int, p int) []float64 {
 	bsf := max(amp) // The best-so-far score
 
 	// Find scores for the rest of t
-	val := 0.0
 	for i := p+s; i < len(t)-s+1; i++ {
-		val, bsf = processBackward(t, s, i, bsf)
-		amp[i] = val
+		amp[i], bsf = processBackward(t, s, i, bsf)
 	}
 
 	// Output full matrix profile of t
 	return amp
 }
-	```, caption: [The DAMP algorithm.],
+	```, caption: [The DAMP algorithm, simplified.],
 ) <dampalgo>
 
 
@@ -616,6 +614,9 @@ and where $t = (t_1, t_2, ..., t_n)$ and $s = (s_1, s_2, ..., s_n)
 in RR^n$.
 It will also calculate the Euclidean distances more efficiently as the equation
 doesn't involve complex numbers or temporary arrays.
+
+The _processBackward_ function in @backproc can easily replace all its calls to
+MASS with this new distance function.
 As a later section will show, the loss of precision in the distance scores are
 negligible when detecting point anomalies and offers great improvements in
 performance.
@@ -625,18 +626,16 @@ performance.
 
 = Method <method>
 
-#TODO("skip matlab part with new gnuplot figure")
-
 _Lu et al._ have provided an example of their DAMP algorithm in the form of a
 Matlab file, as a complement to their paper @lu.
-Running that example produced the data used for creating the plot in @examplepattern,
-as shown previously.
-Both the raw in-data and the output Matrix Profile data was then saved as a
-reference dataset, used for verifying future implementations.
+Running that example produced the raw data used for creating the plot in
+@examplepattern, as shown previously.
+Both the data for the time series and the corresponding Matrix Profile was then
+kept as a reference dataset used for verifying future implementations. 
 @app-repo contains a link to the repository that stores this dataset.
 
-With reference data available, the original DAMP algorithm was then implemented
-in Go #footnote[https://go.dev/] as outlined in @dampalgo and @backproc.
+The original DAMP algorithm was then implemented in Go
+#footnote[https://go.dev/] as outlined in @dampalgo and @backproc.
 Go is famously known for it's simple syntax and large standard library,
 which lends itself well to the purpose of making quick but production-ready prototypes.
 This, along with this author's previous experiences and familiarity, was the reason
@@ -666,10 +665,10 @@ limit the amount of data processed.
 
 _Gillis_ offers a simple to use double-ended queue in Go @gillis and it can
 operate as an efficient first-in, first-out (FIFO) queue, as illustrated in @deque.
-It's worth noting that it operates in $O(1)$ time
-when pushing or popping from either end.
-The internal buffer is always a power of two too, so this queue fits in nicely
-with the use of the previously mentioned MASS function and its operation requirements.
+It's worth noting that as it keeps track of both ends, it's able to operate in
+$O(1)$ time when pushing to or popping from respective end.
+And the internal buffer is always a power of two too, so this data structure fits
+in well with the MASS function and its requirements, as has been previously explained.
 
 // pkg source: https://typst.app/universe/package/fletcher
 #import "@preview/fletcher:0.5.7" as fletcher: diagram, node, edge
@@ -689,52 +688,59 @@ with the use of the previously mentioned MASS function and its operation require
 	  node((2.8,0), " ", shape: rect),
 	  edge((0,1), (0,0), "-|>", [Front]),
 	  edge((2,1), (2,0), "-|>", [Back]),
-	  edge((-2.8,0), (-0.8,0), "<|-", [Pop Front]),
-	  edge((2.8,0), (4.8,0), "<|-", [Push Back]),
-	  edge((0,-0.4), (2,-0.4), "|-|", [Length]),
+	  edge((-2.8,0), (-0.8,0), "<|-", [PopFront()]),
+	  edge((2.8,0), (4.8,0), "<|-", [PushBack()]),
+	  edge((0,-0.4), (2,-0.4), "|-|", [Len()]),
 	  edge((-0.8, -1), (2.8, -1), "|-|", [Capacity]),
 	),
-	caption: [Double-ended queue by _Gillis_, operating as a FIFO queue.],
+	caption: [A double-ended FIFO queue.]
 ) <deque>
 
-By using this new data structure in place of the previously used data arrays and
-making adaptations to the DAMP algorithm, an alternative implementation could
-then process the continuously streaming data from the hardware sensors.
+By using this new data structure as a buffer in place of the previously used data
+arrays, an alternative implementation would be able to consume streaming data in
+a continuously manner.
+@streamdamp shows how the queue can be utilised when calculating discord scores.
 
-#TODO("rewrite into plain english and explain details in a paragraph or two")
+_StreamDAMP_ is a data structure that keeps two queues for the raw data and the
+Matrix Profile, and other associated values such as data sizes and a best-so-far
+score.
+The new function _Push_ will add a raw value to the data queue, making sure it
+doesn't overflow, and then call _processBackward_ to calculate the discord score
+in a similar manner as previously shown in @dampalgo.
+The score is kept in the internal Matrix Profile for future calculations
+and is then finally returned back to the user.
 
 #figure(```go
-func (a *StreamingDAMP) Push(v float64) float64:
-	if a.data.Len() == a.maxSize:
-		a.data.Pop()
-		a.amp.Pop()
-		if a.index > -1:
-			a.index--
-			if a.index < 0:
-				// Drops the score once in-data value is popped from the buffer
-				a.bsf, a.index = a.amp.Max()
+func Push(sd *StreamDAMP, value float64) float64 {
+	if sd.data.Len() == sd.maxSize {
+		// Queue is full, free up a new slot and find new best-so-far score
+		sd.data.PopFront()
+		sd.amp.PopFront()
+		sd.bsf = sd.amp.Max()
+	}
 
-	a.data.Push(v)
-	tlen = a.data.Len()
-	if tlen < a.trainSize:
-		// Keep waiting for more training data
-		a.amp.Push(0)
+	sd.data.PushBack(value)
+	if sd.data.Len() < sd.trainSize {
+		// Wait for more training data before running calculations
+		sd.amp.PushBack(0)
 		return 0
+	}
 
-	val, index, bsf = processBackward(a.data, a.seqSize, tlen-a.seqSize, a.bsf)
+	// Find the discord score for the new value
+	index := sd.data.Len()-sd.seqSize
+	score, sd.bsf := processBackward(sd.data, sd.seqSize, index, sd.bsf)
+	sd.amp.Push(score)
+	return score
+}
+```, caption: [Function for continuously pushing new data to DAMP.]) <streamdamp>
+// ```, caption: [The DAMP algorithm adapted to handle streaming data.]) <streamdamp>
 
-	if math.IsNaN(val):
-		// This happens when there's constant regions in the data
-		val = 0
-
-	if bsf > a.bsf:
-		a.bsf = bsf
-		a.index = index
-
-	a.amp.Push(val)
-	return val
-```, caption: [The DAMP algorithm adapted to handle streaming data.]) <streamdamp>
-
+A user can now repeatedly call _Push_ whenever new data is collected, for example
+from a data stream from a sensor, and perform analysis and monitoring in real time.
+And thanks to the double-ended queue acting as a buffer, most Edge devices
+(with limited computing resources) should be able to handle large amounts of data
+with ease.
+The following subsections will explore this.
 
 == Setting up hardware environment
 
@@ -743,14 +749,16 @@ a hardware environment.
 This thesis uses cheap, consumer-grade devices that can be commonly found
 off-the-shelf and the bill of materials includes:
 
-#TODO("needs links/refs?")
-
-- *Raspberry Pi 4, model B with 1GB RAM.* \
+- *Raspberry Pi 4, model B with 1GB RAM
+#footnote[https://www.raspberrypi.com/products/raspberry-pi-4-model-b/specifications/]
+.* \
 	It's versatile enough and allows for running high-level programming languages,
 	thus not restricting the user to work with closer-to-the-metal environments such
 	as with assembly or plain C programming. Saves a great amount of time.
 
-- *Environment Sensor HAT, by Waveshare.* \
+- *Environment Sensor HAT, by Waveshare
+#footnote[https://www.waveshare.com/wiki/Environment_Sensor_HAT]
+.* \
 	This is an addon module equipped with a TSL25911 ambient light sensor, a BME280
 	temperature, humidity, and air pressure combination sensor, a ICM20948 gyroscopic
 	motion sensor, an LTR390-UV-1 uv sensor, and finally a SGP40 volatile organic
@@ -763,8 +771,7 @@ then set up with standard settings by following the getting started guide
 #TODO("note that CPU sits directly under sensor board and will affect sensors.")
 
 #figure(
-	// image("images/"),
-	text[#TODO("")],
+	block(clip: true, radius: 4pt, image("images/photo-rasp-sensor.jpg", width: 75%)),
 	caption: [Environment sensor HAT mounted on Raspberry Pi.],
 ) <hatonrasp>
 
@@ -835,7 +842,7 @@ for {
 	writer.WritePoint(p)
 	time.Sleep(1 * time.Second)
 }
-```, caption: [Example in Go for collecting data from the TSL25911 ambient light sensor.],
+```, caption: [Example for collecting data from the TSL25911 ambient light sensor.],
 ) <lightsensor>
 
 #TODO("note that instead of sending data to influx, warning threshold could be set
@@ -974,28 +981,26 @@ ok  	code.larus.se/lmas/thesis/damp	183.733s
 
 == Live sensor performance
 
-#TODO("dropped spike near 09:40 on the 28th was a restart, should disappear after a week")
+// #figure(
+// 	image("images/plot-light.png"),
+// 	caption: [Light level (top) and corresponding Matrix Profile (bottom) aggregated
+// 	in InfluxDB.],
+// )
 
-#figure(
-	image("images/plot-light.png"),
-	caption: [Light level (top) and corresponding Matrix Profile (bottom) aggregated
-	in InfluxDB.],
-)
+// #figure(
+// 	image("images/plot-temperature.png"),
+// 	caption: [Temperature (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
+// )
 
-#figure(
-	image("images/plot-temperature.png"),
-	caption: [Temperature (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
-)
+// #figure(
+// 	image("images/plot-humidity.png"),
+// 	caption: [Humidity (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
+// )
 
-#figure(
-	image("images/plot-humidity.png"),
-	caption: [Humidity (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
-)
-
-#figure(
-	image("images/plot-pressure.png"),
-	caption: [Air pressure (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
-)
+// #figure(
+// 	image("images/plot-pressure.png"),
+// 	caption: [Air pressure (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
+// )
 
 
 === Analysis
