@@ -131,13 +131,13 @@ lai:
 fft:
   type: Web
   title: "Fast Fourier transform"
-  publisher: Wikipedia
+  author: Wikipedia contributors
   url: https://en.wikipedia.org/wiki/Fast_Fourier_transform
 
 go:
   type: Web
   title: "The Go Programming Language"
-  publisher: Google
+  author: Google
   url: https://go.dev/
 
 lan:
@@ -154,34 +154,38 @@ lan:
 gillis:
   type: Web
   title: "deque"
-  author:
-    - Andrew Gilis
-  publisher: Github
+  author: Andrew Gilis
   url: https://github.com/gammazero/deque
 
 raspberry:
   type: Web
   title: "Getting started - Raspberry Pi Documentation"
-  author:
-    - Raspberry Pi contributors
-  publisher: Raspberry Pi
+  author: Raspberry Pi contributors
   url: https://www.raspberrypi.com/documentation/computers/getting-started.html
 
 influxdb:
   type: Web
   title: "Install InfluxDB OSS v2 | InfluxDB OSS v2 Documentation"
-  author:
-    - InfluxData Inc.
-  publisher: InfluxData, Inc.
+  author: InfluxData Inc.
   url: https://docs.influxdata.com/influxdb/v2/install/
 
 telegraf:
   type: Web
   title: "Get started | Telegraf Documentation"
-  author:
-    - InfluxData Inc.
-  publisher: InfluxData, Inc.
+  author: InfluxData Inc.
   url: https://docs.influxdata.com/telegraf/v1/get-started/
+
+irf:
+  type: Web
+  title: "Weather at IRF"
+  author: Institutet för rymdfysik (IRF)
+  url: https://www2.irf.se//weather/
+  
+tonga:
+  type: Web
+  title: "2022 Hunga Tonga–Hunga Haʻapai eruption and tsunami"
+  author: Wikipedia contributors
+  url: https://en.wikipedia.org/wiki/2022_Hunga_Tonga%E2%80%93Hunga_Ha%CA%BBapai_eruption_and_tsunami
   
 ################################################################################
 # Surveys

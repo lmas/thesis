@@ -6,7 +6,6 @@
 )
 
 #align(center, [
-  // #set text(16pt)
   #heading(outlined: false, [
 		#metadata.title
 	])
@@ -415,64 +414,70 @@ and summarised by _Lai et al._ @lai:
 	but as a group they could differentiate themselves from the rest of the data
 	series.
 
-@anomalies illustrates these anomalies.
+@anomalies illustrates these three types of anomalies.
 
 #figure(
-	image("images/anomalies-example.png", width: 100%),
+	image("images/example-anomalies.png", width: 100%),
 	caption: [
-		Examples of anomalies in time series data.
+		Examples of anomalies in a sine wave.
 	]
 ) <anomalies>
 
 
-// - define discord anomalies
-
-#TODO("This and the following paragraphs needs to be rewritten as point anomalies are also sought after")
-
-To save time, this thesis will be limited to a group of collective anomalies
-referred to as *discords*, which _Yeh et al._ @yeh defines as "the subsequence
-that has the maximum distance to its nearest neighbor.",
-which the following section will be expanding upon.
-
-
 == Detecting discord anomalies
 
-// - discord detection using MP
+One way of detecting anomalies in time series data is possible by looking for
+*discords* in the time series, which _Yeh et al._ @yeh defines as
+"the subsequences that has the maximum distance to its nearest neighbors."
 
-_Yeh_ introduced a novel algorithm called the _Matrix Profile_ in their paper @yeh,
-as a new alternative for finding data anomalies.
+In their paper, _Yeh_ introduces a novel algorithm called the _Matrix Profile_
+which can find these discords and give strong indications of anomalies in a time
+series.
 The Matrix Profile produces a form of metadata array that, in simplified terms,
 represents the minimal Euclidean distances between each subsequence, of size _m_,
 in the analysed time series _ts_.
+Then it's just a matter of finding the largest distance for each subsequence,
+in order to discover any possible discord anomaly.
+A larger distance means that the subsequence is an unusual pattern in the data
+and that there is a lower probability of a duplicate.
 The paper contains a more in-depth examination of the details and definitions,
 which is not repeated here for brevity.
 
-A useful property of this new metadata is that the higher values in the array
-indicates discord anomalies in the time series data, as demonstrated in @mpexample.
+@examplepoint demonstrates what the Matrix Profile looks like after having
+analysed a time series.
+The data used in this example is the atmospheric pressure recorded by IRF Kiruna
+@irf, during January the 15th in 2022, and it contains two noticeable pressure
+drops after the 1000'th and 1500'th marks.
 
 #figure(
-	image("images/mp_example.png", width: 90%),
+	image("images/example-point.png", width: 90%),
 	caption: [
-		A plotted ECG (top) with accompanying Matrix Profile (bottom). \
-		Note that the highest peak of the MP coincides with the PVC @yeh.
+		Two sudden drops in atmospheric pressure measured at IRF Kiruna (top),
+		as indicated by the Matrix Profile (bottom).
 	]
-) <mpexample>
+) <examplepoint>
 
-This example illustrates a scenario where point or contextual anomalies can be
-common and even normal behaviour,
-and it's more useful to watch for collective anomalies instead.
-It also highlights the difficulty of finding anomalies directly in raw data,
-with jitter-ish or noisy values.
-What's also noteworthy is that the detected anomaly coincides exactly with the
-beginning of the pattern in the raw data readings, as commented by _Yeh_.
+The two drops was caused by the passing pressure waves from the Hunga
+Tonga--Hunga Haʻapai eruption during this day @tonga.
+The Matrix Profile was able to detect both events in the time series, as indicated
+by the two tallest discord peaks.
+And as the two drops are observable by eye in this scenario it's easy to verify
+that the Matrix Profile works as intended.
+
+It's also worth pointing out that the time series is small, about 2600 data points
+recorded at one minute intervals, and any other, alternative tools can handle
+this analysis in a reasonable time.
+But what if the scale was increased to millions of data points?
+This is possible with factory machines equipped with high-performance sensors
+that can record samples at KHz or MHz frequencies, for example.
+Since _Yeh_ published their implementation in 2017, it has seen further improvements
+and there are new alternatives that can handle larger scales of data,
+as discussed in the next section.
 
 
 == Discord Aware Matrix Profile
 
 // - the DAMP algo, an alternative to MP
-
-#TODO("higher distance score similarity means the subsequence pattern is atypical
-and there is no similar subsequence in the data")
 
 Also known as DAMP, this is a new, alternative implementation of the Matrix
 Profile by _Lu et al._ @lu, with a focus on discovering discord anomalies in
@@ -490,7 +495,7 @@ More importantly, detection needs to be fast enough to stop the milling process
 sooner and avoid damaging the equipment.
 
 #figure(
-	image("images/matlab-example.png"),
+	image("images/example-matlab.png"),
 	caption: [
 		Readings @lu from a vibration sensor attached to a milling machine (above)
 		during 3 minutes. 
@@ -616,6 +621,8 @@ size _m_.
 
 For the sake of brevity, the MASS function is not examined any further.
 
+#TODO("Add other dist func")
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Method
@@ -624,6 +631,8 @@ For the sake of brevity, the MASS function is not examined any further.
 = Method <method>
 
 // - running matlab reference and gathering ref. data
+
+#TODO("skip matlab part with new gnuplot figure")
 
 _Lu et al._ have provided an example of their DAMP algorithm in the form of a
 Matlab file, as a complement to their paper @lu.
@@ -934,16 +943,16 @@ for {
 == Validating algorithms
 
 #figure(
-	image("images/1-bourkestreetmall.png"),
-	caption: [test],
+	image("images/analysis-1-bourkestreetmall.png", height: 75%),
+	caption: [Pedestrian traffic on a street [TODO CITE] (top) and accompanying Matrix Profiles (below).],
 )
 
 #figure(
-	image("images/2-machining.png"),
+	image("images/analysis-2-machining.png", height: 75%),
 	caption: [test],
 )
 
-cpu: `Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz`
+`cpu: Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz`
 
 #figure(
 	table(
@@ -960,6 +969,32 @@ cpu: `Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz`
 )
 
 #TODO("note that the plusminus values was just eyeballed from multiple runs?")
+
+```
+goos: freebsd
+goarch: amd64
+pkg: code.larus.se/lmas/thesis/damp
+cpu: Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz
+```
+
+#figure(
+	table(
+		columns: 5,
+		align: left,
+		inset: 6pt,
+		table.header(
+			[*Normalised*], [*Iterations (N)*], [*Time/Op. (ns)*], [*Memory/Op. (bytes)*], [*Allocations/Op. (N)*],
+		),
+		[Yes], [10000], [1597515], [1599991], [1135],
+		[No], [12638], [96961], [15556], [6],
+	),
+	caption: "Benchmarks from running Stream DAMP on random data."
+)
+
+#figure(
+	image("images/analysis-timings.png"),
+	caption: [Runtimes for data analysis of each dataset.]
+)
 
 
 === Analysis
@@ -1093,28 +1128,18 @@ optimisations:
 	go run experiments/generate_anomalies.go \
 	./experiments/plot_anomalies.sh
 
-- Generate @mpexample using:
+- Generate @examplepoint using:
 
 	#TODO("")
 
 - Generate @matlab using:
 
-	./experiments/plot_matlab.sh
+	./experiments/plot_examples.sh
 	
 - Generate "TODO: PLOTS IN RESULTS" using:
 
 		go run experiments/generate_samples.go \
 		./experiments/plot_samples.sh
-
-#pagebreak()
-= Source code for streaming DAMP <app-sdamp>
-
-#TODO("source for algo implementation?")
-
-#figure(
-	raw(read("damp/damp.go"), lang: "go", block: true),
-	caption: "testing",
-)
 
 #pagebreak()
 = Telegraf configuration <app-telegraf>
