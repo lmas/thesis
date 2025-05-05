@@ -129,7 +129,11 @@ func euclidean(x, y []float64) float64 {
 		// Calculates the euclidian distance using Minkowski's method:
 		// https://en.wikipedia.org/wiki/Minkowski_distance
 		for i := 0; i < len(window); i++ {
-			sum += math.Pow(math.Abs(window[i]-y[i]), 2)
+			// math.Pow is obscenely slow!
+			// This is due to being forced to handle special cases and what not
+			// sum += math.Pow(math.Abs(window[i]-y[i]), 2)
+			val := math.Abs(window[i] - y[i])
+			sum += val * val
 		}
 		// Defer the sqrt(sum) to the end of this function:
 		// https://en.m.wikipedia.org/wiki/Euclidean_distance#Squared_Euclidean_distance
