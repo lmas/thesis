@@ -81,7 +81,32 @@ section TODO
 
 # Activity log
 
-# Total: 8
+## Week 9
+
+- 2025-05-23, 6 h:
+    About 1 h cleaning up plots and updating live test on the raspy,
+    5 h continuing with the report (reworking the examples takes a lot of time
+    to simplify and make them easier to read!) and trying to take a nice photo
+    of the hardware setup.
+
+- 2025-05-22, 4 h:
+    2 h rewired the raspberry and had it run latest updates, inspecting results
+    in influx. 2 h continuing with the report.
+
+- 2025-05-21, 8 h:
+    3 h continued working with math examples and then quick meeting with supervisor,
+    5 h cleaning up a lot of leftover comments and finishing the background section.
+
+- 2025-05-20, 5 h:
+    5 h running a longer benchmark and adding it's results to the report, then
+    tried to clean up math examples.
+
+- 2025-05-19, 4 h:
+    1 h finishing last week's work and pushing it, 3 h investigating issue with
+    stream damp (non-normalised) taking way too much time compared to other methods.
+    The obvious fix (in hindsight) was to not call math.Pow(), which gave annoyingly
+    good results afterwards.
+    Had to spend too much time on working as a TA today and lost hours due to that.
 
 ## Week 8
 
@@ -98,7 +123,6 @@ section TODO
     5 h started reworking plots and created new runtime diagram for comparing the
     different algo versions.
     
-
 - 2025-05-13, 5 h:
     Had to lookup a typst pkg for drawing figures and finally redrew the last one,
     also updated result plots to highlight differences between normalised yes/no.
