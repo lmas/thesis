@@ -128,18 +128,6 @@ lai:
   date: 2021-07-29
   url: https://openreview.net/forum?id=r8IvOsnHchr
 
-fft:
-  type: Web
-  title: "Fast Fourier transform"
-  author: Wikipedia contributors
-  url: https://en.wikipedia.org/wiki/Fast_Fourier_transform
-
-go:
-  type: Web
-  title: "The Go Programming Language"
-  author: Google
-  url: https://go.dev/
-
 lan:
   type: Article
   title: "Anomaly Detection on IT Operation Series via Online Matrix Profile"
@@ -180,12 +168,6 @@ irf:
   title: "Weather at IRF"
   author: Institutet för rymdfysik (IRF)
   url: https://www2.irf.se//weather/
-  
-tonga:
-  type: Web
-  title: "2022 Hunga Tonga–Hunga Haʻapai eruption and tsunami"
-  author: Wikipedia contributors
-  url: https://en.wikipedia.org/wiki/2022_Hunga_Tonga%E2%80%93Hunga_Ha%CA%BBapai_eruption_and_tsunami
   
 ################################################################################
 # Surveys

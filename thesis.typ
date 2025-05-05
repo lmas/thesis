@@ -39,6 +39,7 @@
 #set par(justify: true)
 #set quote(block: true, quotes: true)
 #show quote: set align(center)
+#set math.equation(numbering:"(1)")
 
 // Adds zero-padded line numbers to code blocks
 #show raw.line: it => {
@@ -98,10 +99,6 @@
 #pagebreak()
 #heading(numbering: none, outlined: false, bookmarked: true, "Contents")
 #outline(title: none, indent: 2em)
-
-////////////////////////////////////////////////////////////////////////////////
-// Introduction
-
 #pagebreak()
 #set heading(numbering: "1.1")
 #set page(
@@ -109,16 +106,14 @@
   footer: context [
     #counter(page).display("1")
     #h(1fr)
-    #set text(7pt)
+    #set text(9pt)
     #metadata.author
   ]
 )
 
+////////////////////////////////////////////////////////////////////////////////
+
 = Introduction <introduction>
-
-// The introduction gives an overview of the area of your problems.
-
-// - Increasing amount of data generated in the industry
 
 With the shift towards Industry 4.0 @lasi, the manufacturing industries are
 facing new challenges as they move towards decentralised processes.
@@ -127,18 +122,11 @@ the Internet-of-Things.
 By increasing the use of smart sensors a manufacturer can better supervise the
 operation of their equipment and, for example, better predict equipment failure.
 
-// - Need for fast data processing
-// search: large amounts of sensor data in industry
-// REFS:
-// Big Data Challenges and Opportunities in the Hype of Industry 4.0
-
 As _Khan et al._ notes @khan, sensors and programmable logic controllers (PLCs)
 are becoming the largest group of devices that generates the most data.
 And as the industries scales up their sensor networks there's an increasing need
 to be able to faster process the larger amounts of data,
 in order to provide real-time analysis. 
-
-// - introduce matrix profile
 
 This bachelor thesis will explore the use of anomaly detection on time
 series data, performed on hardware-limited devices closer to the Edge.
@@ -148,11 +136,10 @@ The method of anomaly detection will revolve around the Matrix Profile,
 as introduced by _Yeh et al._ @yeh,
 which is a family of algorithms used for detecting discord anomalies,
 among other uses.
-// Can't fix warnings in a quote.
 They also note that "time series discords are known to be very competitive as
 novelty/anomaly detectors."
 
-The Matrix Profile is a simple algorithm with claims of being easily scaleable
+The Matrix Profile is a simple algorithm with claims of being easily scale-able
 @yeh and as such might offer a more performant alternative to machine learning
 models or other artificial intelligence solutions that are popular as of today.
 And since it doesn't require a heavy processing model, it might be able to run
@@ -161,13 +148,6 @@ running the heavier AI models.
 
 
 == Motivation
-
-// The background offers the background to why you are working with your problems.
-
-// - Growing sensor networks and increasing amounts of data in the industry
-// search: industry 4.0
-// REFS:
-// Industry 4.0
 
 Today the world is experiencing it's fourth industrial revolution.
 If the use of electricity and digitisation pushed the two previous revolutions
@@ -187,28 +167,16 @@ These factories are utilising a growing number of sensors and digital, decentral
 systems that allows the factories to become more autonomously monitored and
 controlled remotely.
 
-// - Benefits of sensor networks
-// search: sensors industry 4.0
-// REFS:
-// Significance of sensors for industry 4.0: Roles, capabilities, and applications
-
 _Javaid et al._ @javaid also notes an increasing need of intelligent sensor
 systems and networks for the smart factories.
 By using autonomous sensors with higher processing capabilities,
 the industry will be able to reduce their dependency on human operators and thus
 reduce problems caused by the human factor, for example. 
-// Missing subject? Hard to fix passive voice
 And with the availability of wireless sensors, monitoring can be done more easily
 for inaccessible locations such as remote or hazardous areas.
 The maintenance of the increasingly complex systems can also benefit
 as more precise detection can send alerts sooner for any failing components and
 thus reduce costly maintenance downtime during production.
-
-// - Challenges with sensor networks and noisy data
-// search: costs required to operate larger sensor networks???
-// REFS:
-// Industrial Wireless Sensor Networks: Challenges, Design Principles, and
-// Technical Approaches
 
 Of course, with increasingly larger sensor networks it also follows that there's
 an increasing amount of data, as mentioned by _Javaid_.
@@ -224,11 +192,6 @@ consumption ...".
 This has the potential of extending the lifetime of the sensors that runs on
 battery, or similarly limited power sources, as well as reducing the operational
 costs.
-
-// - Application of anomaly detection to autodetect early warning signs
-// search: anomaly detection temporal data
-// REFS:
-// Outlier Detection for Temporal Data: A Survey
 
 Given that sensor readings are most often timestamped and thus temporal in nature
 as stated by _Gupta et al._ @gupta,
@@ -260,7 +223,6 @@ larger sensor networks.
 
 == Delimitations
 
-// NOTE: can fix this passive voice, missing a subject?
 Due to the limited time available to write a bachelor thesis, this one will
 constrain itself to only analyse the application of the Matrix Profile algorithm
 for detecting anomalies, rather than comparing it to other methods which previous
@@ -286,14 +248,8 @@ in @discussion.
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Theory
 
-// #pagebreak()
 = Background and related work <background>
-
-// - anomaly detection intro
-// REFS:
-// @chandola Anomaly Detection: A Survey
 
 Anomaly detection is a broad area and there exists many, detailed studies on this
 subject from the last two decades @wang, @boniol.
@@ -301,7 +257,7 @@ But what is anomaly detection? _Chandola et al._ @chandola offers a definition:
 
 #quote[
 	Anomaly detection refers to the problem of ﬁnding patterns in data 
-	that do not conform to expected behavior ...
+	that do not conform to expected behaviour ...
 	[which] translate to signiﬁcant, and often critical, actionable
 	information in a wide variety of application domains.
 ]
@@ -348,8 +304,6 @@ literature @chandola, @gupta:
 	Most often this requires running analysis on online, streaming data from sensor
 	networks, for example, in order to detect the anomalies in a quicker manner.
 
-// Challenges with anomaly detection
-
 But detecting non-conforming patterns in data is a difficult problem.
 _Chandola_ have also noted a set of challenges associated with classifying any
 observed patterns:
@@ -389,10 +343,6 @@ resource-constrained environments, such as small devices and sensors.
 
 == Types of anomalies
 
-// - types of anomalies
-// REFS:
-// Revisiting Time Series Outlier Detection: Deﬁnitions and Benchmarks
-
 Yet another challenge is how to define what is an anomalous pattern.
 Most often it's some kind of outlier that clearly differentiates itself from
 the other data, but it could also be more subtle issues that's harder to spot.
@@ -429,7 +379,7 @@ and summarised by _Lai et al._ @lai:
 
 One way of detecting anomalies in time series data is possible by looking for
 *discords* in the time series, which _Yeh et al._ @yeh defines as
-"the subsequences that has the maximum distance to its nearest neighbors."
+"the subsequences that has the maximum distance to its nearest neighbours."
 
 In their paper, _Yeh_ introduces a novel algorithm called the _Matrix Profile_
 which can find these discords and give strong indications of anomalies in a time
@@ -448,8 +398,6 @@ practical examinations of an improved algorithm.
 Let's instead take a look at what kind of results the Matrix Profile can produce.
 @examplepoint demonstrates the result after having run the algorithm on a time
 series.
-// @examplepoint demonstrates what the Matrix Profile looks like after having
-// analysed a time series.
 The data used in this example is the atmospheric pressure recorded by IRF Kiruna
 @irf, during January the 15th in 2022, and it contains two noticeable pressure
 drops after the 1000'th and 1500'th marks.
@@ -463,7 +411,9 @@ drops after the 1000'th and 1500'th marks.
 ) <examplepoint>
 
 The two drops was caused by the passing pressure waves from the Hunga
-Tonga--Hunga Haʻapai eruption during this day @tonga.
+Tonga--Hunga Haʻapai eruption
+#footnote[https://en.wikipedia.org/wiki/2022_Hunga_Tonga%E2%80%93Hunga_Ha%CA%BBapai_eruption_and_tsunami]
+during this day.
 The Matrix Profile was able to detect both events in the time series, as indicated
 by the two tallest discord peaks.
 And as the two drops are observable by eye in this scenario it's easy to verify
@@ -482,179 +432,211 @@ as discussed in the next section.
 
 == Discord Aware Matrix Profile
 
-// - the DAMP algo, an alternative to MP
-
-Also known as DAMP, this is a new, alternative implementation of the Matrix
+Also known as DAMP, this is a new alternative implementation of the Matrix
 Profile by _Lu et al._ @lu, with a focus on discovering discord anomalies in
 large scales of either batched or streaming data.
 _Lu_ achieves this higher performance by calculating an approximate Matrix Profile
 from each subsequence's distance to all _previous ones only_, in a backwards
 processing manner.
+Only having to process previous data results in the space complexity of $O(n)$
+and the time complexity for the worst-cases would be $O(n log n)$, although _Lu_
+claims that the effective time complexity would be better in 99% of the cases due
+to the algorithm being able to quit early.
 
-#TODO("time and space complexities? but their claims is a bit fluffy")
-
-@matlab shows an example profile based on sensor data from a milling machine.
+@examplepattern shows an example of a time series based on simulated sensor data
+from a milling machine.
 In this example it's harder to observe, by eyes only, the beginning of the
 anomalous pattern.
 More importantly, detection needs to be fast enough to stop the milling process
 sooner and avoid damaging the equipment.
+And although this was a simulated scenario, as provided by the paper by _Lu_,
+it serves as a good reference for later improvements of the DAMP algorithm.
 
 #figure(
-	image("images/example-matlab.png"),
+	image("images/example-pattern.png"),
 	caption: [
 		Readings @lu from a vibration sensor attached to a milling machine (above)
 		during 3 minutes. 
 		Near the end the machine starts cutting into other parts of the equipment
 		and generated a tall discord peak in the profile (bottom).
 	]
-) <matlab>
-
-#TODO("mention is based first on paper algo, then matlab example and lastly own code???")"
+) <examplepattern>
 
 @dampalgo shows pseudocode for the DAMP algorithm.
-The function calculates the Matrix Profile of the analysed time series _ts_ and
-is temporarily kept in the _amp_ array, which the function returns to the user
+The function calculates the Matrix Profile of the analysed time series $t$,
+with the subsequence length $s$ and a split point $p$, and
+is temporarily kept in the $a m p$ array, which the function returns to the user
 at the end.
 
-The first loop starting on line 10 finds the initially highest discord score _best_
-for the first subsequence, after the split point between the "training sequence"
-in the beginning of _ts_ and it's end.
+The first loop calculates the initial scores for the first points in the time
+series, _after_ the split point between the "training sequence" in the beginning
+of $t$ and the points afterwards.
 The training sequence acts as a warm up for the algorithm, so it doesn't produce
-erroneous scores that might skew the following scores.
-The MASS function finds the scores by calculating the Euclidean distances between
-the subsequences.
-_Zhong et al._  @mueen created this function and it's shown later in @massv2.
+erroneous values that might skew the following scores.
+The MASS v2 function finds the scores by calculating the Euclidean distances
+between the subsequences, it's shown later in @massv2.
 
 #figure(```go
-ts = time series array
-m = subsequence length
-s = split index between training and testing data
+func DAMP(t []float64, s int, p int) []float64 {
+	amp := make([]float64, len(t)) // An new empty array
 
-function DAMP (ts, m, s):
-	amp = new array (of same size as ts, but filled with zeroes)
-	i = temporary index
+	// Find the discord scores for the first points
+	for i := p-1; i < p+s; i++ {
+		query := t[i: i+s]
+		amp[i] = massv2(t[0: i], query)
+	}
+	bsf := max(amp) // The best-so-far score
 
-	// Quickly find the discord score for the first subsequence
-	for i = loop from s-1 to s+m:
-		query = subsequence of ts[from i, to i+m]
-		amp[i] = minimum score from MASSv2(ts, query)
-	best = maximum score in amp
+	// Find scores for the rest of t
+	val := 0.0
+	for i := p+s; i < len(t)-s+1; i++ {
+		val, bsf = processBackward(t, s, i, bsf)
+		amp[i] = val
+	}
 
-	// Find scores for all following subsequences until the end of ts
-	for i = loop from s+m to length(ts)-m+1:
-		amp[i], best = processBackward(ts, m, i, best)
-
-	// Output full matrix profile of ts
+	// Output full matrix profile of t
 	return amp
+}
 	```, caption: [The DAMP algorithm.],
 ) <dampalgo>
 
 
-// - helper func backwardProcess
-
-The second loop on line 16 then iterates through all subsequences in the time
-series and calculates their distance profiles using the _processBackward_ function,
+The second loop then iterates through all subsequences in the time series and
+calculates their distance profiles using the _processBackward_ function,
 shown in @backproc.
-This function finds the highest distance profiles by working backwards in an
-expanding search (done on lines 22-23) from the current subsequence,
-starting in the loop on line 07.
+
+_processBackward_ finds the distance scores by looping backwards in an expanding
+search from the current subsequence $t_(i:i+s)$ and stops as soon as it either
+reaches the beginning of $t$ _or_ when the score is lower than the best-so-far
+$b s f$.
 To prevent reading non-existing data, the process has to consider the two special
-cases on line 12 and line 18 which guards against reading data past either
+cases _one_ and _two_, which guards against reading data past either
 possible end of the time series.
+Case one will also end the loop despite what the current score would be, as there's
+simply no more data that needs to be process afterwards.
+
+The rest of the code is self explanatory.
 
 #figure(```go
-func processBackward(ts []float, m int, i int, bsf float):
-	ampi = +inf
-	size = nextpower2(8*m)
-	exp = 0
-	query = ts[i : i + m]
-
-	while ampi >= bsf:
-		start = i - size + exp*m + 1
-		stop = i - size/2 + exp*m + 1
+func processBackward(t []float64, s int, i int, bsf float64)
+(float64, float64) {
+	size := nextpower2(8 * s)
+	query := t[i: i+s]
+	score := math.Inf(0) // Positive infinity
+	exp := 0
+ 
+	for score >= bsf {
+		start := i - size + (exp*s) + 1
+		stop := i - (size/2) + (exp*s) + 1
 
 		// Case 1: the segment furthest from the current subsequence
-		if start < 1:
-			ampi = min(massv2(ts[0 : i + 1], query))
-			if ampi > bsf: bsf = ampi
-			break loop
+		if start < 1 {
+			score = massv2(t[0: i+1], query)
+			if score > bsf {
+				bsf = score
+			}
+			return score, bsf
+		}
 
-		// Case 2: the segment closest to current 
-		if exp == 0: stop = i + 1
+		// Case 2: the segment closest to the current subsequence
+		if exp == 0 {
+			stop = i+1
+		}
 
-		// Get current distance profile and expand the search (if needed)
-		ampi = min(massv2(ts[start : stop], query))
-		size = size*2
-		exp = exp + 1
-	return ampi, bsf
+		// Get current distance score and expand the search (if needed)
+		score = massv2(t[start: stop], query)
+		size *= 2
+		exp += 1
+	}
+	return score, bsf
+}
 ```, caption: [DAMP backward processing.]) <backproc>
 
-By halting the search as soon as a distance score is lower than the best so far
-value _bsf_, the algorithm also solves the "twin-freak" problem.
-An anomaly will cancel out itself if it appears more than once, hence the name
-"twin-freak",
-as the nearest neighbour will be itself during the calculations of the distance
-profiles.
+By halting the search as soon as a distance score is lower than the best-so-far,
+the algorithm also solves the "twin-freak" problem.
+An anomaly will cancel out itself if it appears more than once (hence the name
+"twin-freak", from _Lu et al._) as the nearest neighbour would be itself during
+the calculations of the distance scores.
 
-// - helper func MASS v2, nearest neighbour search
 
-Finally, @massv2 displays the MASS function for the sake of completeness.
-The core part is the use of Fast Fourier Transforms @fft,
-enabling efficient distance calculations.
+== Distance between neighbours
 
-#figure(```go
-func massv2(x []float, y []float):
-	m, n = length(y), length(x)
-	meany, meanx = mean(y), movmean(x, m - 1, 0)
-	sigmay, sigmax = std(y), movstd(x, m - 1, 0)
+Searching for the nearest neighbours is originally done using MASS v2 function,
+which was created by _Zhong et al._ @mueen.
+@massv2 displays the core equation
 
-	// Reverse query and append zeroes until equal size as x
-	y = reverse(y)
-	y[m + 1 : n] = zeroes
+$
+	D(t, s) = sqrt(2*(m - (p_[m:n] - m * mu_y*mu_x[m:n]) / (sigma_y*sigma_x[m:n])))
+$ <massv2>
 
-	// Calculate dot products in O(n log n) time
-	fx, fy = fft(x), fft(y)
-	fz = fx*fy
-	z = ifft(fz)
+which uses a standard score
+#footnote[https://en.m.wikipedia.org/wiki/Standard_score]
+to normalise the distances and where $t$ is the time series so search through,
+$s$ the investigated subsequence and (using common functions available in Matlab)
 
-	// Calculate the distance profile and return array
-  dist = 2*(m - (z(m:n)-m*meany*meanx(m:n)) / (sigmay*sigmax(m:n)) )
-	return sqrt(dist) // As a []float
-```, caption: [The MASS v2 distance profile calculation.]) <massv2>
+#align(center)[
+	$m &= "length"(s), && n &&= "length"(t) \
+	mu_ s&= "mean"(s), && mu_t &&= "movmean"(t, m-1) \
+	sigma_s &= "std"(s), && sigma_t &&= "movstd"(t, m-1)$.
+]
 
-It's also noteworthy that this function operates more efficient if the amount of
-data points is a power of two, as mentioned by _Lu_ @lu.
-If it's not, the MASS function would be hit with a hefty performance drop.
-The DAMP algorithm avoids this, on line 03 in @backproc, by setting the size
-of the processed data to the next power of two that is after the subsequence
-size _m_.
+$s$ is then reversed and padded with zeroes until it's the same size as $t$ using
 
-For the sake of brevity, the MASS function is not examined any further.
+#align(center)[
+	$q &= "flip"(s) \
+	q_[m+1:n] &= 0$
+]
 
-#TODO("Add other dist func")
+which is then multiplied with $t$ by the convolution of the fast Fourier
+transforms #footnote[https://en.wikipedia.org/wiki/Fast_Fourier_transform],
+
+#align(center)[
+$p &= "ifft"("fft"(t) convolve "fft"(q))$
+]
+
+which is then finally inserted in @massv2.
+The result is an array of Euclidean distances for the subsequence $s$ and it's
+neighbours in the time series $t$.
+
+It's also noteworthy that the MASS function operates more efficient if the
+amount of data points is a power of two, as mentioned by _Lu_ @lu.
+If not, the function would have a significant drop in performance.
+The DAMP algorithm avoids this issue by setting the size of the processed data
+to the next power of two that occurs after the subsequence size $s$,
+near the beginning of the _processBackward_ function in @backproc.
+
+As a final note, normalised distances are not wanted in some cases, for example
+when trying to detect point anomalies.
+Rather than using MASS, it's possible to use a generalised method such as
+Minkowski's distance #footnote[https://en.wikipedia.org/wiki/Minkowski_distance]
+
+$ D(t,s) = sqrt(sum_(i=1)^n |t_i-s_i|^2 ) \ $<minkowski>
+
+and where $t = (t_1, t_2, ..., t_n)$ and $s = (s_1, s_2, ..., s_n)
+in RR^n$.
+It will also calculate the Euclidean distances more efficiently as the equation
+doesn't involve complex numbers or temporary arrays.
+As a later section will show, the loss of precision in the distance scores are
+negligible when detecting point anomalies and offers great improvements in
+performance.
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Method
 
-// #pagebreak()
 = Method <method>
-
-// - running matlab reference and gathering ref. data
 
 #TODO("skip matlab part with new gnuplot figure")
 
 _Lu et al._ have provided an example of their DAMP algorithm in the form of a
 Matlab file, as a complement to their paper @lu.
-Running that example produced the data used for creating the plot in @matlab,
+Running that example produced the data used for creating the plot in @examplepattern,
 as shown previously.
 Both the raw in-data and the output Matrix Profile data was then saved as a
 reference dataset, used for verifying future implementations.
 @app-repo contains a link to the repository that stores this dataset.
 
-// - implement original algo and verify it against ref.
 With reference data available, the original DAMP algorithm was then implemented
-in Go @go as outlined in @dampalgo and @backproc.
+in Go #footnote[https://go.dev/] as outlined in @dampalgo and @backproc.
 Go is famously known for it's simple syntax and large standard library,
 which lends itself well to the purpose of making quick but production-ready prototypes.
 This, along with this author's previous experiences and familiarity, was the reason
@@ -667,8 +649,6 @@ against the reference data, the correctness of the implemented algorithm.
 
 
 == Adapting the algorithm
-
-// - adapt algo to streaming data using ring buffer
 
 As @introduction previously mentioned, the DAMP algorithm should run in a live
 scenario and be able to handle live sensor data.
@@ -770,15 +750,11 @@ off-the-shelf and the bill of materials includes:
 	thus not restricting the user to work with closer-to-the-metal environments such
 	as with assembly or plain C programming. Saves a great amount of time.
 
-	#TODO("picture")
-
 - *Environment Sensor HAT, by Waveshare.* \
 	This is an addon module equipped with a TSL25911 ambient light sensor, a BME280
 	temperature, humidity, and air pressure combination sensor, a ICM20948 gyroscopic
 	motion sensor, an LTR390-UV-1 uv sensor, and finally a SGP40 volatile organic
 	compound sensor. Provides many alternative sensors in a single package.
-
-	#TODO("picture")
 
 With the sensor HAT mounted on top as shown in @hatonrasp, the Raspberry Pi was
 then set up with standard settings by following the getting started guide
@@ -803,30 +779,8 @@ CPU times and other performance-related data from the Raspberry Pi.
 The collected data is then sent to InfluxDB for logging and monitoring purposes.
 @app-telegraf shows the configuration file used for Telegraf.
 
-// === Setup TODO: remove??
-// - download image from:
-//     https://www.raspberrypi.com/software/operating-systems/
-// - verify downloaded image wasn't corrupted:
-//     `sha256sum <img name>.sha`
-// - decompress:
-//     `unxz <img name>.xz`
-// - and then flash the image to a SD card:
-//     `dd if=<img name> of=/dev/<device> bs=1M`
-// - now boot the raspberry and follow it's first time setup and create a user.
-// - Connect to wifi using networkmanager, https://wiki.debian.org/NetworkManager
-// - First create the new connection:
-//     `sudo nmtui`
-// - if wifi SSID is hidden, must force active the connection:
-//     `sudo nmcli connection up <network>`
-// - with internet available, fetch and install updates:
-// 		`sudo apt update && sudo apt upgrade`
-// - finally install influxdb, see appendix XXX for install instructions.
-// - once influx is installed, open URL and follow in-browser setup and done.
-
 
 == Logging sensor data
-
-// - applying streaming algo to live sensors
 
 With the hardware set up and ready, the stream-adapted DAMP implementation could
 start processing the sensor data.
@@ -862,9 +816,9 @@ sensor := tsl2591.NewTSL2591(&tsl2591.Opts{
 // Initialise influxdb client using the official client:
 // github.com/influxdata/influxdb-client-go/v2
 host := "http://localhost:8086/"
-token := "supersecretAPItoken"
-organisation := "exampleorg"
-bucket := "examplebucket"
+token := "super secret API token"
+organisation := "example org"
+bucket := "example bucket"
 client := influxdb2.NewClientWithOptions(
 	host, token, influxdb2.DefaultOptions(),
 )
@@ -884,7 +838,6 @@ for {
 ```, caption: [Example in Go for collecting data from the TSL25911 ambient light sensor.],
 ) <lightsensor>
 
-// - damp paper suggest learning threshold values for the scores
 #TODO("note that instead of sending data to influx, warning threshold could be set
 and cause alerts?")
 
@@ -936,18 +889,15 @@ for {
 ) <bmesensor>
 
 #TODO("disregard the last 3 sensors as being poor examples and having constant regions")
+// - gyro didn't work out, had constant regions
+
 
 ////////////////////////////////////////////////////////////////////////////////
-// Results
 
-// The evaluation evaluates whether you have actually solved your problems.
-
-// #pagebreak()
 = Results <results>
 
 #TODO("")
 
-// - gyro didn't work out, had constant regions
 // - constant regions causing NaNs and had to add region check, ignored in streaming algo
 
 == Validating algorithms
@@ -962,29 +912,39 @@ for {
 	caption: [test],
 )
 
-`cpu: Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz`
-
 #figure(
-	table(
-		columns: (5),
-		align: left,
-		inset: 8pt,
-		table.header(
-			[*Dataset*], [*Size*], [*DAMP*], [*Streaming DAMP*], [*Plotting*],
-		),
-		[1-bourkestreetmall], [17490 points], [2.52 s ±0.1 s], [2.40 s ±0.1 s], [0.99 s ±0.01 s],
-		[2-machining], [44056 points], [5.70 s ±0.1 s], [3.44 s ±0.1 s], [4.82 s ±0.1 s],
-	),
-	caption: [Runtime performance of dataset analysis.],
+	image("images/analysis-knutstorp-tonga.png", height: 75%),
+	caption: [test],
 )
 
-#TODO("note that the plusminus values was just eyeballed from multiple runs?")
-
 ```
+go test -test.benchmem -bench=. -cpuprofile ".cpu.prof" -memprofile ".mem.prof" -count 10 "./damp"
 goos: freebsd
 goarch: amd64
 pkg: code.larus.se/lmas/thesis/damp
 cpu: Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz
+BenchmarkStreamDampNormalised-4       	   10000	   1622685 ns/op	 1599982 B/op	    1135 allocs/op
+BenchmarkStreamDampNormalised-4       	   10000	   1624508 ns/op	 1598646 B/op	    1135 allocs/op
+BenchmarkStreamDampNormalised-4       	   10000	   1631566 ns/op	 1598646 B/op	    1135 allocs/op
+BenchmarkStreamDampNormalised-4       	   10000	   1623754 ns/op	 1598633 B/op	    1134 allocs/op
+BenchmarkStreamDampNormalised-4       	   10000	   1626154 ns/op	 1598622 B/op	    1134 allocs/op
+BenchmarkStreamDampNormalised-4       	   10000	   1627689 ns/op	 1598625 B/op	    1134 allocs/op
+BenchmarkStreamDampNormalised-4       	   10000	   1626680 ns/op	 1598626 B/op	    1134 allocs/op
+BenchmarkStreamDampNormalised-4       	   10000	   1625058 ns/op	 1598621 B/op	    1134 allocs/op
+BenchmarkStreamDampNormalised-4       	   10000	   1625635 ns/op	 1598626 B/op	    1134 allocs/op
+BenchmarkStreamDampNormalised-4       	   10000	   1626463 ns/op	 1598626 B/op	    1134 allocs/op
+BenchmarkStreamDampNoneNormalised-4   	   38035	     33345 ns/op	   16152 B/op	       6 allocs/op
+BenchmarkStreamDampNoneNormalised-4   	   37266	     33394 ns/op	   16145 B/op	       6 allocs/op
+BenchmarkStreamDampNoneNormalised-4   	   38080	     33320 ns/op	   16151 B/op	       6 allocs/op
+BenchmarkStreamDampNoneNormalised-4   	   38044	     33231 ns/op	   16151 B/op	       6 allocs/op
+BenchmarkStreamDampNoneNormalised-4   	   37311	     33448 ns/op	   16145 B/op	       6 allocs/op
+BenchmarkStreamDampNoneNormalised-4   	   37657	     33308 ns/op	   16148 B/op	       6 allocs/op
+BenchmarkStreamDampNoneNormalised-4   	   38005	     33225 ns/op	   16151 B/op	       6 allocs/op
+BenchmarkStreamDampNoneNormalised-4   	   37348	     33368 ns/op	   16146 B/op	       6 allocs/op
+BenchmarkStreamDampNoneNormalised-4   	   38059	     33207 ns/op	   16151 B/op	       6 allocs/op
+BenchmarkStreamDampNoneNormalised-4   	   38136	     33187 ns/op	   16152 B/op	       6 allocs/op
+PASS
+ok  	code.larus.se/lmas/thesis/damp	183.733s
 ```
 
 #figure(
@@ -998,18 +958,19 @@ cpu: Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz
 		[Yes], [10000], [1597515], [1599991], [1135],
 		[No], [12638], [96961], [15556], [6],
 	),
-	caption: "Benchmarks from running Stream DAMP on random data."
+	caption: "Average performance while running benchmarks for Stream DAMP on random data."
 )
 
 #figure(
 	image("images/analysis-timings.png"),
-	caption: [Runtimes for data analysis of each dataset.]
+	caption: [Average runtimes for the analysis of each dataset.]
 )
 
 
 === Analysis
 
 #TODO("")
+
 
 == Live sensor performance
 
@@ -1036,9 +997,11 @@ cpu: Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz
 	caption: [Air pressure (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
 )
 
+
 === Analysis
 
 #TODO("")
+
 
 == Conclusion of results
 
@@ -1048,11 +1011,9 @@ cpu: Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz
 - surprised that the ring-buffer didn't affect performance
 
 ////////////////////////////////////////////////////////////////////////////////
-// Discussion
 
 // The discussion discusses each individual problem, how you addressed it, alternative solutions and shortcomings, etc.
 
-// #pagebreak()
 = Discussion <discussion>
 
 #TODO("")
@@ -1077,13 +1038,13 @@ sensors:
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Conclusion
 
 // The conclusions and future work describes the final outcome of how you solved your problems and what is left to do.
 
 == Final conclusion
 
 #TODO("")
+
 
 == Future work
 
@@ -1103,7 +1064,6 @@ optimisations:
 	of parameters such as window size (by searching all window sizes).
 
 ////////////////////////////////////////////////////////////////////////////////
-// References
 
 #pagebreak()
 = References
@@ -1115,7 +1075,6 @@ optimisations:
 )
 
 ////////////////////////////////////////////////////////////////////////////////
-// Appendices
 
 #set heading(numbering: "A.1", supplement: [Appendix])
 #show heading: it => {
@@ -1127,6 +1086,7 @@ optimisations:
 	it.body
 }
 #counter(heading).update(0)
+
 
 #pagebreak()
 = Project repository <app-repo>
@@ -1142,7 +1102,7 @@ optimisations:
 
 	#TODO("")
 
-- Generate @matlab using:
+- Generate @examplepattern using:
 
 	./experiments/plot_examples.sh
 	
@@ -1150,6 +1110,7 @@ optimisations:
 
 		go run experiments/generate_samples.go \
 		./experiments/plot_samples.sh
+
 
 #pagebreak()
 = Telegraf configuration <app-telegraf>
