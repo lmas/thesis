@@ -31,29 +31,30 @@ import (
 
 const (
 	bmePeriod int = 1000
-	bmeSeq    int = 60 * 10
-	bmeTrain  int = bmeSeq * 2
+	bmeBuffer int = 1024
+	bmeSeq    int = 8
+	bmeTrain  int = 512
 )
 
 type BME struct {
 	debug bool
 	bus   i2c.BusCloser
 	bme   *bmxx80.Dev
-	temp  *damp.StreamingDAMP
-	pres  *damp.StreamingDAMP
-	humi  *damp.StreamingDAMP
+	temp  *damp.StreamDAMP
+	pres  *damp.StreamDAMP
+	humi  *damp.StreamDAMP
 }
 
 func NewBME(debug bool) (dev *BME, err error) {
-	temp, err := damp.NewStreamingDAMP(bmeSeq*3, bmeSeq, bmeTrain)
+	temp, err := damp.NewStreamDAMP(bmeBuffer, bmeSeq, bmeTrain, false)
 	if err != nil {
 		return nil, err
 	}
-	pres, err := damp.NewStreamingDAMP(bmeSeq*6, bmeSeq, bmeTrain)
+	pres, err := damp.NewStreamDAMP(bmeBuffer, bmeSeq, bmeTrain, false)
 	if err != nil {
 		return nil, err
 	}
-	humi, err := damp.NewStreamingDAMP(bmeSeq*6, bmeSeq, bmeTrain)
+	humi, err := damp.NewStreamDAMP(bmeBuffer, bmeSeq, bmeTrain, false)
 	if err != nil {
 		return nil, err
 	}

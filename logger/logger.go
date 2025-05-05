@@ -35,8 +35,7 @@ import (
 var debug = flag.Bool("debug", false, "Print debug info")
 
 type config struct {
-	Influx  confInflux
-	Sensors map[string]confSensor
+	Influx confInflux
 }
 
 type confInflux struct {
@@ -44,13 +43,6 @@ type confInflux struct {
 	Token  string
 	Org    string
 	Bucket string
-}
-
-type confSensor struct {
-	Period    int
-	MaxSize   int
-	SeqSize   int
-	TrainSize int
 }
 
 func main() {
@@ -105,7 +97,7 @@ func openInfluxdb(conf config) (client influxdb2.Client, err error) {
 	open, err := client.Ping(ctx)
 	cancel()
 	if err != nil {
-		return nil, fmt.Errorf("Error connecting to influxdb: ", err)
+		return nil, fmt.Errorf("Error connecting to influxdb: %w", err)
 	}
 	if !open {
 		return nil, fmt.Errorf("Influxdb not running?")

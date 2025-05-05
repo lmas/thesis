@@ -28,18 +28,19 @@ import (
 
 const (
 	lightPeriod int = 1000
-	lightSeq    int = 60 * 10
-	lightTrain  int = lightSeq * 2
+	lightBuffer int = 1024
+	lightSeq    int = 8
+	lightTrain  int = 512
 )
 
 type Light struct {
 	debug bool
 	tsl   *tsl2591.TSL2591
-	sdamp *damp.StreamingDAMP
+	sdamp *damp.StreamDAMP
 }
 
 func NewLight(debug bool) (dev *Light, err error) {
-	sdamp, err := damp.NewStreamingDAMP(lightSeq*3, lightSeq, lightTrain)
+	sdamp, err := damp.NewStreamDAMP(lightBuffer, lightSeq, lightTrain, false)
 	if err != nil {
 		return nil, err
 	}
