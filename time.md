@@ -32,11 +32,11 @@ section Thesis paper
 
     Theory: 5d
 
-    Method: 15d
-    
-    Results: 05-05, 10d
+    Method: 10d
 
-    Analysis: 05-12, 5d   
+    Analysis: 10d
+    
+    Results: 5d
 
     Discussion:05-19, 5d
     Conclusion: 05-19, 5d
@@ -75,22 +75,51 @@ section Work week 6
 section Work week 7
     Finish analysis: 05-05, 5d
     Cleanup results: milestone, 05-09, 23h
-    Send draft: crit, milestone, 05-05, 1d
 
 section Work week 8
-    Prepare presentation: 05-12, 5d
     Presentation signup: crit, milestone, 05-12, 1d
+    Check-in meeting: milestone, 05-14, 1d
 
 section Work week 9
-    TODO: 05-19, 5d
+    Prepare oppositions: 05-19, 5d
 
 section Work week 10
-    Presentation: crit, 05-27, 2d
-    <Spare?>: 05-26, 5d
+    Presentations: crit, 05-27, 2d
+    TODO: 05-26, 5d
+    Send draft: milestone, 05-30, 23h
+
+section TODO
+    Prepare presentation: 5d
 ```
 
 
 # Activity log
+
+## week 6
+
+- 2025-05-02, 6 h:
+    2 h investigating and plotting multiple window sizes and how they affect the
+    Matrix Profile.
+    2 h tried plotting a new dataset from one of the supervisors.
+    2 h set up an experiment for adding noise to data samples and experimenting
+    with signal filtering before running DAMP on the data.
+
+- 2025-04-30, 9 h:
+    2 h meeting with both supervisors and discussing the results and algorithmic
+    details, changing the scope and deadline of the project.
+    7 h investigating the factors in the MASS function and plotting them, also
+    investigating and trying to plot frequency domains of the datasets and see if
+    there's any correlation to the matrix profile.
+
+- 2025-04-29, 8 h:
+    Continued writing the method and adding lots of new references, plots and
+    code examples.
+
+- 2025-04-28, 7 h:
+    1 h exploring the gathered data and making a small adjustment to the streaming
+    algorithm.
+    6 h started working on the method of the thesis and gathering the references
+    and hardware details being used.
 
 ## Week 5
 
