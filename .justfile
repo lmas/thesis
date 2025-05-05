@@ -1,8 +1,6 @@
-
-PAPER := "thesis"
 COVER := ".cover"
-#TARGETS := "$(go list ./... | grep -v /tmp)"
-TARGETS := "code.larus.se/lmas/thesis/damp"
+MEM := ".mem.prof"
+CPU := ".cpu.prof"
 
 # Show available recipes by default
 default:
@@ -10,9 +8,15 @@ default:
 
 ################################################################################
 
+# Updates 3rd party packages and tools
+deps:
+    go get -u "./damp"
+    go mod tidy
+    go install github.com/securego/gosec/v2/cmd/gosec@latest
+
 # Recompile the paper from source
 buildpaper:
-    @typst compile "{{PAPER}}.typ"
+    @typst compile "thesis.typ"
 
 # Rebuild PDF and refresh the browser
 run: buildpaper
@@ -22,22 +26,28 @@ run: buildpaper
 
 # Runs source code linters
 lint:
-    @go vet {{TARGETS}}
-    @gosec -quiet -fmt=golint -exclude-dir="tmp" ./...
+    go vet "./damp"
+    gosec -quiet -fmt=golint "./damp"
 
+# Runs available test suites and saves coverage stats
 test: 
-    @go test -v -coverprofile="{{COVER}}.out" {{TARGETS}}
+    go test -v -coverprofile="{{COVER}}.out" "./damp"
 
-# Generate pretty coverage report
+# Generate pretty coverage report from previously saved stats
 cover:
     go tool cover -html="{{COVER}}.out" -o="{{COVER}}.html"
     firefox "{{COVER}}.html"
 
-# Updates 3rd party packages and tools
-deps:
-    go get -u {{TARGETS}}
-    go mod tidy
-    go install github.com/securego/gosec/v2/cmd/gosec@latest
+# Run benchmark suites and save both CPU and MEM usage stats
+bench:
+    go test -test.benchmem -bench=. -cpuprofile "{{CPU}}" -memprofile "{{MEM}}" "./damp"
+
+cpuprof:
+    go tool pprof -lines -show "damp" -http=:8080 "{{CPU}}"
+
+memprof:
+    go tool pprof -lines -show "damp" -http=:8080 "{{MEM}}"
+    
 
 ################################################################################
 
@@ -62,8 +72,11 @@ umount:
 
 # Removes all built stuff
 clean:
-    test ! -f "{{PAPER}}.pdf" || rm "{{PAPER}}.pdf"
-    test ! -f "{{COVER}}.*" || rm "{{COVER}}.*"
+    test ! -f *.pdf || rm *.pdf
+    test ! -f {{COVER}}.* || rm {{COVER}}.*
+    test ! -f {{MEM}} || rm {{MEM}}
+    test ! -f {{CPU}} || rm {{CPU}}
+    test ! -f *.test || rm *.test
     go mod tidy
     go clean
     
