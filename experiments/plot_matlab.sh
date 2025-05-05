@@ -16,38 +16,23 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # ABOUT:
-# Simple helper script to plot data files using GNUplot
-
-set -eu
-
-# The list of data samples to plot
-samples=$(cat << EOF
-damp/samples/1-bourkestreetmall
-damp/samples/2-machining
-EOF
-)
-
-################################################################################
+# Generates example plot using the matlab dataset.
+# Note that xtics steps forward using step size = max amount of samples (44056) / 6 ticks
 
 plot=$(cat << EOF
 set key off;
 set style data line;
 set linetype 1 lc rgb "#0072bd";
+set xtics("0.5" 7342,"1.0" 14684, "1.5" 22026, "2.0" 29368, "2.5" 36710, "3.0" 44052);
 set ytics format "";
 set grid;
 
 set term png size 1280, 720 font "Default,14";
-set output '%s.png';
-set multiplot layout 3,1;
-set title "Data"; plot "%s.in";
-set title "DAMP"; plot "%s.in.damp";
-set title "StreamDAMP"; plot "%s.in.sdamp";
+set output 'images/matlab-example.png';
+set multiplot layout 2,1;
+set title "Data"; plot "damp/samples/2-machining.in";
+set title "DAMP"; plot "damp/samples/2-machining.out";
 EOF
 )
 
-echo "$samples" | while read sample; do
-  name=$(basename "$sample")
-  echo "Plotting $name..."
-  cmd=$(printf "$plot\n" "images/$name" "$sample" "$sample" "$sample")
-  gnuplot -e "$cmd"
-done
+gnuplot -e "$plot"

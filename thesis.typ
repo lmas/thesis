@@ -476,11 +476,11 @@ More importantly, detection needs to be fast enough to stop the milling process
 sooner and avoid damaging the equipment.
 
 #figure(
-	image("images/machining_plot.png"),
+	image("images/matlab-example.png"),
 	caption: [
 		Readings @lu from a vibration sensor attached to a milling machine (above)
 		during 3 minutes. 
-		Near the end the machine starts cutting into other parts of the equipment,
+		After 2.5 minutes the machine starts cutting into other parts of the equipment,
 		as indicated by the tallest discord peak in the profile (bottom).
 	]
 ) <machining>
@@ -910,12 +910,12 @@ for {
 == Validating algorithms
 
 #figure(
-	image("damp/1-bourkestreetmall-plots.png", width: 80%),
+	image("images/1-bourkestreetmall.png"),
 	caption: [test],
 )
 
 #figure(
-	image("damp/2-machining-plots.png", width: 80%),
+	image("images/2-machining.png"),
 	caption: [test],
 )
 
