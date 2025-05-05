@@ -95,7 +95,40 @@ section TODO
 
 # Activity log
 
-## week 6
+## Week 7
+
+- 2025-05-09, 0 h:
+    "Sick day."
+
+- 2025-05-08, 5 h:
+    About 1 h social meeting,
+    4 h finished test/timeseries refactor, start using new tool for plotting
+    so all plots in the report can be made uniform and allow for better plotting
+    widgets.
+
+- 2025-05-07, 7 h:
+    About 1 h meeting discussing status of the project and artefacts.
+    2 h updating logger and try run it on the raspberry with new algo.
+    4 h start rewriting tests to be less fat and slow, adding new helper funcs
+    and start refactoring timeseries type.
+
+- 2025-05-06, 7 h:
+    1 h mailing people about plots and thesis defence,
+    4 h reading up on the math behind convolution, standard deviation, euclidean
+    distances and how to do some distance optimisations (while getting sidetracked
+    with other interesting optimisations in new papers).
+    2 h running some more experiments on the distance function being used for the
+    streaming algo and cleaned up code.
+
+- 2025-05-05, 7 h:
+    5 h investigated the type of normalisation done in the MASS function,
+    wrote an alternative that doesn't z-normalise the input signal and got promising
+    results as a reward. The anomaly detection could now handle point anomalies
+    (even with extra noise added to the input), thought it through and think this
+    is a more wanted application.
+    2 h cleaning up all code and doing some refactoring, committing everything.
+
+## Week 6
 
 - 2025-05-02, 6 h:
     2 h investigating and plotting multiple window sizes and how they affect the
@@ -129,7 +162,7 @@ section TODO
 
 - 2025-04-24, 6 h:
     Discussed the used sensors, cleaned out the gyro as it worked too poorly
-    and added temp., press., and humidity sensors instead.
+    and added temp., pressure, and humidity sensors instead.
 
 -2025-04-23, 9 h:
     Plotted the test data to single png per dataset instead and then a long day

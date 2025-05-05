@@ -573,7 +573,8 @@ func processBackward(ts []float, m int, i int, bsf float):
 
 By halting the search as soon as a distance score is lower than the best so far
 value _bsf_, the algorithm also solves the "twin-freak" problem.
-An anomaly will cancel out itself if it appears more than once, hence the name,
+An anomaly will cancel out itself if it appears more than once, hence the name
+"twin-freak",
 as the nearest neighbour will be itself during the calculations of the distance
 profiles.
 
@@ -1021,6 +1022,16 @@ sensors:
 
 - research the effects of different seq. sizes.
 - need more applications in real scenarios.
+
+optimisations:
+
+- paper: Searching and Mining Trillions of Time Series Subsequences under Dynamic Time Warping
+  has notes about the use of squared distances and abandoning distance searches
+	earlier using lower bounds.
+
+- paper: Matrix Profile XXX: MADRID: A Hyper-Anytime and Parameter-Free Algorithm to Find Time Series Anomalies of all Lengths
+	has suggestions for generalised optimisations (based on DAMP paper) and getting rid
+	of parameters such as window size (by searching all window sizes).
 
 ////////////////////////////////////////////////////////////////////////////////
 // References
