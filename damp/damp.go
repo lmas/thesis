@@ -37,8 +37,8 @@ func DAMP(t *Timeseries, m int, s int) (amp *Timeseries, err error) {
 		err = fmt.Errorf("s must be less than length(t) - m + 1")
 	case s/m < 4:
 		err = fmt.Errorf("s/m must be above 3 (cycles), to prevent false positives")
-	case containsConstantRegions(t, m) == true:
-		err = fmt.Errorf("t contains near constant regions, which can cause false positives/negatives and other bad values")
+		// case containsConstantRegions(t, m) == true:
+		// err = fmt.Errorf("t contains near constant regions, which can cause false positives/negatives and other bad values")
 	}
 	if err != nil {
 		return
