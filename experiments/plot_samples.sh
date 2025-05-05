@@ -51,7 +51,7 @@ gnuplot <<- EOF
 set style data histogram;
 set style fill solid;
 set key left reverse Left;
-set ylabel "Time (s)";
+set ylabel "Time (seconds/datapoint)";
 set term png size 1280,720 font "Default,14";
 set output 'images/analysis-timings.png';
 plot "tmp/timings.in" using 2:xtic(1) title "DAMP", \

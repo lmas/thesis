@@ -101,9 +101,12 @@ func main() {
 		if err := writeTS(s.name+".3.damp", tsSDamp2); err != nil {
 			panic(err)
 		}
+		d := time.Duration(tsData.Len())
 		times = append(times, timing{
 			dataset: s.name,
-			dur:     []time.Duration{dur1, dur2, dur3},
+			dur: []time.Duration{
+				dur1 / d, dur2 / d, dur3 / d,
+			},
 		})
 	}
 	if err := writeTimings("tmp/timings.in", times); err != nil {

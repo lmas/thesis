@@ -43,10 +43,12 @@ set xtics("0.5" 7342,"1.0" 14684, "1.5" 22026, "2.0" 29368, "2.5" 36710, "3.0" 4
 set grid
 set key off
 set term png size 1280, 720 font "Default,14"
-set output 'images/example-matlab.png'
+set output 'images/example-pattern.png'
 set multiplot layout 2,1
 
+set ylabel "Arbitrary unit"
 set title "Data"; plot "damp/samples/2-machining.in"
 set arrow from 32000,2.4 to 36000,2.75 linewidth 2
+set ylabel "Discord score (arb. unit)"
 set title "DAMP"; plot "damp/samples/2-machining.out"
 EOF
