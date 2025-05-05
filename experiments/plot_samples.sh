@@ -38,16 +38,17 @@ set grid;
 
 set term png size 1280, 720 font "Default,14";
 set output '%s.png';
-set multiplot layout 3,1;
+set multiplot layout 4,1;
 set title "Data"; plot "%s.in";
-set title "DAMP"; plot "%s.in.damp";
-set title "StreamDAMP"; plot "%s.in.sdamp";
+set title "DAMP"; plot "%s.1.damp";
+set title "Stream DAMP (normalised=true)"; plot "%s.2.damp";
+set title "Stream DAMP (normalised=false)"; plot "%s.3.damp";
 EOF
 )
 
 echo "$samples" | while read sample; do
   name=$(basename "$sample")
   echo "Plotting $name..."
-  cmd=$(printf "$plot\n" "images/$name" "$sample" "$sample" "$sample")
+  cmd=$(printf "$plot\n" "images/$name" "$sample" "$sample" "$sample" "$sample")
   gnuplot -e "$cmd"
 done

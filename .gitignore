@@ -3,7 +3,6 @@
 
 *.toml
 *.damp
-*.sdamp
 *.png
 *.test
 *.prof

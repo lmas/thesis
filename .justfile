@@ -72,11 +72,12 @@ umount:
 
 # Removes all built stuff
 clean:
-    test ! -f *.pdf || rm *.pdf
-    test ! -f {{COVER}}.* || rm {{COVER}}.*
-    test ! -f {{MEM}} || rm {{MEM}}
-    test ! -f {{CPU}} || rm {{CPU}}
-    test ! -f *.test || rm *.test
+    rm *.pdf || true
+    rm {{COVER}}.* || true
+    rm {{MEM}} || true
+    rm {{CPU}} || true
+    rm *.test || true
+    rm damp/samples/*.damp || true
     go mod tidy
     go clean
     

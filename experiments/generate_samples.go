@@ -36,15 +36,15 @@ type testSample struct {
 }
 
 var plotSamples = []testSample{
-	{"damp/samples/1-bourkestreetmall.in", 17490, 24, 24 * 7},
-	{"damp/samples/2-machining.in", 44056, 16, 44056 / 9},
+	{"damp/samples/1-bourkestreetmall", 17490, 24, 24 * 7},
+	{"damp/samples/2-machining", 44056, 16, 44056 / 9},
 }
 
 func main() {
 	for _, s := range plotSamples {
 		// Open the dataset
 		log.Println("running sample:", s.name)
-		tsData, err := damp.ReadTimeseriesFromFile(s.name, s.maxSize)
+		tsData, err := damp.ReadTimeseriesFromFile(s.name+".in", s.maxSize)
 		if err != nil {
 			panic(err)
 		}
@@ -57,24 +57,41 @@ func main() {
 			panic(err)
 		}
 		log.Println("original took:", stop.Sub(start))
-		if err := writeTS(s.name+".damp", tsDamp); err != nil {
+		if err := writeTS(s.name+".1.damp", tsDamp); err != nil {
 			panic(err)
 		}
 
-		// Run streaming DAMP
-		tsSDamp := damp.NewTimeseries(tsData.Len(), false)
-		sdamp, err := damp.NewStreamDAMP(s.maxSize, s.seqSize, s.trainSize, false)
+		// Run streaming DAMP, normalised
+		tsSDamp1 := damp.NewTimeseries(tsData.Len(), false)
+		sdamp1, err := damp.NewStreamDAMP(s.maxSize, s.seqSize, s.trainSize, true)
 		if err != nil {
 			panic(err)
 		}
 		start = time.Now()
 		for i := range tsData.Len() {
-			discord := sdamp.Push(tsData.Get(i))
-			tsSDamp.Push(discord)
+			discord := sdamp1.Push(tsData.Get(i))
+			tsSDamp1.Push(discord)
 		}
 		stop = time.Now()
-		log.Print("streaming took:", stop.Sub(start))
-		if err := writeTS(s.name+".sdamp", tsSDamp); err != nil {
+		log.Print("streaming (normalised=true) took:", stop.Sub(start))
+		if err := writeTS(s.name+".2.damp", tsSDamp1); err != nil {
+			panic(err)
+		}
+
+		// Run streaming DAMP, non-normalised
+		tsSDamp2 := damp.NewTimeseries(tsData.Len(), false)
+		sdamp2, err := damp.NewStreamDAMP(s.maxSize, s.seqSize, s.trainSize, false)
+		if err != nil {
+			panic(err)
+		}
+		start = time.Now()
+		for i := range tsData.Len() {
+			discord := sdamp2.Push(tsData.Get(i))
+			tsSDamp2.Push(discord)
+		}
+		stop = time.Now()
+		log.Print("streaming (normalised=false) took:", stop.Sub(start))
+		if err := writeTS(s.name+".3.damp", tsSDamp2); err != nil {
 			panic(err)
 		}
 	}
