@@ -269,22 +269,10 @@ The rest of the thesis has it's structure organised in the following way.
 @method walks through the implementation of the Matrix Profile algorithm and
 how it's applied in the hardware.
 Then the section continues with the collection of data from the hardware sensors. 
-@results documents and analyses the results from the data collection,
-which is then discussed --  in relation to the original problem definitions --
+@results documents and analyses the results from the data collection
+which is then discussed, in relation to the original problem definitions,
 in @discussion.
 
-// REMARK: I've seen comments in social media about the use of dashes - in any
-// form of written text - indicates the presence of "AI enhancements" or tools.
-// I would like to challenge this in this last paragraph, or at least see if I
-// can trap some unsuspecting fish with this bait.
-// NOTE: I'm against the use of AI tools and don't use them myself!
-// Instead I will cite my little handbook:
-// "As a substitute for the comma, _the dash_ signals a stronger, more significant
-// pause."
-// - The new Oxford guide to writing, by Tomas S. Kane
-// REMARK2: Although, while looking at it now it feels like a unnecessarily
-// strong emphasis... But I'll leave it in anyways and see if anyone's going to
-// notice.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Theory
@@ -407,14 +395,9 @@ and summarised by _Lai et al._ @lai:
 	previous research.
 
 - Contextual anomalies:
-	These are also individual data points, but with values that make them stand out
-	in the local context --
-	which needs to be defined during the analysis --
-	instead of globally.
+	These are also individual data points but with values that make them stand out
+	in a local context (and is thus subjective), instead of globally.
 	It's considered a harder problem to identify this kind of anomaly.
-
-// NOTE: About the use of dashes in text, see the comments in @structure
-// (around line 295, up and above).
 
 - Collective anomalies:
 	This is a subsequence of data points, which individually might not stand out
