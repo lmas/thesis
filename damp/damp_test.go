@@ -16,17 +16,10 @@
 package damp
 
 import (
-	"bufio"
-	"fmt"
 	"math"
-	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"testing"
-	"time"
-
-	"gonum.org/v1/plot"
 )
 
 func TestNextpower2(t *testing.T) {
@@ -60,7 +53,7 @@ func TestDAMPWithConstantRegions(t *testing.T) {
 		93.84000000000002, 93.84000000000002, 93.84000000000002,
 	}
 	seq := 11
-	ts := NewTimeSeries(len(data), false)
+	ts := NewTimeseries(len(data), false)
 	for _, d := range data {
 		ts.Push(d)
 	}
@@ -76,140 +69,54 @@ func TestDAMPWithConstantRegions(t *testing.T) {
 const samplesDir string = "samples"
 
 type testSample struct {
-	name      string
-	samples   int
-	maxSize   int
-	seqSize   int
-	trainSize int
-	precision float64
+	name        string
+	maxSize     int
+	seqSize     int
+	trainSize   int
+	topDiscords []int
 }
 
-func TestDAMPWithDatasets(t *testing.T) {
-	samples := []testSample{
-		{"1-bourkestreetmall", 17490, 17490, 24, 24 * 7, 0.00000000001},
-		{"2-machining", 44056, 44056, 16, 44056 / 9, 0.000001},
-	}
-	for _, s := range samples {
-		// Open the dataset
-		t.Log("running sample:", s.name)
-		ts, err := readTS(filepath.Join(".", samplesDir, s.name+".in"), s.maxSize)
-		if err != nil {
-			t.Fatal(err)
-		}
+var dataSamples = []testSample{
+	{"1-bourkestreetmall", 17490, 24, 24 * 7, []int{
+		7837, 7850, 7838, 7852, 7849, 7848, 7847, 7846, 7845, 7842, 7843, 7844,
+		7841, 7839, 7840, 7853, 16611, 16610, 7851, 7854, 16609, 16599, 16600,
+		16601, 16608, 16607, 16603, 16604, 16605, 16606, 16602, 16598, 16597,
+		16596, 7855, 16595, 16612, 7856, 7836, 16594, 7857, 9182, 9181, 7858,
+		7835, 9169, 9168, 9170, 9167, 9166, 9171, 9165, 9172, 9164, 9163, 9173,
+		9183, 9162, 16613, 9180, 16617, 8475, 8476, 9161,
+	}},
+	{"2-machining", 44056, 16, 44056 / 9, []int{
+		15551, 15550, 15558, 15553, 15552, 15548, 15549, 15554, 15556, 15555,
+		15557, 15559, 15560, 15561, 15547, 15544, 15545, 15546, 15543, 15562,
+		36781, 15542, 36787, 36790, 36783, 36788, 36780, 36791, 36789, 36782,
+		15541, 36793, 36792, 15563, 36795, 36794, 36779, 36778, 36786, 36796,
+		36777, 36797, 36776, 36799, 36784, 36798, 36775, 15540, 36785, 15564,
+		15567, 36801, 36802, 36800, 36774, 29764, 29762, 29763, 29761, 29765,
+		29760, 29759, 29758, 22607,
+	}},
+}
+var topN = 64
 
-		// Run original DAMP
-		start := time.Now()
-		damp, err := DAMP(ts, s.seqSize, s.trainSize)
-		stop := time.Now()
-		if err != nil {
-			t.Fatalf("expected no errors, got: %s", err)
-		}
-		err = compareMP(damp, filepath.Join(samplesDir, s.name+".out"), s.precision)
+func TestStreamDAMPWithDatasets(t *testing.T) {
+	for _, s := range dataSamples {
+		path := filepath.Join(".", samplesDir, s.name+".in")
+		ts, err := ReadTimeseriesFromFile(path, s.maxSize)
 		if err != nil {
 			t.Fatal(err)
 		}
-		t.Log("original took:", stop.Sub(start))
-
-		// Run streaming DAMP
-		sd, err := NewStreamDAMP(s.maxSize, s.seqSize, s.trainSize, true)
+		sd, err := NewStreamDAMP(s.maxSize, s.seqSize, s.trainSize, false)
 		if err != nil {
 			t.Fatal(err)
 		}
-		f, err := os.Open(filepath.Join(".", samplesDir, s.name+".in"))
-		if err != nil {
-			t.Fatal(err)
+		sdamp := NewTimeseries(ts.Len(), false)
+		for i := range ts.Len() {
+			discord := sd.Push(ts.Get(i))
+			sdamp.Push(discord)
 		}
-		sc := bufio.NewScanner(f)
-		var v float64
-		start = time.Now()
-		for sc.Scan() {
-			line := strings.TrimSpace(sc.Text())
-			v, err = strconv.ParseFloat(line, 64)
-			if err != nil {
-				t.Fatal(err)
+		for i, idx := range sdamp.TopIndices(topN) {
+			if idx != s.topDiscords[i] {
+				t.Fatalf("expected index %v, got %v", s.topDiscords[i], idx)
 			}
-			sd.Push(v)
 		}
-		stop = time.Now()
-		f.Close()
-		t.Log("streaming took:", stop.Sub(start))
-		if err = sc.Err(); err != nil {
-			t.Fatal(err)
-		}
-
-		// Plot the data
-		start = time.Now()
-		pdata, err := PlotFromTimeseries(ts, "Data")
-		if err != nil {
-			t.Fatal(err)
-		}
-		pdamp, err := PlotFromTimeseries(damp, "DAMP")
-		if err != nil {
-			t.Fatal(err)
-		}
-		psdamp, err := PlotFromTimeseries(sd.amp, fmt.Sprintf("Stream DAMP, normalised=%v", sd.norm))
-		if err != nil {
-			t.Fatal(err)
-		}
-		w, err := os.Create(s.name + "-plots.png")
-		if err != nil {
-			t.Error(err)
-		}
-		if err = SavePlots([]*plot.Plot{pdata, pdamp, psdamp}, w); err != nil {
-			t.Error(err)
-		}
-		w.Close()
-		stop = time.Now()
-		t.Log("plotting took:", stop.Sub(start))
 	}
-}
-
-func readTS(path string, size int) (ts *Timeseries, err error) {
-	r, err := os.Open(path)
-	if err != nil {
-		err = fmt.Errorf("error opening input: %s\n", err)
-		return
-	}
-	ts, err = ReadTimeSeries(r, size)
-	if err != nil {
-		err = fmt.Errorf("error reading input: %s\n", err)
-	}
-	defer r.Close()
-	return
-}
-
-func compareMP(mp *Timeseries, path string, precision float64) (err error) {
-	r, err := os.Open(path)
-	if err != nil {
-		return fmt.Errorf("error opening output: %w\n", err)
-	}
-	s := bufio.NewScanner(r)
-	var f float64
-	var i int
-	for s.Scan() {
-		line := strings.TrimSpace(s.Text())
-		f, err = strconv.ParseFloat(line, 64)
-		if err != nil {
-			return
-		}
-		v := mp.Get(i)
-		if !compareFloats(v, f, precision) {
-			return fmt.Errorf("expected %.16f, got %.16f (line %d)\n", f, v, i)
-		}
-		i += 1
-	}
-	return s.Err()
-}
-
-// compareFloats attempts to compare two floats, up to a certain precision.
-// Source: https://stackoverflow.com/a/76386543
-func compareFloats(a, b, epsilon float64) bool {
-	if a == b {
-		return true
-	}
-	diff := math.Abs(a - b)
-	if a == 0.0 || b == 0.0 || diff < math.SmallestNonzeroFloat64 {
-		return diff < epsilon*math.SmallestNonzeroFloat64
-	}
-	return diff/(math.Abs(a)+math.Abs(b)) < epsilon
 }

@@ -17,29 +17,22 @@ package damp
 
 import (
 	"bufio"
-	"image/color"
+	"fmt"
 	"io"
 	"math"
+	"os"
 	"slices"
 	"strconv"
 	"strings"
 
-	"github.com/fale/sit"
 	"github.com/gammazero/deque"
-	"gonum.org/v1/plot"
-	"gonum.org/v1/plot/font"
-	"gonum.org/v1/plot/plotter"
-	"gonum.org/v1/plot/vg"
-	"gonum.org/v1/plot/vg/draw"
-	"gonum.org/v1/plot/vg/vgimg"
 )
 
 type Timeseries struct {
-	// data []float64
 	data deque.Deque[float64]
 }
 
-func NewTimeSeries(size int, fill bool) *Timeseries {
+func NewTimeseries(size int, fill bool) *Timeseries {
 	var d deque.Deque[float64]
 	d.Grow(size)
 	if fill {
@@ -48,13 +41,12 @@ func NewTimeSeries(size int, fill bool) *Timeseries {
 		}
 	}
 	return &Timeseries{
-		// data: make([]float64, size),
 		data: d,
 	}
 }
 
-// ReadTimeSeries reads values from a Reader r and creates a new TimeSeries.
-func ReadTimeSeries(r io.Reader, max int) (t *Timeseries, err error) {
+// ReadTimeseries reads values from a Reader r and creates a new TimeSeries.
+func ReadTimeseries(r io.Reader, max int) (t *Timeseries, err error) {
 	t = &Timeseries{}
 	s := bufio.NewScanner(r)
 	var f float64
@@ -80,51 +72,29 @@ func ReadTimeSeries(r io.Reader, max int) (t *Timeseries, err error) {
 	return
 }
 
-func PlotFromTimeseries(t *Timeseries, title string) (p *plot.Plot, err error) {
-	p = plot.New()
-	p.Title.Text = title
-	p.Y.Tick.Marker = sit.Ticker{}
-	p.Y.Min = sit.Min(p.Y.Min, p.Y.Max)
-	p.Y.Max = sit.Max(p.Y.Min, p.Y.Max)
-	p.X.Tick.Marker = sit.Ticker{}
-	p.X.Min = sit.Min(p.X.Min, p.X.Max)
-	p.X.Max = sit.Max(p.X.Min, p.X.Max)
-	p.Add(plotter.NewGrid())
-	line, err := plotter.NewLine(t)
+func ReadTimeseriesFromFile(path string, size int) (ts *Timeseries, err error) {
+	r, err := os.Open(path)
 	if err != nil {
-		return nil, err
+		err = fmt.Errorf("error opening input: %s\n", err)
+		return
 	}
-	line.Width = vg.Points(1)
-	line.Color = color.RGBA{R: 0, G: 114, B: 189, A: 255}
-	p.Add(line)
+	ts, err = ReadTimeseries(r, size)
+	if err != nil {
+		err = fmt.Errorf("error reading input: %s\n", err)
+	}
+	defer r.Close()
 	return
 }
 
-func SavePlots(plots []*plot.Plot, w io.Writer) (err error) {
-	h := font.Length(len(plots) * 5)
-	img := vgimg.New(20*vg.Centimeter, h*vg.Centimeter)
-	dc := draw.New(img)
-	t := draw.Tiles{
-		Rows: len(plots),
-		Cols: 1,
+func (t *Timeseries) Write(w io.Writer) error {
+	for i := range t.Len() {
+		w.Write([]byte(fmt.Sprintf("%f\n", t.Get(i))))
 	}
-	pc := make([][]*plot.Plot, len(plots))
-	for i, p := range plots {
-		pc[i] = make([]*plot.Plot, 1)
-		pc[i][0] = p
-	}
-	c := plot.Align(pc, t, dc)
-	for i := range plots {
-		pc[i][0].Draw(c[i][0])
-	}
-	png := vgimg.PngCanvas{Canvas: img}
-	_, err = png.WriteTo(w)
-	return
+	return nil
 }
 
 func (t *Timeseries) Max() (max float64, index int) {
 	max = math.Inf(-1)
-	// for _, v := range t.data {
 	for i := range t.data.Len() {
 		v := t.data.At(i)
 		if v > max {
@@ -136,7 +106,6 @@ func (t *Timeseries) Max() (max float64, index int) {
 }
 
 func (t *Timeseries) Slice(i, j int) []float64 {
-	// return t.data[i:j]
 	v := make([]float64, j-i)
 	for x := range len(v) {
 		v[x] = t.data.At(i + x)
@@ -145,12 +114,10 @@ func (t *Timeseries) Slice(i, j int) []float64 {
 }
 
 func (t *Timeseries) Get(i int) float64 {
-	// return t.data[i]
 	return t.data.At(i)
 }
 
 func (t *Timeseries) Set(i int, v float64) {
-	// t.data[i] = v
 	t.data.Set(i, v)
 }
 
@@ -164,14 +131,41 @@ func (t *Timeseries) Push(v float64) {
 
 // Required by plotter interface (can't receive a pointer)
 func (t Timeseries) Len() int {
-	// return len(t.data)
 	return t.data.Len()
 }
 
 // Required by plotter interface (can't receive a pointer)
 func (t Timeseries) XY(i int) (x, y float64) {
-	// return float64(i), t.data[i]
 	return float64(i), t.data.At(i)
+}
+
+func (t Timeseries) TopIndices(k int) []int {
+	if k > t.Len() {
+		k = t.Len()
+	}
+	top := make([]int, k)
+	for i := range top {
+		top[i] = -1
+	}
+	for i := range t.Len() {
+		x := t.Get(i)
+		for j := range top {
+			// Case 1: insert into the next free slot
+			if top[j] == -1 {
+				top[j] = i
+				break
+			}
+			// Case 2: push away lesser items
+			y := t.Get(top[j])
+			if x > y {
+				// Splice together the top of the slice [:j], the new item {i},
+				// and bottom of the slice minus the last item [j:len(top)-1]
+				top = append(top[:j], append([]int{i}, top[j:len(top)-1]...)...)
+				break
+			}
+		}
+	}
+	return top
 }
 
 func containsConstantRegions(ts *Timeseries, seqSize int) bool {
@@ -181,10 +175,10 @@ func containsConstantRegions(ts *Timeseries, seqSize int) bool {
 	}
 	var vertcat []float64
 	vertcat = append(vertcat, 1)
-	vertcat = append(vertcat, diff(data)...)
+	vertcat = append(vertcat, diffBetweenItems(data)...)
 	vertcat = append(vertcat, 1)
-	idx := find(vertcat)
-	len := slices.Max(diff(idx))
+	idx := findNonZero(vertcat)
+	len := slices.Max(diffBetweenItems(idx))
 	return len >= float64(seqSize)
 }
 
@@ -193,7 +187,7 @@ func containsConstantRegions(ts *Timeseries, seqSize int) bool {
 //
 // in: [1 1 2 3 5 8 13 21]
 // out:  0     1     1     2     3     5     8
-func diff(list []float64) (val []float64) {
+func diffBetweenItems(list []float64) (val []float64) {
 	prev := math.NaN()
 	for _, v := range list {
 		if math.IsNaN(prev) {
@@ -206,7 +200,7 @@ func diff(list []float64) (val []float64) {
 	return val
 }
 
-func find(list []float64) (val []float64) {
+func findNonZero(list []float64) (val []float64) {
 	for i, v := range list {
 		if v == 0.0 {
 			continue

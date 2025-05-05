@@ -47,7 +47,7 @@ func DAMP(t *Timeseries, m int, s int) (amp *Timeseries, err error) {
 	// of helper utils, so have to wait until there's enough free time)
 
 	// Find the approximately highest discord score from an initial chunk of the data
-	amp = NewTimeSeries(tlen, true)
+	amp = NewTimeseries(tlen, true)
 	for i := s - 1; i < s+16*m; i++ {
 		// Stop training if the subsequence attempts to move past the end of the time series
 		if i+m-1 > tlen {

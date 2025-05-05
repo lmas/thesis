@@ -44,8 +44,8 @@ func NewStreamDAMP(maxSize, seqSize, trainSize int, normalise bool) (sd *StreamD
 		return
 	}
 	sd = &StreamDAMP{
-		data:      NewTimeSeries(maxSize, false),
-		amp:       NewTimeSeries(maxSize, false),
+		data:      NewTimeseries(maxSize, false),
+		amp:       NewTimeseries(maxSize, false),
 		maxSize:   maxSize,
 		trainSize: trainSize,
 		seqSize:   seqSize,

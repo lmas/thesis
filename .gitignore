@@ -1,5 +1,7 @@
 .metadata.toml
 *.pdf
 *.toml
+*.damp
+*.sdamp
+*.svg
 mnt/*
-damp/*.png
