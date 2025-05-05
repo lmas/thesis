@@ -51,7 +51,7 @@ var samples = []sample{
 	{"tmp/data/knutstorp-pressure.in", -1, 0.5, 1024, 512, 8},
 }
 
-var normalise = true
+var normalise = false
 
 func main() {
 	plots := make([][]*plot.Plot, 4) // Rows
