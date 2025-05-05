@@ -31,8 +31,8 @@ import (
 
 const (
 	bmePeriod int = 1000
-	bmeBuffer int = 1024
-	bmeSeq    int = 8
+	bmeBuffer int = 10240
+	bmeSeq    int = 10
 	bmeTrain  int = 512
 )
 

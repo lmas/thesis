@@ -28,8 +28,8 @@ import (
 
 const (
 	lightPeriod int = 1000
-	lightBuffer int = 1024
-	lightSeq    int = 8
+	lightBuffer int = 10240
+	lightSeq    int = 10
 	lightTrain  int = 512
 )
 
