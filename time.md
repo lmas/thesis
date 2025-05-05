@@ -1,18 +1,4 @@
 
-# Original (proposed) time plan
-
-- Week 1: Find and study previous work done, run reference implementation (done in Python, for example) on artificial data.
-- Week 2: Setup the first board, start developing C implementation of matrix profile.
-- Week 3: Finish implementation and test it on the board.
-- Week 4: Investigate and implement sending data wirelessly (preferable) from the board.
-- Week 5: Investigate how to measure energy usage, setup extra sensors if required.
-- Week 6: Finish both investigations and apply new implementations on the board.
-- Week 7: Setup controller and InfluxDB, start collecting sensor data and energy usage.
-- Week 8: Setup second board without matrix profile, let it send full sensor data and start analysing the statistics.
-- Week 9: Finish the analysis and comparison of both boards, write up the results.
-- Week 10: Intentional left as a spare, in case of problems.
-
-
 # Planned schedule
 
 ```mermaid
@@ -94,6 +80,33 @@ section TODO
 
 
 # Activity log
+
+# Total: 8
+
+## Week 8
+
+- 2025-05-16, 6 h:
+    6h continued with the report, started cleaning up examples and sorting through
+    the changes from yesterday, booked upcoming presentations.
+
+- 2025-05-15, 8 h:
+    8 h continued working on the plots and their scripts, started rewriting parts
+    of old sections with new plots and stuff.
+
+- 2025-05-14, 8 h:
+    About 2 h meetings with supervisors and checking in progress, 1 h social meeting,
+    5 h started reworking plots and created new runtime diagram for comparing the
+    different algo versions.
+    
+
+- 2025-05-13, 5 h:
+    Had to lookup a typst pkg for drawing figures and finally redrew the last one,
+    also updated result plots to highlight differences between normalised yes/no.
+
+- 2025-05-12, 8 h:
+    2 h cleaning up sources and added basic benchmark.
+    6 h adding scripts and instructions for generating prettier plots for the
+    report, only two more images that needs to be replaced.
 
 ## Week 7
 
