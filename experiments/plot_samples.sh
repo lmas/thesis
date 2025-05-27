@@ -21,35 +21,39 @@
 set -eu
 
 while read sample; do
+  path=$(echo "$sample" | cut -d ';' -f 1)
+  unit=$(echo "$sample" | cut -d ';' -f 2)
   gnuplot <<- EOF
-  set key off;
-  set style data line;
-  set linetype 1 lc rgb "#0072bd";
-  set grid;
-  set term png size 720, 1280 font "Default,14";
-  set output "images/analysis-$sample.png";
-  set multiplot layout 4,1;
-  set xlabel "Time (T)"
-  set title "Data"; plot "damp/samples/$sample.in";
+  set key off
+  set style data line
+  set linetype 1 lc rgb "#0072bd"
+  set grid
+  set term png size 720, 1280 font "Default,14"
+  set output "images/analysis-$path.png"
+  set multiplot layout 5,1
+  set xlabel "Time (n)"
+  set ylabel "$unit"
+  set title "Data"; plot "damp/samples/$path.in"
   set ylabel "Discord score (arb. unit)"
-  set title "DAMP"; plot "tmp/$sample.1.damp";
-  set title "Stream DAMP (normalised=true)"; plot "tmp/$sample.2.damp";
-  set title "Stream DAMP (normalised=false)"; plot "tmp/$sample.3.damp";
+  set title "Reference DAMP"; plot "damp/samples/$path.out"
+  set title "DAMP"; plot "tmp/$path.1.damp"
+  set title "Stream DAMP (normalised=true)"; plot "tmp/$path.2.damp"
+  set title "Stream DAMP (normalised=false)"; plot "tmp/$path.3.damp"
 EOF
 done << EOF
-1-bourkestreetmall
-2-machining
-knutstorp-tonga
+1-bourkestreetmall;Pedestrians (people/h)
+2-machining;Arbitrary unit
+knutstorp-tonga;Pressure (hPa)
 EOF
 
 gnuplot <<- EOF
-set style data histogram;
-set style fill solid;
-set key left reverse Left;
-set ylabel "Time (ms/data point)";
-set term png size 1280,720 font "Default,14";
-set output 'images/analysis-timings.png';
+set style data histogram
+set style fill solid
+set key left reverse Left
+set ylabel "Time (ms/data point)"
+set term png size 1280,720 font "Default,14"
+set output 'images/analysis-timings.png'
 plot "tmp/timings.in" using 2:xtic(1) title "DAMP", \
 "tmp/timings.in" using 3 title "Stream DAMP (normalised=true)", \
-"tmp/timings.in" using 4 title "Stream DAMP (normalised=false)";
+"tmp/timings.in" using 4 title "Stream DAMP (normalised=false)"
 EOF
