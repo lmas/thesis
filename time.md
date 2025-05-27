@@ -81,6 +81,36 @@ section TODO
 
 # Activity log
 
+## Week 10
+
+- 2025-06-01, 6 h:
+    6 h continued with the report, sent a first draft.
+
+- 2025-05-31, 5 h:
+    5 h added note about subsequence sizes and first half of the analysis,
+    tried fiddling some more with the influx graphs.
+
+- 2025-05-30, 6 h:
+    About 6 h running the Matlab script on the knutstorp data and twiddling a lot
+    more with the influx graphs (there was an unwanted spike in the temperature
+    data, caused by an open window...), continued writing.
+
+- 2025-05-29, 0 h:
+    Holiday.
+
+- 2025-05-28, 6 h:
+    Had a half-hour meeting with supervisor, about 1 h updating sample plots
+    and fixing word contractions, 4.5 h writing the results section and doing
+    other cleanups.
+
+- 2025-05-27, 6 h:
+    About 2 h attending presentations and oppositions of other theses, then about
+    4 h continuing with the report and start laying out the results and adjusting
+    the plots.
+
+- 2025-05-26, 0 h:
+    Busy with other work elsewhere.
+
 ## Week 9
 
 - 2025-05-23, 6 h:

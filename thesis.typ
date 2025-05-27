@@ -1227,11 +1227,11 @@ the system, as suggested from the top of the process list:
 
 ```
 # sudo ps axS k -time o user,pcpu,pmem,time,comm | head -n 5
-USER    		%CPU		%MEM		    TIME		COMMAND
-influxdb		 1.6		28.1		03:34:42		influxd
-lmas    		 0.3		 0.9		00:44:21		logger
-telegraf		 0.1		10.5		00:21:55		telegraf
-root    		 0.0		 1.4		00:04:10		NetworkManager
+	USER    		%CPU		%MEM		    TIME		COMMAND
+	influxdb		 1.6		28.1		03:34:42		influxd
+	lmas    		 0.3		 0.9		00:44:21		logger
+	telegraf		 0.1		10.5		00:21:55		telegraf
+	root    		 0.0		 1.4		00:04:10		NetworkManager
 ```
 
 The resource usage numbers does not match exactly with the plot though, as the
