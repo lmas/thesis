@@ -385,8 +385,8 @@ In their paper, _Yeh_ introduces a novel algorithm called the _Matrix Profile_
 which can find these discords and give strong indications of anomalies in a time
 series.
 The Matrix Profile produces a form of metadata array that, in simplified terms,
-represents the minimal Euclidean distances between each subsequence, of size _m_,
-in the analysed time series _ts_.
+represents the minimal Euclidean distances between each subsequence $s$,
+of size $m$, in the analysed time series _ts_.
 Then it is just a matter of finding the largest distance for each subsequence,
 in order to discover any possible discord anomaly.
 A larger distance, _the discord score_, means that the subsequence is an unusual
@@ -464,7 +464,7 @@ it serves as a good reference for later improvements of the DAMP algorithm.
 
 @dampalgo shows pseudocode for the DAMP algorithm.
 The function calculates the Matrix Profile of the analysed time series $t$,
-with the subsequence length $s$ and a split point $p$, and
+with the subsequence length $m$ and a split point $p$, and
 is temporarily kept in the $a m p$ array, which the function returns to the user
 at the end.
 
@@ -477,19 +477,19 @@ The MASS v2 function finds the scores by calculating the Euclidean distances
 between the subsequences, it is shown later in @massv2.
 
 #figure(```go
-func DAMP(t []float64, s int, p int) []float64 {
+func DAMP(t []float64, m int, p int) []float64 {
 	amp := make([]float64, len(t)) // An new empty array
 
 	// Find the discord scores for the first points
-	for i := p-1; i < p+s; i++ {
-		query := t[i: i+s]
+	for i := p-1; i < p+m; i++ {
+		query := t[i: i+m]
 		amp[i] = massv2(t[0: i], query)
 	}
 	bsf := max(amp) // The best-so-far score
 
 	// Find scores for the rest of t
-	for i := p+s; i < len(t)-s+1; i++ {
-		amp[i], bsf = processBackward(t, s, i, bsf)
+	for i := p+m; i < len(t)-m+1; i++ {
+		amp[i], bsf = processBackward(t, m, i, bsf)
 	}
 
 	// Output full matrix profile of t
@@ -504,7 +504,7 @@ calculates their distance profiles using the _processBackward_ function,
 shown in @backproc.
 
 _processBackward_ finds the distance scores by looping backwards in an expanding
-search from the current subsequence $t_(i:i+s)$ and stops as soon as it either
+search from the current subsequence $t_(i:i+m)$ and stops as soon as it either
 reaches the beginning of $t$ _or_ when the score is lower than the best-so-far
 $b s f$.
 To prevent reading non-existing data, the process has to consider the two special
@@ -516,16 +516,16 @@ simply no more data that needs to be process afterwards.
 The rest of the code is self explanatory.
 
 #figure(```go
-func processBackward(t []float64, s int, i int, bsf float64)
+func processBackward(t []float64, m int, i int, bsf float64)
 (float64, float64) {
-	size := nextpower2(8 * s)
-	query := t[i: i+s]
+	size := nextpower2(8 * m)
+	query := t[i: i+m]
 	score := math.Inf(0) // Positive infinity
 	exp := 0
  
 	for score >= bsf {
-		start := i - size + (exp*s) + 1
-		stop := i - (size/2) + (exp*s) + 1
+		start := i - size + (exp*m) + 1
+		stop := i - (size/2) + (exp*m) + 1
 
 		// Case 1: the segment furthest from the current subsequence
 		if start < 1 {
@@ -600,7 +600,7 @@ It is also noteworthy that the MASS function operates more efficient if the
 amount of data points is a power of two, as mentioned by _Lu_ @lu.
 If not, the function would have a significant drop in performance.
 The DAMP algorithm avoids this issue by setting the size of the processed data
-to the next power of two that occurs after the subsequence size $s$,
+to the next power of two that occurs after the subsequence size,
 near the beginning of the _processBackward_ function in @backproc.
 
 As a final note, normalised distances are not wanted in some cases, for example
@@ -620,6 +620,30 @@ MASS with this new distance function.
 As a later section will show, the loss of precision in the distance scores are
 negligible when detecting point anomalies and offers great improvements in
 performance.
+
+
+== A note on subsequence and training sizes
+
+As _Chandola et al._ have noted @chandola, one difficulty with anomaly detection
+is choosing the most optimal size of subsequence for the analysis.
+Most other studies seem to pass over this problem.
+_Lu et al._ simply states that the size should be set according to domain
+knowledge of the analysed time series @lu.
+Though they do try to solve the problem in a later work @lu2, by analysing a time
+series using _multiple_ subsequence sizes and avoid having the user pick one
+themselves.
+
+Similar difficulties exists with picking the training sizes and there is a more
+noticeable lack of suggestions in the existing literature.
+Although the size of the training data might have a lesser impact on the results,
+in comparison with the effects of subsequence sizes.
+
+This thesis have not investigated these parameters any further, to limit the
+scope and to remain on topic, but future works might want to study the impacts
+of these parameters.
+For now though, the subsequence size should be "large enough" to cover the
+theoretical size of any expected anomaly patterns and the training size should
+be at least twice of that.
 
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -94,6 +94,19 @@ lu:
   serial-number:
     doi: 10.1145/3534678.3539271
 
+lu2:
+  type: Article
+  title: "Matrix Profile XXX: MADRID: A Hyper-Anytime and Parameter-Free Algorithm to Find Time Series Anomalies of all Lengths"
+  author:
+    - Yue Lu
+    - Thirumalai Vinjamoor Akhil Srinivas
+    - Takaaki Nakamura
+    - Makoto Imamura
+    - Eamonn Keogh
+  date: 2023-12-01
+  serial-number:
+    doi: 10.1109/ICDM58522.2023.00148
+
 mueen:
   type: Article
   title: "MASS: distance profile of a query over a time series"
