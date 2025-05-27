@@ -209,20 +209,27 @@ time series.
 
 This thesis looks to investigate and try to answer the following questions:
 
-- Is it possible to run the Matrix Profile algorithm in a limited hardware
-	environment, such as a small, of-the-shelf microprocessor board, and be able
-	to detect anomalies in the data streams from multiple sensors?
+- Is it possible to calculate a Matrix Profile using raw samples from a sensor,
+	in a limited hardware environment such as a small, of-the-shelf microprocessor
+	board?
 
-- If so, how efficient would this on-device-detection be in terms of sent data
-	traffic (or lack of) and energy use?
-	The microprocessor board should have its performance benchmarked against a
-	similar board, but which sends all sensor data continuously to a remote
-	controller instead.
+- Is anomaly detection accurate enough, when using a Matrix Profile?
+	A comparison with a reference implementation should validate the results.
 
-Positive outcomes to these questions would then indicate that sensor analysis
-done close to the Edge would be beneficial to the individual sensor's lifetime
-and thus reduce the overall amount of spent resources required for operating
-larger sensor networks.
+- Is the method performant enough to handle multiple sensors in the same
+	environment? How efficient is the algorithm?
+	A benchmark should measure the performance.
+
+Positive outcomes to these questions would give an indication that data analysis
+is possible to do on Edge devices directly.
+Doing so should enable more efficient data monitoring, with earlier anomaly
+detection, less data to store, and using less network traffic. 
+Minimising both data storage and network traffic should help reduce the overall
+amount of spent resources, required for operating larger sensor networks.
+
+And by reducing the continuous data stream from an individual sensor, to only
+have it sending out alerts, it might be possible to extend the sensor's lifetime.
+This is especially true if the sensor is running on battery power.
 
 
 == Delimitations
@@ -243,12 +250,12 @@ consuming to work with.
 
 The rest of the thesis has its structure organised in the following way.
 @background introduces the theory and commonly used methods for anomaly detection.
-@method walks through the implementation of the Matrix Profile algorithm and
-how it is applied in the hardware.
-Then the section continues with the collection of data from the hardware sensors. 
-@results documents and analyses the results from the data collection
-which is then discussed, in relation to the original problem definitions,
-in @discussion.
+@method walks through the implementation of a Matrix Profile, adapting it to
+handle streaming data and then running it in a hardware environment with sensors.
+The section continues with the data collection from the sensors and the results
+are then documented in @results.
+@analysis provides an analysis of the results, with a final conclusion given in
+@conclusion.
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1089,8 +1096,6 @@ services.
 on the system (causing work for the CPU, hard drives, or network devices for
 example) and is an average of the last 15 minutes.
 
-#TODO("update plot at a later date")
-
 #figure(
 	image("images/sensors-performance.png"),
 	caption: [Resource utilisation on the Raspberry Pi.],
@@ -1179,7 +1184,7 @@ implementations, while developing the prototypes, and was mainly kept for that
 purpose.
 
 
-== On the benchmark
+== On the benchmark <on-bench>
 As was already mentioned in @benchmark, the bar plot shows an unfair comparison.
 One of the reason for this is that the first DAMP implementation was naively
 re-implemented from _Lu's_ Matlab script and had no optimisations done on it.
@@ -1213,7 +1218,7 @@ The existing streaming adaptions were good enough though and could be easily run
 on the Raspberry Pi, which the following section will discuss.
 
 
-== On the sensors
+== On the sensors <on-sensors>
 
 As @res-perf shows, the load on the CPU was non-existent while running Stream DAMP
 in parallel with all other system services in the background.
@@ -1253,7 +1258,9 @@ could filter out the lesser discords and make the other peaks more actionable.
 
 // The discussion discusses each individual problem, how you addressed it, alternative solutions and shortcomings, etc.
 
-= Discussion <discussion>
+// The conclusions and future work describes the final outcome of how you solved your problems and what is left to do.
+
+= Conclusion <conclusion>
 
 #TODO("")
 
@@ -1276,31 +1283,38 @@ sensors:
 - the choice of hardware sensors was poorly made, should had researched better.
 
 
-////////////////////////////////////////////////////////////////////////////////
-
-// The conclusions and future work describes the final outcome of how you solved your problems and what is left to do.
-
-== Final conclusion
-
-#TODO("")
-
-
 == Future work
 
-#TODO("")
+The most obvious area that needs more work is the subject of how to pick an
+optimal subsequence size for your data source.
+The subject needs a more thorough investigation, by itself, which should produce
+some sort of a guideline.
+This might be difficult though, as time series data and anomaly patterns varies
+greatly between the different types of data sources that are available.
+Alternatively, more studies could investigate _Lu's_ approach @lu2, where they
+simply analyse a large amount of subsequence sizes by default.
 
-- research the effects of different seq. sizes.
-- need more applications in real scenarios.
+Another area that lacks study is the choice of distance function and how it would
+affect, performance wise, finding the nearest neighbours for a subsequence.
+As mentioned in @on-bench near the end, one initial investigation could try
+to normalise Minkowski's method and, if possible, compare it to the MASS function.
 
-optimisations:
+_Rakthanmanon et al._ suggest other interesting optimisations @rakthanmanon that
+would be worth to investigate for this work.
+For example, calculating a square root is an expensive mathematical operation on
+a computer and unfortunately a required step when calculating exact Euclidean
+distances.
+However, skipping the square root would not affect the relation between nearest
+neighbours and could offer performance improvements when running distance searches
+on large sets of time series.
+Another suggestion is to abort the distance search earlier by ignoring subsequences
+outside of lower bounds.
 
-- paper: Searching and Mining Trillions of Time Series Subsequences under Dynamic Time Warping
-  has notes about the use of squared distances and abandoning distance searches
-	earlier using lower bounds.
-
-- paper: Matrix Profile XXX: MADRID: A Hyper-Anytime and Parameter-Free Algorithm to Find Time Series Anomalies of all Lengths
-	has suggestions for generalised optimisations (based on DAMP paper) and getting rid
-	of parameters such as window size (by searching all window sizes).
+@on-sensors also had suggestions for refining the raw samples from the sensors,
+or reimplementing the drivers from scratch, and setting up some sort of a threshold
+for filtering and ignoring smaller discord scores.
+But doing so would require an adaptable threshold that could adjust itself over
+time, so it could better handle variations in the time series.
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1448,5 +1462,3 @@ NoneNormalised-4  38136    33187 ns/op    16152 B/op     6 allocs/op
 PASS
 ok  	code.larus.se/lmas/thesis/damp	183.733s
 ```
-
-#TODO("explain format")

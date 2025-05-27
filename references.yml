@@ -181,6 +181,22 @@ irf:
   title: "Weather at IRF"
   author: Institutet för rymdfysik (IRF)
   url: https://www2.irf.se//weather/
+
+rakthanmanon:
+  type: Article
+  title: "Searching and mining trillions of time series subsequences under dynamic time warping"
+  author:
+    - Thanawin Rakthanmanon
+    - Bilson Campana
+    - Abdullah Mueen
+    - Gustavo Batista
+    - Brandon Westover
+    - Qiang Zhu
+    - Jesin Zakaria
+    - Eamonn Keogh
+  date: 2012-08-12
+  serial-number:
+    doi: 10.1145/2339530.2339576
   
 ################################################################################
 # Surveys
