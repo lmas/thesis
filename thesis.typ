@@ -761,15 +761,17 @@ off-the-shelf and the bill of materials includes:
 #footnote[https://www.waveshare.com/wiki/Environment_Sensor_HAT]
 .* \
 	This is an addon module equipped with a TSL25911 ambient light sensor, a BME280
-	temperature, humidity, and air pressure combination sensor, a ICM20948 gyroscopic
-	motion sensor, an LTR390-UV-1 uv sensor, and finally a SGP40 volatile organic
-	compound sensor. Provides many alternative sensors in a single package.
+	temperature, humidity, and air pressure combination sensor, a ICM20948
+	gyroscopic motion sensor, an LTR390-UV-1 ultraviolet (UV) sensor, and finally
+	a SGP40 volatile organic compound (VOC) sensor.
+	Many alternative sensors provided in a single package.
 
-#TODO("rewrite for new pic")
-
-With the sensor HAT mounted on top as shown in @hatonrasp, the Raspberry Pi was
-then set up with standard settings by following the getting started guide
-@raspberry and then connected to a locally available WIFI network.
+Setting up the hardware required using some wires and a breadboard which is
+commonly used when prototyping electronic projects, as shown in @hatonrasp.
+@app-wiring have a wiring diagram that better illustrates the setup.
+The Raspberry Pi was then powered up and setup in a default way by following the
+getting started guide @raspberry and then connected to a locally available WIFI
+network.
 
 #figure(
 	block(clip: true, radius: 4pt, image("images/photo-rasp-sensor.jpg", width: 75%)),
@@ -792,7 +794,7 @@ The collected data is then sent to InfluxDB for logging and monitoring purposes.
 
 With the hardware set up and ready, the stream-adapted DAMP implementation could
 start processing the sensor data.
-@lightsensor shows example code for collecting the shifting ambient light level
+@lightsensor shows example code for collecting the shifting, ambient light level
 from the TSL25911 sensor.
 The code is running continuously on the Raspberry Pi in order to log the data
 for later analysis.
@@ -853,7 +855,6 @@ and cause alerts?")
 
 @bmesensor illustrates a similar example for collecting data from the BME280 device
 which has multiple built-in sensors.
-
 Lines 04-12 connects to the $I^2C$ bus the devices communicates over and disables
 all sensor filters.
 Lines 18-20 then reads the raw values from the three sensors and normalises them
@@ -900,8 +901,15 @@ for {
 ```, caption: [Example for collecting multiple values from the BME280 combination sensor.],
 ) <bmesensor>
 
-#TODO("disregard the last 3 sensors as being poor examples and having constant regions")
-// - gyro didn't work out, had constant regions
+Both examples was then merged into a single utility, the sensor "logger".
+It could then run in the background on the Raspberry Pi and continuously
+collect the sensor samples and discord scores for InfluxDB. 
+
+More sensors were available of course, the gyroscopic/UV/VOC devices, which were
+not used.
+The VOC sensor did not have a ready-made driver in Go available at the time
+and the UV and gyroscopic sensors did not provide any interesting data.
+
 
 == A note on signal noise
 
@@ -910,8 +918,6 @@ fluctuating data and other problems associated with signal noise.
 The subject itself is a well-known problem and it is common knowledge that if a
 signal input contains noise, the output result will also contain noise or worse.
 This remains true for DAMP of course.
- // and the following results will illustrate
-// how the noise affects the algorithm.
 
 As an example, a basic low-pass filter could filter the data before it is pushed
 into DAMP and remove the noise in the higher frequencies.
@@ -926,7 +932,6 @@ DAMP too much anyway.
 //   year={2008},
 //   publisher={John Wiley \& Sons}
 // }
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -950,18 +955,18 @@ reference plot above them.
 The peaks themselves should point out the anomalies in the time series data.
 All plots are kept together on a single page, to aid the comparison.
 
-@resmilling is a constructed example by _Lu_ @lu with synthetic data that simulates
+@res-milling is a constructed example by _Lu_ @lu with synthetic data that simulates
 a vibration sensor on a milling machine.
 After the 35000'th time mark near the end, a collective anomaly appears and discord
 analysis should highlight this pattern with a peak in the discord plots.
 
-@restonga shows analysis done on atmospheric pressure data collected by IRF Kiruna
+@res-tonga shows analysis done on atmospheric pressure data collected by IRF Kiruna
 @irf, over the day of January the 15th, 2022.
 As @detectdiscords already explained, two pressure drops appeared in the data
 as contextual anomalies after the 1000'th and 1500'th marks, and the analysis
 should highlight them as such.
 
-@resbourke is the final example and the data represents pedestrian foot traffic
+@res-bourke is the final example and the data represents pedestrian foot traffic
 near Bourke Street Mall, in the city of Melbourne, Australia.
 Multiple point and contextual anomalies appeared in the time series and most
 likely represents holiday events with accompanying increase of the foot traffic.
@@ -974,7 +979,7 @@ but its relevance remains unconfirmed.
 This dataset served as an initial reference during prototyping and acted as a more
 difficult example for the discord analysis.
 
-A later section will analyse these results in more depth.
+A later section will analyse the results of these figures in more depth.
 
 #figure(
 	image("images/analysis-2-machining.png", height: 95%),
@@ -983,16 +988,15 @@ A later section will analyse these results in more depth.
 		on a milling machine.
 		The task was to detect the collective anomaly near the end of the range.
 	],
-) <resmilling>
+) <res-milling>
 
 #figure(
-	image("images/analysis-knutstorp-tonga.png", height: 95%),
+	image("images/analysis-3-knutstorp.png", height: 95%),
 	caption: [
 		Analysis of air pressure data collected by IRF Kiruna.
 		The task was to detect the two contextual anomalies (caused by pressure drops).
-#TODO("missing ref plot, need to run data in matlab")
 	],
-) <restonga>
+) <res-tonga>
 
 #figure(
 	image("images/analysis-1-bourkestreetmall.png", height: 95%),
@@ -1000,15 +1004,34 @@ A later section will analyse these results in more depth.
 		Analysis of pedestrian traffic on a street, as used by _Lu_.
 		This final task contains multiple point and contextual anomalies.
 	],
-) <resbourke>
+) <res-bourke>
 
 
 == Benchmark
 
-Once the algorithm was validated and confirmed to work correctly its performance
-was measured.
+The discord analysis also measured the time required to process each dataset for
+each implementation and stored the results.
+Plotting the runtimes resulted in @res-times which is, in hindsight, an unfair
+comparison.
+@analysis provides more details for each method and why they produce results
+that are unfair when compared to each other.
 
-#TODO("update with new values from appendix")
+This plot serves better as a proof of validation, in that making adaptions to
+the original DAMP algorithm (to handle streaming data) would allow it to run
+better in limited computing environments.
+
+#figure(
+	image("images/analysis-timings.png"),
+	caption: [Average runtimes for the analysis of each dataset.]
+) <res-times>
+
+A proper benchmark was done afterwards on Stream DAMP and it highlights the
+differences in performance, depending strongly on the choice of method for
+calculating the subsequence distances.
+
+The benchmark used a randomly generated time series with 10240 data points.
+@app-benchmarks contains the full output of that benchmark, with the results
+averaged and presented in @res-bench.
 
 #figure(
 	table(
@@ -1018,70 +1041,79 @@ was measured.
 		table.header(
 			[*Normalised*], [*Iterations (N)*], [*Time/Op. (ns)*], [*Memory/Op. (bytes)*], [*Allocations/Op. (N)*],
 		),
-		[Yes], [10000], [1597515], [1599991], [1135],
-		[No], [12638], [96961], [15556], [6],
+		[Yes], [10000], [1626019], [1598765], [1134],
+		[No], [37794], [33303], [16149], [6],
 	),
 	caption: "Average performance while running benchmarks for Stream DAMP on random data."
-)
-
-#figure(
-	image("images/analysis-timings.png"),
-	caption: [Average runtimes for the analysis of each dataset.]
-)
+) <res-bench>
 
 
 == Live sensor performance
 
-#TODO("update plots, split up in pairs")
-
-#figure(
-	image("images/sensors-1.png"),
-	caption: [TODO],
-)
-
-#figure(
-	image("images/sensors-2.png"),
-	caption: [TODO],
-)
-
 #figure(
 	image("images/sensors-performance.png"),
-	caption: [TODO],
+	caption: [Resource utilisation on the Raspberry Pi.],
 )
 
-// #figure(
-// 	image("images/plot-light.png"),
-// 	caption: [Light level (top) and corresponding Matrix Profile (bottom) aggregated
-// 	in InfluxDB.],
-// )
+```
+# sudo ps axS k -time o user,pcpu,pmem,time,comm | head -n 5
+	USER    		%CPU		%MEM		    TIME		COMMAND
+	influxdb		 1.6		26.7		02:46:49		influxd
+	lmas    		 0.3		 0.9		00:34:51		logger
+	telegraf		 0.1		10.4		00:17:22		telegraf
+	root    		 0.0		 1.3		00:03:19		NetworkManager
+```
 
-// #figure(
-// 	image("images/plot-temperature.png"),
-// 	caption: [Temperature (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
-// )
+#figure(
+	stack(dir: ttb, spacing: 0pt,
+		image("images/sensors-1.png", width: 75%),
+		image("images/sensors-2.png", width: 75%),
+	),
+	caption: [Live analysis of sensors over the last seven days.],
+)
 
-// #figure(
-// 	image("images/plot-humidity.png"),
-// 	caption: [Humidity (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
-// )
-
-// #figure(
-// 	image("images/plot-pressure.png"),
-// 	caption: [Air pressure (top) and Matrix Profile (bot.) aggregated in InfluxDB.],
-// )
+#figure(
+	stack(dir: ttb, spacing: 0pt,
+		image("images/sensors-3.png", width: 75%),
+		image("images/sensors-4.png", width: 75%),
+	),
+	caption: [Live analysis of sensors over the last three hours.],
+)
 
 
-== Analysis
+= Analysis <analysis>
 
 #TODO("")
 
+== On the discord analysis
+
 - note difference between the 3 examples, tonga is clean from noise as an example
 
-for @resmilling:
+for @res-milling:
 All implementations identified the anomaly correctly, although turning of
 normalisation for Stream DAMP made it highlight an earlier but minor pattern as
 a bigger anomaly.
 This illustrates the importance of using normalisation
+
+== On the benchmark
+
+The reason for this is that the first DAMP implementation was naively
+re-implemented from _Lu's_ Matlab script and had no optimisations done on it,
+hence why it spent more time processing each new data point as shown in the plot.
+Rather, the focus was on producing results that matched as close a possible to
+the reference results.
+
+For the two other implementations, Stream DAMP had to use a double-ended queue
+of a limited size so it could process new data in a streaming manner.
+Using a limited queue would obviously provide performance gains, as less data
+needed to be reprocess for each new data point.
+
+And finally, disabling normalisation allowed for using a more simpler and much
+more efficient distance calculation.
+
+- benchmark table hints at that more optimisations could be done
+
+== On the sensors
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1186,16 +1218,22 @@ optimisations:
 
 
 #pagebreak()
+= Hardware wiring setup <app-wiring>
+
+#TODO("")
+
+
+#pagebreak()
 = Telegraf configuration <app-telegraf>
 
 #TODO("")
 
 
 #pagebreak()
-= Performance benchmark <benchmarks>
+= Performance benchmark <app-benchmarks>
 
 ```
-go test -test.benchmem -bench=. -count 10 "./damp"
+# go test -test.benchmem -bench=. -count 10 "./damp"
 goos: freebsd
 goarch: amd64
 pkg: code.larus.se/lmas/thesis/damp
