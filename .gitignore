@@ -1,7 +1,6 @@
 .metadata.toml
 *.pdf
 *.toml
-*.png
 *.test
 *.prof
 mnt/*

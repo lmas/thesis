@@ -27,6 +27,10 @@
 
 		#metadata.company
 	])
+
+	#align(horizon, text(size: 48pt, fill: red)[
+		`DRAFT #1`
+	])
 ])
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -814,7 +818,7 @@ The collected data is then sent to InfluxDB for logging and monitoring purposes.
 @app-telegraf shows the configuration file used for Telegraf.
 
 
-== Logging sensor data
+== Logging sensor data <logger>
 
 With the hardware set up and ready, the stream-adapted DAMP implementation could
 start processing the sensor data.
@@ -1074,35 +1078,55 @@ averaged and presented in @res-bench.
 
 == Live sensor performance
 
+The logger utility from @logger have been running for a week on the Raspberry Pi
+and was able to collect a large amount of raw data from all sensors and their
+corresponding Matrix Profiles.
+The telegraf agent was also running in the background at the same time and
+collected statistics on the system's overall performance.
+The results was then presented in the web view of InfluxDB, as shown in @res-perf.
+
+It is worth pointing out that this performance view
+displays the resource utilisation of the whole system and all its background
+services.
+"System load" is an arbitrary measurement of the work load while running tasks
+on the system (causing work for the CPU, hard drives, or network devices for
+example) and is an average of the last 15 minutes.
+
 #figure(
 	image("images/sensors-performance.png"),
 	caption: [Resource utilisation on the Raspberry Pi.],
-)
+) <res-perf>
 
-```
-# sudo ps axS k -time o user,pcpu,pmem,time,comm | head -n 5
-	USER    		%CPU		%MEM		    TIME		COMMAND
-	influxdb		 1.6		26.7		02:46:49		influxd
-	lmas    		 0.3		 0.9		00:34:51		logger
-	telegraf		 0.1		10.4		00:17:22		telegraf
-	root    		 0.0		 1.3		00:03:19		NetworkManager
-```
+@res-seven displays the collected sensor data for the last seven days and is an
+aggregation due to the large amount of data.
+The logger utility sampled all sensors in one second intervals and calculated
+the corresponding discord score for each new data point, using 10 second
+subsequence sizes.
+The two annotations in the plots for temperature and humidity marks the time
+for when an open window caused an indoor draft for half an hour.
+
+@res-three shows the raw sensor data and corresponding Matrix Profiles from the
+last three hours.
+At 09:00 a plant light was automatically turned on and is visible in the plot for
+the light sensor.
+A 10 minute shower after 11:00 caused a sharp increase in the humidity and a
+smoother increase in the indoor temperature.
 
 #figure(
 	stack(dir: ttb, spacing: 0pt,
 		image("images/sensors-1.png", width: 75%),
 		image("images/sensors-2.png", width: 75%),
 	),
-	caption: [Live analysis of sensors over the last seven days.],
-)
+	caption: [Sensor data and Matrix Profiles aggregated over the last seven days.]
+) <res-seven>
 
 #figure(
 	stack(dir: ttb, spacing: 0pt,
 		image("images/sensors-3.png", width: 75%),
 		image("images/sensors-4.png", width: 75%),
 	),
-	caption: [Live analysis of sensors over the last three hours.],
-)
+	caption: [Raw sensor data from the last three hours.]
+) <res-three>
 
 
 = Analysis <analysis>
@@ -1340,19 +1364,6 @@ optimisations:
 # https://github.com/influxdata/telegraf/blob/release-1.33/plugins/inputs/system/README.md
 [[inputs.system]]
  fieldinclude = ["uptime", "load15", "n_users"]
-
-# Read metrics about disk usage by mount point
-# https://github.com/influxdata/telegraf/blob/release-1.33/plugins/inputs/disk/README.md
-[[inputs.disk]]
-  fieldinclude = ["used_percent"]
-  taginclude = ["path"]
-  mount_points = ["/"]
-
-# Gather metrics about network interfaces
-# https://github.com/influxdata/telegraf/blob/master/plugins/inputs/net/README.md
-[[inputs.net]]
-  fieldinclude = ["bytes_*"]
-  interfaces = ["lo0", "eth0", "wlan0"]
 ```
 
 
