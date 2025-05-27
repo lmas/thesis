@@ -43,7 +43,7 @@ EOF
 done << EOF
 1-bourkestreetmall;Pedestrians (people/h)
 2-machining;Arbitrary unit
-knutstorp-tonga;Pressure (hPa)
+3-knutstorp;Pressure (hPa)
 EOF
 
 gnuplot <<- EOF

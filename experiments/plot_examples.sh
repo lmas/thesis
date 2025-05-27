@@ -27,12 +27,11 @@ set key off
 set term png size 1280, 720 font "Default,14"
 set output 'images/example-point.png'
 set multiplot layout 2,1
-
 set ylabel "Pressure (hPa)"
-plot "damp/samples/knutstorp-tonga.in"
+plot "damp/samples/3-knutstorp.in"
 set arrow from 32000,2.4 to 36000,2.75 linewidth 2
 set ylabel "Discord score (arb. unit)"
-plot "damp/samples/knutstorp-tonga.3.damp"
+plot "tmp/3-knutstorp.3.damp"
 EOF
 
 gnuplot <<- EOF
@@ -45,7 +44,6 @@ set key off
 set term png size 1280, 720 font "Default,14"
 set output 'images/example-pattern.png'
 set multiplot layout 2,1
-
 set ylabel "Arbitrary unit"
 set title "Data"; plot "damp/samples/2-machining.in"
 set arrow from 32000,2.4 to 36000,2.75 linewidth 2

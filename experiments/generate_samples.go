@@ -40,7 +40,7 @@ type testSample struct {
 var plotSamples = []testSample{
 	{"damp/samples/1-bourkestreetmall", 17490, 24, 24 * 7},
 	{"damp/samples/2-machining", 44056, 16, 44056 / 9},
-	{"damp/samples/knutstorp-tonga", 1024, 16, 512},
+	{"damp/samples/3-knutstorp", 1024, 16, 512},
 }
 
 func main() {
