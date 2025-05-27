@@ -1107,17 +1107,54 @@ averaged and presented in @res-bench.
 
 = Analysis <analysis>
 
-#TODO("")
+In the beginning of the previous section, four methods analysed three datasets
+with different types of anomalies in them and the results was then plotted.
+An investigation of the results is now done in this section, in a bid to offer
+insights into and an evaluation of the analyses.
 
-== On the discord analysis
+Starting with @res-milling, the dataset was a synthetic example dense with points
+that had a high variance in their range, thus producing a "thick" plot.
+The anomaly is easily visible near the end but it is hard to determine when it
+begins with eyes only.
+A human operator would most likely not react fast enough to interrupt the milling
+machine before it had already started cutting into itself.
+Fast and early detection would be beneficial in this example.
 
-- note difference between the 3 examples, tonga is clean from noise as an example
+As is then shown in the follow plots, all methods could correctly identify the
+anomaly almost before it even started, illustrating the effectiveness of the
+shared method.
+However, turning of normalisation for Stream DAMP made it highlight an earlier
+but minor pattern as a bigger anomaly (as indicated with the taller peak near
+the beginning) and could trigger a false alarm early during the work routine.
+This illustrates the importance of using normalisation in the cases for when
+an anomaly consists of multiple points in some sort of a pattern, even if human
+eyes can not observe it directly.
 
-for @res-milling:
-All implementations identified the anomaly correctly, although turning of
-normalisation for Stream DAMP made it highlight an earlier but minor pattern as
-a bigger anomaly.
-This illustrates the importance of using normalisation
+In @res-tonga, the dataset is less noisy and produced a cleaner curve in the plot,
+with two harder-to-observe anomalies hidden in the middle.
+Here the regular DAMP methods, with normalisation, could not provide any
+meaningful results.
+Turning of normalisation was the only way to correctly detect the anomalies,
+as shown in the last plot.
+
+And as the first, sprawling plots suggest, the algorithm most likely had a hard
+time to find any matching patterns and had to expand its search multiple times.
+The benchmark later on seems to confirm this theory, as the DAMP implementation
+had a large performance degradation when compared to the two other methods.
+
+With @res-bourke as the final example, a couple of spikes is easily seen in the
+foot traffic but no other obvious patterns are visible in the plot.
+All methods seems to agree on the point anomaly "spike" near the 8000'th time mark
+and also for the contextual "drop" after the 16000'th mark.
+A random remark is that turning of normalisation seemed to produce the most
+confident result.
+
+It is hard to provide any more meaningful observations without access to the
+original source.
+Although, this dataset provided great validation of having made correct
+implementations, while developing the prototypes, and was mainly kept for that
+purpose.
+
 
 == On the benchmark
 
@@ -1250,7 +1287,73 @@ optimisations:
 #pagebreak()
 = Telegraf configuration <app-telegraf>
 
-#TODO("")
+#show raw: set text(size: 7pt)
+
+```toml
+# Configuration for telegraf agent
+# https://github.com/influxdata/telegraf/blob/release-1.33/docs/CONFIGURATION.md
+[agent]
+  interval = "1m"
+  round_interval = true
+  metric_batch_size = 1000
+  metric_buffer_limit = 10000
+  collection_jitter = "5s"
+  flush_interval = "15m"
+  flush_jitter = "5s"
+  precision = "0s"
+  debug = false
+  quiet = true
+  log_with_timezone = "local"
+  omit_hostname = true
+
+#######################################################################
+
+# Configuration for sending metrics to InfluxDB 2.0
+# https://github.com/influxdata/telegraf/blob/release-1.33/plugins/outputs/influxdb_v2/README.md
+[[outputs.influxdb_v2]]
+  urls = ["http://127.0.0.1:8086"]
+  token = "<redacted>"
+  organization = "LTU"
+  bucket = "host"
+  timeout = "5s"
+  influx_omit_timestamp = false
+
+#######################################################################
+
+# Read metrics about cpu usage
+# https://github.com/influxdata/telegraf/blob/release-1.33/plugins/inputs/cpu/README.md
+[[inputs.cpu]]
+  fieldinclude = ["usage_user", "usage_system", "usage_idle"] 
+  tagexclude = ["cpu"]
+  percpu = false
+  totalcpu = true
+  collect_cpu_time = false
+  report_active = false
+  core_tags = false
+
+# Read metrics about memory usage
+# https://github.com/influxdata/telegraf/blob/release-1.33/plugins/inputs/mem/README.md
+[[inputs.mem]]
+  fieldinclude = ["used_percent"]
+
+# Read metrics about system load & uptime
+# https://github.com/influxdata/telegraf/blob/release-1.33/plugins/inputs/system/README.md
+[[inputs.system]]
+ fieldinclude = ["uptime", "load15", "n_users"]
+
+# Read metrics about disk usage by mount point
+# https://github.com/influxdata/telegraf/blob/release-1.33/plugins/inputs/disk/README.md
+[[inputs.disk]]
+  fieldinclude = ["used_percent"]
+  taginclude = ["path"]
+  mount_points = ["/"]
+
+# Gather metrics about network interfaces
+# https://github.com/influxdata/telegraf/blob/master/plugins/inputs/net/README.md
+[[inputs.net]]
+  fieldinclude = ["bytes_*"]
+  interfaces = ["lo0", "eth0", "wlan0"]
+```
 
 
 #pagebreak()
