@@ -878,9 +878,6 @@ for {
 ```, caption: [Example for collecting data from the TSL25911 ambient light sensor.],
 ) <lightsensor>
 
-#TODO("note that instead of sending data to influx, warning threshold could be set
-and cause alerts?")
-
 @bmesensor illustrates a similar example for collecting data from the BME280 device
 which has multiple built-in sensors.
 Lines 04-12 connects to the $I^2C$ bus the devices communicates over and disables
@@ -1035,7 +1032,7 @@ A later section will analyse the results of these figures in more depth.
 ) <res-bourke>
 
 
-== Benchmark
+== Benchmark <benchmark>
 
 The discord analysis also measured the time required to process each dataset for
 each implementation and stored the results.
@@ -1092,6 +1089,8 @@ services.
 on the system (causing work for the CPU, hard drives, or network devices for
 example) and is an average of the last 15 minutes.
 
+#TODO("update plot at a later date")
+
 #figure(
 	image("images/sensors-performance.png"),
 	caption: [Resource utilisation on the Raspberry Pi.],
@@ -1101,7 +1100,7 @@ example) and is an average of the last 15 minutes.
 aggregation due to the large amount of data.
 The logger utility sampled all sensors in one second intervals and calculated
 the corresponding discord score for each new data point, using 10 second
-subsequence sizes.
+subsequence sizes and with normalisation turned off.
 The two annotations in the plots for temperature and humidity marks the time
 for when an open window caused an indoor draft for half an hour.
 
@@ -1181,24 +1180,74 @@ purpose.
 
 
 == On the benchmark
-
-The reason for this is that the first DAMP implementation was naively
-re-implemented from _Lu's_ Matlab script and had no optimisations done on it,
-hence why it spent more time processing each new data point as shown in the plot.
-Rather, the focus was on producing results that matched as close a possible to
-the reference results.
+As was already mentioned in @benchmark, the bar plot shows an unfair comparison.
+One of the reason for this is that the first DAMP implementation was naively
+re-implemented from _Lu's_ Matlab script and had no optimisations done on it.
+Hence why the plot would indicate that this method required so much more time to
+process each new data point.
+The major focus for this method was instead spent on producing results that
+matched as close a possible to the reference results.
 
 For the two other implementations, Stream DAMP had to use a double-ended queue
 of a limited size so it could process new data in a streaming manner.
-Using a limited queue would obviously provide performance gains, as less data
-needed to be reprocess for each new data point.
+Using this queue would of course provide performance gains, as less data needed
+to be re-processed when looking for the nearest neighbours for each new data point.
 
 And finally, disabling normalisation allowed for using a more simpler and much
-more efficient distance calculation.
+more efficient distance calculation using Minkowski's method.
+In contrast to that, the MASS function was naively implemented, alongside with
+DAMP, and runs much heavier operations required for the normalisation.
+Obvious targets for optimisations would be the unnecessary re-allocations of the
+arrays holding complex numbers, for example.
 
-- benchmark table hints at that more optimisations could be done
+This large difference between the two distance functions was then confirmed with
+the results in the benchmark table.
+Using this initial benchmark, further work could investigate and measure the
+performance of:
+
+- using other methods for calculating the distances
+- optimising existing methods
+- or adapting Minkowski's method to also handle normalisation.
+
+The existing streaming adaptions were good enough though and could be easily run
+on the Raspberry Pi, which the following section will discuss.
+
 
 == On the sensors
+
+As @res-perf shows, the load on the CPU was non-existent while running Stream DAMP
+in parallel with all other system services in the background.
+It is most likely the background services that is causing the most work load on
+the system, as suggested from the top of the process list:
+
+```
+# sudo ps axS k -time o user,pcpu,pmem,time,comm | head -n 5
+USER    		%CPU		%MEM		    TIME		COMMAND
+influxdb		 1.6		28.1		03:34:42		influxd
+lmas    		 0.3		 0.9		00:44:21		logger
+telegraf		 0.1		10.5		00:21:55		telegraf
+root    		 0.0		 1.4		00:04:10		NetworkManager
+```
+
+The resource usage numbers does not match exactly with the plot though, as the
+telegraf data was missing some system overhead in the reported statistics.
+The list does however highlight that InfluxDB have used the most memory and is
+the most likely cause for the periodic drops in the RAM load.
+This is probably due to when the service offloads its data cache when it has
+grown too large.
+
+It is interesting to see that the logger utility was able to operate with less
+than one percent of the one GB RAM that was available on the system.
+This suggests that Stream DAMP could run in even smaller environments, for
+example on an Arduino board or any other micro-controllers.
+
+Future work would require finding better values for the subsequence sizes though,
+as the Matrix Profiles would only give strong indications for the most obvious
+anomalies in the sensor samples.
+The sensor drivers would also require some more work, to get rid of the noisy
+spikes in the data that the Matrix Profiles likes to point out.
+A final suggestion would be to set up a threshold for the discord peaks, which
+could filter out the lesser discords and make the other peaks more actionable.
 
 ////////////////////////////////////////////////////////////////////////////////
 
