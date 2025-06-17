@@ -1329,9 +1329,29 @@ Even if the work was time consuming, the time spent was well rewarded with havin
 the results validated properly against the reference.
 
 
-== Ethics and sustanability
+== Ethics and sustainability
 
+The Matrix Profile is a plain statistical method and does not need much data
+to operate.
+This is in direct contrast to machine learning models, which might need large
+training datasets, extra metadata, or human annotations or labels.
+All this extra data carries increased risks for privacy and integrity, as well
+as increased maintenance costs in order to protect the data.
+The Matrix Profile minimises this problem,  as it only needs to consider the
+similarities between groups of numerical values in some sort of order.
+In fact, the algorithm does not need to store any data at all, besides keeping
+the internal buffer filled with temporary in-data while looking for similarities.
 
+Being able to analysing data on Edge devices can further improve security,
+as the raw data never needs to leave the sensor device and enter any networking
+environments.
+Being able to run on or near the Edge also have the added benefits of not needing
+any significant resources, in order to operate.
+This was in fact one major reason for picking the Matrix Profile as the choice
+of method for running anomaly detection in this thesis.
+Comparing the algorithm with other methods again, today's popular machine learning
+or artificial intelligence models most often requires large amounts of resources
+and even centralised data centres in order to operate at all.
 
 
 ////////////////////////////////////////////////////////////////////////////////
