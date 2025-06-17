@@ -214,12 +214,12 @@ This thesis looks to investigate and try to answer the following questions:
 	in a limited hardware environment such as a small, of-the-shelf microprocessor
 	board?
 
-- Is anomaly detection accurate enough, when using a Matrix Profile?
-	A comparison with a reference implementation should validate the results.
+- Using a custom implementation of the algorithm, is anomaly detection accurate
+	enough? A comparison with a reference should validate the results.
 
-- Is the method performant enough to handle multiple sensors in the same
-	environment? How efficient is the algorithm?
-	A benchmark should measure the performance.
+- Is the implementation performant enough to handle multiple sensors in the same
+	environment? How efficient is the algorithm? A benchmark should measure the
+	performance.
 
 Positive outcomes to these questions would give an indication that data analysis
 is possible to do on Edge devices directly.
@@ -1160,10 +1160,10 @@ A human operator would most likely not react fast enough to interrupt the millin
 machine before it had already started cutting into itself.
 Fast and early detection would be beneficial in this example.
 
-As is then shown in the follow plots, all methods could correctly identify the
+As is then shown in the following plots, all methods could correctly identify the
 anomaly almost before it even started, illustrating the effectiveness of the
 shared method.
-However, turning of normalisation for Stream DAMP made it highlight an earlier
+However, turning off normalisation for Stream DAMP made it highlight an earlier
 but minor pattern as a bigger anomaly (as indicated with the taller peak near
 the beginning) and could trigger a false alarm early during the work routine.
 This illustrates the importance of using normalisation in the cases for when
@@ -1174,10 +1174,10 @@ In @res-tonga, the dataset is less noisy and produced a cleaner curve in the plo
 with two harder-to-observe anomalies hidden in the middle.
 Here the regular DAMP methods, with normalisation, could not provide any
 meaningful results.
-Turning of normalisation was the only way to correctly detect the anomalies,
+Turning off normalisation was the only way to correctly detect the anomalies,
 as shown in the last plot.
 
-And as the first, sprawling plots suggest, the algorithm most likely had a hard
+And as the first sprawling plots suggest, the algorithm most likely had a hard
 time to find any matching patterns and had to expand its search multiple times.
 The benchmark later on seems to confirm this theory, as the DAMP implementation
 had a large performance degradation when compared to the two other methods.
@@ -1197,6 +1197,7 @@ purpose.
 
 
 == On the benchmark <on-bench>
+
 As was already mentioned in @benchmark, the bar plot shows an unfair comparison.
 One of the reason for this is that the first DAMP implementation was naively
 re-implemented from _Lu's_ Matlab script and had no optimisations done on it.
@@ -1259,8 +1260,8 @@ This suggests that Stream DAMP could run in even smaller environments, for
 example on an Arduino board or any other micro-controllers.
 
 Future work would require finding better values for the subsequence sizes though,
-as the Matrix Profiles would only give strong indications for the most obvious
-anomalies in the sensor samples.
+as the Matrix Profiles would only highlight the most obvious anomalies in the
+sensor samples.
 The sensor drivers would also require some more work to get rid of the noisy
 spikes in the data, as the Matrix Profiles likes to point out these.
 A low-pass filter could solve this for example.
@@ -1269,31 +1270,83 @@ could filter out the lesser discords and make the other peaks more actionable.
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// The discussion discusses each individual problem, how you addressed it, alternative solutions and shortcomings, etc.
+= Discussion <discussion>
 
-// The conclusions and future work describes the final outcome of how you solved your problems and what is left to do.
+The performance results and analyses from previous sections gives strong indications
+that a small Edge device can detect anomalies live using a stream adapted
+Matrix Profile.
+This confirms that the first question from @definition is highly feasible:
+
+- Is it possible to calculate a Matrix Profile using raw samples from a sensor,
+	in a limited hardware environment such as a small, of-the-shelf microprocessor
+	board?
+
+Not only is it possible, but it is also easy to adapt to new scenarios or environments,
+and can run independently with minimal human oversight.
+It was surprisingly easy to run the algorithm and getting results quickly,
+without having to do any pre-training of a model or fine tuning parameters
+(as is common for most machine learning models).
+Although, the results can be noisy at times and would require some fine tuning of,
+for example, the sequence size.
+This is further complicated by the lack of recommendations or evaluations on how
+to properly set the sequence size in accordance to the characteristics of the
+analysed data.
+
+Another problem encountered was the appearance of flat, constant regions in the
+sensor data.
+As it is the nature of a plot, a group of points on a horizontal line will of
+course match perfectly with another group of points of the same amplitude.
+Any perfect matches would cause arithmetic errors from trying to divide by zero,
+and would break the algorithm.
+This was a regular problem for the light sensor during the night, for example,
+and an extra check had to catch the faulty results from the algorithm.
+Using a small buffer mitigated this issue somewhat, as there was a smaller chance
+of finding exact matches with the limited data sequence.
+
+The buffer was originally intended to allow handling streaming data and increasing
+the algorithm's performance.
+With the runtime gains, the implementation was able to analyse multiple data
+streams at the same time, as shown in @benchmark, and could confirm the second
+question from @definition:
+
+- Is the implementation performant enough to handle multiple sensors in the same
+	environment? How efficient is the algorithm? A benchmark should measure the
+	performance.
+
+The plots from @results could then verify that the stream adapted implementation
+gave similar results as the original algorithm and the third-party Matlab script,
+thus answering the final question:
+
+- Using a custom implementation of the algorithm, is anomaly detection accurate
+	enough? A comparison with a reference should validate the results.
+
+It was difficult to achieve exact results as the Matlab implementation though,
+since Go is missing a large number of mathematical utility functions that is
+commonly found in Matlab.
+Working with complex numbers during the fast Fourier transforms was also complicated
+and the naive re-implementations would cause bad performance degradation.
+Even if the work was time consuming, the time spent was well rewarded with having
+the results validated properly against the reference.
+
+
+== Ethics and sustanability
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+// The conclusions and future work describes the final outcome of how you solved your problems and what's left to do.
+//
+// - describe the outcome
+// - describe your impact:
+// 		- how would the work benefit, if applied used?
+// 		- potentional savings/benefits
+
 
 = Conclusion <conclusion>
 
-#TODO("")
-
-hard to work with matlab code examples:
-- one-based indexing (instead of the more common zero indexing) causing many issues
-	and off-by-one errors.
-- large amount of helper funcs required for performing arithmetic on arrays.
-- doing a fast fourier transform required the use of complex numbers, which was
-	a different type in Go and might cause performance problems.
-
-algo:
-- can not handle constant regions, causing NaNs.
-- especially gyro worked poorly, as it kept to its baseline all the time.
-- but one happy accident was that the new streaming algo could recover from the
-	constant region problems thanks to the ring-buffer cycling through data.
-- surprised the deque library did not add bad performance overhead.
-- hard to pick good seq.size, need more research and detailing effects of it.
-
-sensors:
-- the choice of hardware sensors was poorly made, should had researched better.
+In this thesis...
 
 
 == Future work
