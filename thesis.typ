@@ -256,7 +256,7 @@ handle streaming data and then running it in a hardware environment with sensors
 The section continues with the data collection from the sensors and the results
 are then documented in @results.
 @analysis provides an analysis of the results, with a final conclusion given in
-@conclusion.
+@conclusions.
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1356,25 +1356,38 @@ and even centralised data centres in order to operate at all.
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// The conclusions and future work describes the final outcome of how you solved your problems and what's left to do.
-//
-// - describe the outcome
-// - describe your impact:
-// 		- how would the work benefit, if applied used?
-// 		- potentional savings/benefits
+= Conclusions <conclusions>
 
+The Matrix Profile is a statistical algorithm and can detect anomalies in time
+series data.
+It is easy to implement and modify, making it adaptable to new kinds of data.
+Once it is running, it is able to operate indefinitely without human oversight.
+It is also small enough to run on Edge devices and can analyse data from multiple
+sensors at the same time.
 
-= Conclusion <conclusion>
+This thesis implemented the Matrix Profile using Go and adapted the code to handle
+data in a streaming manner.
+The implementation was then able to produce anomaly highlights that closely matched
+a known good reference, thus proving the implementation's validity.
 
-In this thesis...
+The implementation could then run on a Raspberry Pi and analyse raw sensor data
+from light, temperature, pressure, and humidity sensors.
+An InfluxDB instance, running on the same device, would then receive the analysed
+data and could produce plots that would indicate anomalies in the sensor readings.
+
+Being able to run data analysis efficiently on a small device like this also
+highlights the value in using simpler methods, rather than leaning on heavy
+machine learning models for example.
+Running on Edge devices minimises the amount of operating resources needed and
+provides greater benefits to data security.
+It also minimises the amount of sent and processed data traffic, benefiting the
+whole network where the device resides in.
 
 
 == Future work
 
-The most obvious area that needs more work is the subject of how to pick an
-optimal subsequence size for your data source.
-The subject needs a more thorough investigation, by itself, which should produce
-some sort of a guideline.
+The most obvious area that needs more work in this subject is how to pick an
+optimal subsequence size for a data source.
 This might be difficult though, as time series data and anomaly patterns varies
 greatly between the different types of data sources that are available.
 Alternatively, more studies could investigate _Lu's_ approach @lu2, where they
