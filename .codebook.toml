@@ -13,6 +13,7 @@ words = [
     "convolve",
     "creg",
     "dampalgo",
+    "dampdata",
     "dbscan",
     "delimitations",
     "deque",
@@ -59,7 +60,9 @@ words = [
     "percpu",
     "pmem",
     "rakthanmanon",
+    "raspspecs",
     "sdamp",
+    "sensorhat",
     "sgp",
     "streamdamp",
     "subsequence",
@@ -77,6 +80,7 @@ words = [
     "yeh's",
     "yml",
     "zhong",
+    "zscore",
 ]
 
 # Source: https://editorsmanual.com/articles/contractions-list/
