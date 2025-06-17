@@ -99,6 +99,7 @@
 / DAMP: Discord Aware Matrix Profile, an efficient algorithm for calculating a Matrix Profile.
 // Method
 / $I^2C$: Inter-integrated circuit, a simple, serial communication bus.
+/ VOC: Volatile organic compounds, microscopic particles from mold, plants, furniture, and cleaning supplies.
 
 #pagebreak()
 #heading(numbering: none, outlined: false, bookmarked: true, "Contents")
@@ -130,7 +131,7 @@ As _Khan et al._ notes @khan, sensors and programmable logic controllers (PLCs)
 are becoming the largest group of devices that generates the most data.
 And as the industries scales up their sensor networks there is an increasing need
 to be able to faster process the larger amounts of data,
-in order to provide real-time analysis. 
+in order to provide real-time analysis.
 
 This bachelor thesis will explore the use of anomaly detection on time
 series data, performed on hardware-limited devices closer to the Edge.
@@ -160,11 +161,11 @@ then today's shift is mainly driven by the large amount of smart, modular, and
 highly connected devices that forms the so called Internet-of-Things.
 Dubbed as "Industry 4.0" by the team of german scientists _Dr. Lasi et al._
 @lasi,
-this new revolution originated from the need of increased flexibility and better 
+this new revolution originated from the need of increased flexibility and better
 efficiency in production systems, in order to better handle quickly shifting
 market demands.
 
-_Dr. Lasi et al._ continues in their article with, that technology is pushing 
+_Dr. Lasi et al._ continues in their article with, that technology is pushing
 towards miniaturisation, digitisation, automation, and as a result,
 turning today's manufacturing plants into tomorrow's "smart factories".
 These factories are utilising a growing number of sensors and digital, decentralised
@@ -175,7 +176,7 @@ _Javaid et al._ @javaid also notes an increasing need of intelligent sensor
 systems and networks for the smart factories.
 By using autonomous sensors with higher processing capabilities,
 the industry will be able to reduce their dependency on human operators and thus
-reduce problems caused by the human factor, for example. 
+reduce problems caused by the human factor, for example.
 And with the availability of wireless sensors, monitoring can be done more easily
 for inaccessible locations such as remote or hazardous areas.
 The maintenance of the increasingly complex systems can also benefit
@@ -223,7 +224,7 @@ This thesis looks to investigate and try to answer the following questions:
 Positive outcomes to these questions would give an indication that data analysis
 is possible to do on Edge devices directly.
 Doing so should enable more efficient data monitoring, with earlier anomaly
-detection, less data to store, and using less network traffic. 
+detection, less data to store, and using less network traffic.
 Minimising both data storage and network traffic should help reduce the overall
 amount of spent resources, required for operating larger sensor networks.
 
@@ -267,7 +268,7 @@ subject from the last two decades @wang, @boniol.
 But what is anomaly detection? _Chandola et al._ @chandola offers a definition:
 
 #quote[
-	Anomaly detection refers to the problem of ﬁnding patterns in data 
+	Anomaly detection refers to the problem of ﬁnding patterns in data
 	that do not conform to expected behaviour ...
 	[which] translate to signiﬁcant, and often critical, actionable
 	information in a wide variety of application domains.
@@ -292,7 +293,7 @@ literature @chandola, @gupta:
 	Common problems in this domain involves being able to handle the large amount
 	of streaming data generated from, for example, data traffic that can cause
 	false alarms.
-	
+
 - Fraud detection:
 	Here the goal is to detect any criminal activities from users that are looking
 	for ways to fraudulently collect any resources with economical benefits,
@@ -300,7 +301,7 @@ literature @chandola, @gupta:
 	For example, sudden bank transfers made by an individual inside a company could
 	look like an anomalous pattern from their normal behaviour,
 	indicating a potential insider trader, and analysis should flag it as such.
-	
+
 - Medical and public health monitors:
 	Medical symptoms or diseases can be detected and tracked by using medical data,
 	either from patient records or attached health sensors.
@@ -343,7 +344,7 @@ It has previously been common to use various kinds of machine learning models,
 for example:
 neural networks, support vector machines (a linear classification model),
 decision trees (a rules-based prediction model),
-k-nearest neighbour (a distance based model), 
+k-nearest neighbour (a distance based model),
 DBSCAN (a clustering model),
 or any mix of multiple models.
 But these models have shared problems of requiring extensive training data before
@@ -467,13 +468,13 @@ it serves as a good reference for later improvements of the DAMP algorithm.
 	image("images/example-pattern.png"),
 	caption: [
 		Readings @lu from a vibration sensor attached to a milling machine (above)
-		during 3 minutes. 
+		during 3 minutes.
 		Near the end the machine starts cutting into other parts of the equipment
 		and generated a tall discord peak in the profile (bottom).
 	]
 ) <examplepattern>
 
-@dampalgo shows pseudocode for the DAMP algorithm.
+@dampalgo demonstrates the DAMP algorithm, using Go code.
 The function calculates the Matrix Profile of the analysed time series $t$,
 with the subsequence length $m$ and a split point $p$, and
 is temporarily kept in the $a m p$ array, which the function returns to the user
@@ -533,7 +534,7 @@ func processBackward(t []float64, m int, i int, bsf float64)
 	query := t[i: i+m]
 	score := math.Inf(0) // Positive infinity
 	exp := 0
- 
+
 	for score >= bsf {
 		start := i - size + (exp*m) + 1
 		stop := i - (size/2) + (exp*m) + 1
@@ -624,7 +625,10 @@ $ D(t,s) = sqrt(sum_(i=1)^n |t_i-s_i|^2 ) \ $<minkowski>
 and where $t = (t_1, t_2, ..., t_n)$ and $s = (s_1, s_2, ..., s_n)
 in RR^n$.
 It will also calculate the Euclidean distances more efficiently as the equation
-does not involve complex numbers or temporary arrays.
+does not involve complex numbers or temporary arrays, which @benchmark will show
+later.
+The result will differ from MASS of course, as the distances are not normalised
+anymore.
 
 The _processBackward_ function in @backproc can easily replace all its calls to
 MASS with this new distance function.
@@ -666,7 +670,7 @@ Matlab file, as a complement to their paper @lu.
 Running that example produced the raw data used for creating the plot in
 @examplepattern, as shown previously.
 Both the data for the time series and the corresponding Matrix Profile was then
-kept as a reference dataset used for verifying future implementations. 
+kept as a reference dataset used for verifying future implementations.
 @app-repo contains a link to the repository that stores this dataset.
 
 The original DAMP algorithm was then implemented in Go
@@ -790,7 +794,8 @@ off-the-shelf and the bill of materials includes:
 .* \
 	It is versatile enough and allows for running high-level programming languages,
 	thus not restricting the user to work with closer-to-the-metal environments such
-	as with assembly or plain C programming. Saves a great amount of time.
+	as with assembly or plain C programming.
+	Running Raspbian Linux on the device saves a great amount of development time.
 
 - *Environment Sensor HAT, by Waveshare
 #footnote[https://www.waveshare.com/wiki/Environment_Sensor_HAT]
@@ -835,52 +840,56 @@ The code is running continuously on the Raspberry Pi in order to log the data
 for later analysis.
 Please note that any error handling was omitted for brevity.
 
-Line 05 sets up an instance of the streaming DAMP algorithm, which can continuously
+Line 06 sets up an instance of the streaming DAMP algorithm, which can continuously
 calculate the Matrix Profile of the sensor data.
-Line 09 and 23 creates instances for the sensor driver and writable client for
-InfluxDB, respectively.
-The block spanning lines 26-35 then runs an infinite loop, with an iteration
-once per second, that reads the current light level and calculates the latest
-discord score from the Matrix Profile.
-Both values are then sent to InfluxDB for storage and analysis.
+Lines 12 and 18 creates instances for the readable sensor driver and the writable
+client for InfluxDB, respectively.
+An infinite loop is then started on line 22, where "time.Tick(...)" adjusts the
+loop's iteration time to an even second.
+This allows for precise measurements on time, despite losing milliseconds from
+running one iteration of the code inside the loop, as stated by the Go documentation
+@ticker for "time.NewTicker" (of which "time.Tick" wraps around).
 
-#TODO("update with new code")
+The loop then reads the current light level and calculates the latest
+discord score of the Matrix Profile, using the DAMP instance.
+Both values are then sent to InfluxDB for storage and later analysis.
 
 #figure(```go
 // Initialise DAMP
-sequenceSize := 600 // in seconds (10 minutes)
-queueSize := sequenceSize * 3
-trainingSize := sequenceSize * 2
-sdamp := damp.NewStreamingDAMP(queueSize, sequenceSize, trainingSize)
+bufferSize := 10240
+sequenceSize := 10
+trainSize := 512
+normalise := false
+sdamp, _ := damp.NewStreamDAMP(
+	bufferSize, sequenceSize, trainSize, normalise,
+)
 
 // Initialise sensor device driver provided by:
 // github.com/JenswBE/golang-tsl2591
-sensor := tsl2591.NewTSL2591(&tsl2591.Opts{
+device, _ := tsl2591.NewTSL2591(&tsl2591.Opts{
 	Gain:   tsl2591.GainLow,
 	Timing: tsl2591.IntegrationTime100MS,
 })
 
-// Initialise influxdb client using the official client:
-// github.com/influxdata/influxdb-client-go/v2
-host := "http://localhost:8086/"
-token := "super secret API token"
-organisation := "example org"
-bucket := "example bucket"
-client := influxdb2.NewClientWithOptions(
-	host, token, influxdb2.DefaultOptions(),
-)
-writer := client.WriteAPI(organisation, bucket)
+// Open InfluxDB API
+client := influxdb2.NewClient("http://localhost:8086/", "secret API token")
+writer := client.WriteAPI("example organisation", "example bucket")
 
 // Collect sensor data and Matrix Profile in a loop
-for {
-	value := sensor.Lux()
+for range time.Tick(1 * time.Second) {
+	value, _ := device.Lux()
 	discord := sdamp.Push(value)
-	point := influxdb2.NewPointWithMeasurement("light").
-					 AddField("current", value).
-					 AddField("discord", discord).
-					 SetTime(time.Now())
+
+	// Push the data to InfluxDB, as a point sample
+	point := influxdb2.NewPoint(
+		"light", // The measurement name
+		map[string]any{ // Data fields
+			"current": value,
+			"discord": discord,
+		},
+		time.Now(), // Timestamp
+	)
 	writer.WritePoint(p)
-	time.Sleep(1 * time.Second)
 }
 ```, caption: [Example for collecting data from the TSL25911 ambient light sensor.],
 ) <lightsensor>
@@ -889,63 +898,65 @@ for {
 which has multiple built-in sensors.
 Lines 04-12 connects to the $I^2C$ bus the devices communicates over and disables
 all sensor filters.
-Lines 18-20 then reads the raw values from the three sensors and normalises them
-to more manageable units.
-Lines 23-25 calculates discord scores as usual, but using individual instances
-of the Streaming DAMP algorithm.
+On line 17 the sensor device samples and stores raw readings inside the temporary
+variable $ e n v$.
+The raw values are then, on lines 20-22, converted and normalised into celsius,
+kPa, and %rH for each respective sensor.
+
+Lines 25-27 calculates the discord scores as usual, but using individual instances
+of the streaming DAMP algorithm.
 The initialisation of these instances was similar to the setup done in @lightsensor,
 but was again omitted for the sake of brevity.
-All six values was then sent to InfluxDB.
-
-#TODO("update with new code")
+All six values are then sent to InfluxDB.
 
 #figure(```go
 // Initialise new sensor driver provided by:
 // periph.io/x/devices/v3/bmxx80
 // and all its associated libraries.
-host.Init()
-bus := i2creg.Open("")
+_, _ = host.Init()
+bus, _ := i2creg.Open("")
 address := 0x76
-sensor = bmxx80.NewI2C(bus, address, &bmxx80.Opts{
+device = bmxx80.NewI2C(bus, address, &bmxx80.Opts{
 	Temperature: bmxx80.O1x,
 	Pressure:    bmxx80.O1x,
 	Humidity:    bmxx80.O1x,
 	Filter:      bmxx80.NoFilter,
 })
 
-var env physic.Env
-for {
-		// Collect new data readings from the various sensors
-		sensor.Sense(&env)
-		temp := env.Temperature.Celsius()
-		pres := float64(env.Pressure) / float64(physic.Pascal)
-		humi := float64(env.Humidity) / float64(physic.PercentRH)
+// Collect new data readings from the sensors
+for range time.Tick(1 * time.Second) {
+	var env physic.Env
+	_ = device.Sense(&env)
 
-		// And calculate new discord scores
-		tempDiscord := sdampTemp.Push(temp)
-		presDiscord := sdampPres.Push(pres)
-		humiDiscord := sdampHumi.Push(humi)
+	// Get the values in correct units
+	temp := env.Temperature.Celsius()
+	pres := float64(env.Pressure) / float64(physic.Pascal)
+	humi := float64(env.Humidity) / float64(physic.PercentRH)
 
-		point := influxdb2.NewPointWithMeasurement(...)
-		writer.WritePoint(p)
-		time.Sleep(1 * time.Second)
+	// And calculate new discord scores
+	tempDiscord := sdampTemp.Push(temp)
+	presDiscord := sdampPres.Push(pres)
+	humiDiscord := sdampHumi.Push(humi)
+
+	point := influxdb2.NewPoint(...)
+	writer.WritePoint(p)
 }
 ```, caption: [Example for collecting multiple values from the BME280 combination sensor.],
 ) <bmesensor>
 
 Both examples was then merged into a single utility, the sensor "logger".
 It could then run in the background on the Raspberry Pi and continuously
-collect the sensor samples and discord scores for InfluxDB. 
+collect the sensor samples and discord scores for InfluxDB.
 
-More sensors were available of course, the gyroscopic/UV/VOC devices, which were
-not used.
-The VOC sensor did not have a ready-made driver in Go available at the time
-and the UV and gyroscopic sensors did not provide any interesting data.
+More sensors were available of course, for example the gyroscope and UV light
+sensor, which were not used as they did not provide any interesting data.
+A VOC sensor was also present, but it did not have a ready-made driver in Go
+available at the time.
 
 
 == A note on signal noise
 
-One important detail that have not been mentioned before is how DAMP will handle
+One important detail not mentioned before is how DAMP should handle
 fluctuating data and other problems associated with signal noise.
 The subject itself is a well-known problem and it is common knowledge that if a
 signal input contains noise, the output result will also contain noise or worse.
@@ -977,11 +988,12 @@ provided on their publishing page
 #footnote[https://sites.google.com/view/discord-aware-matrix-profile/dataset]
 and so could be reused as test data in this work.
 
-In the following figures in this section, the first plot shows the raw data from
-a time series.
+In the following figures over the next few pages, the first plot at the top of
+each page shows the raw data of each analysed time series.
 The second plot is the output from _Lu's_ Matlab script and serves as a visual
 reference for the next plots.
-The last three plots shows the outputs from the implementations used in this thesis.
+The last three plots at the bottom of each page shows the outputs from the
+implementations used in this thesis.
 The discord peaks in these plots should ideally line up with the peaks in the
 reference plot above them.
 The peaks themselves should point out the anomalies in the time series data.
@@ -1242,15 +1254,16 @@ This is probably due to when the service offloads its data cache when it has
 grown too large.
 
 It is interesting to see that the logger utility was able to operate with less
-than one percent of the one GB RAM that was available on the system.
+than one percent of the gigabyte of RAM that was available on the system.
 This suggests that Stream DAMP could run in even smaller environments, for
 example on an Arduino board or any other micro-controllers.
 
 Future work would require finding better values for the subsequence sizes though,
 as the Matrix Profiles would only give strong indications for the most obvious
 anomalies in the sensor samples.
-The sensor drivers would also require some more work, to get rid of the noisy
-spikes in the data that the Matrix Profiles likes to point out.
+The sensor drivers would also require some more work to get rid of the noisy
+spikes in the data, as the Matrix Profiles likes to point out these.
+A low-pass filter could solve this for example.
 A final suggestion would be to set up a threshold for the discord peaks, which
 could filter out the lesser discords and make the other peaks more actionable.
 
@@ -1358,7 +1371,7 @@ time, so it could better handle variations in the time series.
 - Generate @examplepattern using:
 
 	./experiments/plot_examples.sh
-	
+
 - Generate "TODO: PLOTS IN RESULTS" using:
 
 		go run experiments/generate_samples.go \
@@ -1410,7 +1423,7 @@ time, so it could better handle variations in the time series.
 # Read metrics about cpu usage
 # https://github.com/influxdata/telegraf/blob/release-1.33/plugins/inputs/cpu/README.md
 [[inputs.cpu]]
-  fieldinclude = ["usage_user", "usage_system", "usage_idle"] 
+  fieldinclude = ["usage_user", "usage_system", "usage_idle"]
   tagexclude = ["cpu"]
   percpu = false
   totalcpu = true

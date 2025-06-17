@@ -197,7 +197,7 @@ rakthanmanon:
   date: 2012-08-12
   serial-number:
     doi: 10.1145/2339530.2339576
-  
+
 ################################################################################
 # Surveys
 
@@ -224,3 +224,13 @@ boniol:
   date: 2024-12-29
   serial-number:
     arxiv: 2412.20512v1
+
+################################################################################
+# Documentation and other sites
+
+ticker:
+  type: Web
+  title: "time package - time - Go Packages"
+  author: Go contributors
+  date: 2025-07-08
+  url: https://pkg.go.dev/time#NewTicker
