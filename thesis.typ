@@ -29,16 +29,10 @@
 	])
 
 	#align(horizon, text(size: 48pt, fill: red)[
-		`DRAFT #1`
+		`DRAFT #2`
 	])
 ])
 
-////////////////////////////////////////////////////////////////////////////////
-// Preface
-
-#let TODO(msg) = {
-	[#text(fill: red, weight: "bold")[TODO: #msg]]
-}
 #set text(size: 12pt)
 #set par(justify: true)
 #set quote(block: true, quotes: true)
@@ -56,31 +50,43 @@
 	it.body
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Preface
+
 #pagebreak(to: "even")
 #align(center, [
 	[This page intentionally left blank]
 ])
 #pagebreak()
 
+
 #heading(numbering: none, outlined: false, bookmarked: true, "Abstract")
+
+// The abstract is a mini thesis on its own. It should contain the briefest of
+// motivation and problem description, what has been done, and summarize the results.
+// The purpose is to give the reader a quick view of the content, and encourage
+// the reader to read the rest of the thesis.
+
 // Offer a brief description of your thesis or dissertation and a concise summary
 // of its conclusions. Be sure to describe the subject and focus of your work with
 // clear details and avoid including lengthy explanations or opinions.
 
-#TODO("")
-
-*Keywords*: time series, matrix profile, anomaly detection, edge computing
 
 
-#heading(numbering: none, outlined: false, bookmarked: true, "Preface")
-// A preface is a statement of the author's reasons for undertaking the work and
-// other personal comments that are not directly germane to the materials presented
-// in other sections of the thesis.
+*Keywords*: time series, anomaly detection, edge computing, matrix profile
 
-#TODO("this paper and thanks")
+
+#heading(numbering: none, outlined: false, bookmarked: true, "Acknowledgements")
+
+I would like to thank my two supervisors from Luleå University of Technology
+and #metadata.company, for allowing me to work on a project based on my own ideas.
+Extra thanks to the company for providing the hardware.
+
+It has been great bouncing ideas and getting grilled on the theory, guys. \
+I enjoyed working with you both.
 
 - #metadata.author, \
-	Luleå University of Technology, 2025
+	Luleå in July, 2025
 
 
 #pagebreak()
@@ -123,6 +129,7 @@
 / VOC: \
 	Volatile organic compounds, microscopic particles from mold, plants, furniture,
 	and cleaning supplies.
+
 
 #pagebreak()
 #heading(numbering: none, outlined: false, bookmarked: true, "Contents")
