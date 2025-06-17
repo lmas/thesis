@@ -63,7 +63,7 @@
 #heading(numbering: none, outlined: false, bookmarked: true, "Abstract")
 
 // The abstract is a mini thesis on its own. It should contain the briefest of
-// motivation and problem description, what has been done, and summarize the results.
+// motivation and problem description, what was done, and summarize the results.
 // The purpose is to give the reader a quick view of the content, and encourage
 // the reader to read the rest of the thesis.
 
@@ -71,7 +71,7 @@
 // of its conclusions. Be sure to describe the subject and focus of your work with
 // clear details and avoid including lengthy explanations or opinions.
 
-
+TODO
 
 *Keywords*: time series, anomaly detection, edge computing, matrix profile
 
@@ -154,21 +154,24 @@ With the shift towards Industry 4.0 @lasi, the manufacturing industries are
 facing new challenges as they move towards decentralised processes.
 This move is partly enabled by the advances with smart devices and the rise of
 the Internet-of-Things.
-By increasing the use of smart sensors a manufacturer can better supervise the
+These devices are most often operated near the Edge, at the ends of the communication
+networks and close to users or other machinery which might interact with the
+smart devices in one way or another.
+By increasing the use of smart sensors, a manufacturer can better supervise the
 operation of their equipment and, for example, better predict equipment failure.
 
-As _Khan et al._ notes @khan, sensors and programmable logic controllers (PLCs)
+_Khan et al._ notes that @khan sensors and programmable logic controllers (PLCs)
 are becoming the largest group of devices that generates the most data.
-And as the industries scales up their sensor networks there is an increasing need
-to be able to faster process the larger amounts of data,
-in order to provide real-time analysis.
+As the industries scales up their sensor networks there is an increasing need
+to be able to faster process the larger amounts of data, in order to provide
+real-time analysis.
 
-This bachelor thesis will explore the use of anomaly detection on time
+This bachelor thesis explores the use of anomaly detection on time
 series data, performed on hardware-limited devices closer to the Edge.
 This is an attempt at evaluating the possible usefulness of running data analysis
 directly on smart sensors.
-The method of anomaly detection will revolve around the Matrix Profile,
-as introduced by _Yeh et al._ @yeh,
+The method of anomaly detection revolves around the Matrix Profile, as introduced
+by _Yeh et al._ @yeh,
 which is a family of algorithms used for detecting discord anomalies,
 among other uses.
 They also note that "time series discords are known to be very competitive as
@@ -177,7 +180,7 @@ novelty/anomaly detectors."
 The Matrix Profile is a simple algorithm with claims of being easily scale-able
 @yeh and as such might offer a more performant alternative to machine learning
 models or other artificial intelligence solutions that are popular as of today.
-And since it does not require a heavy processing model, it might be able to run
+Since it does not require a heavy processing model, it might be able to run
 on smaller devices and sensors that lacks the required processing power for
 running the heavier AI models.
 
@@ -205,9 +208,9 @@ controlled remotely.
 _Javaid et al._ @javaid also notes an increasing need of intelligent sensor
 systems and networks for the smart factories.
 By using autonomous sensors with higher processing capabilities,
-the industry will be able to reduce their dependency on human operators and thus
-reduce problems caused by the human factor, for example.
-And with the availability of wireless sensors, monitoring can be done more easily
+the industry can reduce their dependency on human operators and can thus reduce
+problems caused by the human factor, for example.
+With the availability of wireless sensors, monitoring can be easier
 for inaccessible locations such as remote or hazardous areas.
 The maintenance of the increasingly complex systems can also benefit
 as more precise detection can send alerts sooner for any failing components and
@@ -215,7 +218,7 @@ thus reduce costly maintenance downtime during production.
 
 Of course, with increasingly larger sensor networks it also follows that there is
 an increasing amount of data, as mentioned by _Javaid_.
-And more raw data requires communication networks with higher processing capacity.
+More raw data requires communication networks with higher processing capacity, too.
 _Gungor et al._ @gungor suggests that the sensors should filter their data and
 only send the processed data, as a step towards reducing the network overhead.
 Doing so also has the possible benefit of reducing signal interference, delays,
@@ -255,26 +258,30 @@ Positive outcomes to these questions would give an indication that data analysis
 is possible to do on Edge devices directly.
 Doing so should enable more efficient data monitoring, with earlier anomaly
 detection, less data to store, and using less network traffic.
-Minimising both data storage and network traffic should help reduce the overall
-amount of spent resources, required for operating larger sensor networks.
+Minimising both data storage and network traffic should assist in reducing the
+overall amount of spent resources, required for operating larger sensor networks.
 
-And by reducing the continuous data stream from an individual sensor, to only
+By reducing the continuous data stream from an individual sensor, to only
 have it sending out alerts, it might be possible to extend the sensor's lifetime.
 This is especially true if the sensor is running on battery power.
 
 
 == Delimitations
 
-Due to the limited time available to write a bachelor thesis, this one will
-constrain itself to only analyse the application of the Matrix Profile algorithm
-for detecting anomalies, rather than comparing it to other methods which previous
+Due to the limited time available to write a bachelor thesis, this one constrains
+itself to only analyse the application of the Matrix Profile algorithm for
+detecting anomalies, rather than comparing it to other methods which previous
 surveys already have done extensively.
 
-Also, the thesis will only explore the use of a single off-the-shelf device
-such as a Raspberry Pi and a small set of simple sensors such as temperature,
-humidity and light level.
-Any other, more advanced devices are simply too expensive and possibly too time
-consuming to work with.
+Also, the algorithm is only applied on a single off-the-shelf device such as a
+Raspberry Pi, together with a small set of simple sensors such as temperature,
+humidity, and light level.
+Although it is running a full operating system, the processing power of a
+Raspberry Pi can reflect the capabilities of other Internet-of-Things devices
+used in the industry.
+Smaller, "closer to the metal" devices such as Arduino might be too time consuming
+to work with as software is most often developed using C or Assembly (which are
+well-known to be difficult to work with) for these kinds of devices.
 
 
 == Thesis structure <structure>
@@ -333,8 +340,8 @@ literature @chandola, @gupta:
 	indicating a potential insider trader, and analysis should flag it as such.
 
 - Medical and public health monitors:
-	Medical symptoms or diseases can be detected and tracked by using medical data,
-	either from patient records or attached health sensors.
+	Medical data either from patient records or attached health sensor can detect
+	or track medical symptoms, issues, and diseases.
 	For example, it is common to monitor a patient's condition over time
 	or tracking the outbreak of diseases in specific areas such as cities.
 	In this scenario, not being able to detect anomalies in the patient's data could
@@ -370,7 +377,7 @@ _Gupta et al._ @gupta notes a few more challenges:
 
 These challenges then most often result in specific solutions for
 finding anomalies in a single domain.
-It has previously been common to use various kinds of machine learning models,
+It has previously been common to use different kinds of machine learning models,
 for example:
 neural networks, support vector machines (a linear classification model),
 decision trees (a rules-based prediction model),
@@ -386,7 +393,7 @@ resource-constrained environments, such as small devices and sensors.
 == Types of anomalies
 
 Yet another challenge is how to define what is an anomalous pattern.
-Most often it is some kind of outlier that clearly differentiates itself from
+Most often it is some kind of outlier that distinctly differentiates itself from
 the other data, but it could also be more subtle issues that is harder to spot.
 A definition that is commonly used in the literature @chandola, @gupta
 and summarised by _Lai et al._ @lai:
@@ -400,7 +407,7 @@ and summarised by _Lai et al._ @lai:
 - Contextual anomalies:
 	These are also individual data points but with values that make them stand out
 	in a local context (and is thus subjective), instead of globally.
-	It is considered a harder problem to identify this kind of anomaly.
+	Most literature considers this kind of anomaly as being harder to identify.
 
 - Collective anomalies:
 	A subsequence of data points which individually might not stand out
@@ -434,7 +441,7 @@ in order to discover any possible discord anomaly.
 A larger distance, _the discord score_, means that the subsequence is an unusual
 pattern in the data and that there is a lower probability of a duplicate.
 _Yeh's_ paper contains more in-depth definitions and details of the original
-algorithm which is not repeated here for brevity, but later sections will provide
+algorithm which is not repeated here for brevity, but later sections provides
 practical examinations of an improved algorithm.
 
 Lets instead take a look at what kind of results the Matrix Profile can produce.
@@ -452,19 +459,19 @@ drops after the 1000'th and 1500'th marks.
 	]
 ) <examplepoint>
 
-The two drops was caused by the passing pressure waves from the Hunga
-Tonga--Hunga Haʻapai eruption
+The cause of the two pressure drops originates from the passing pressure waves
+from the Hunga Tonga--Hunga Haʻapai eruption
 #footnote[https://en.wikipedia.org/wiki/2022_Hunga_Tonga%E2%80%93Hunga_Ha%CA%BBapai_eruption_and_tsunami]
-during this day.
+during the same day.
 The Matrix Profile was able to detect both events in the time series, as indicated
 by the two tallest discord peaks.
-And as the two drops are observable by eye in this scenario it is easy to verify
+As the two drops are observable by eye in this scenario it is easy to verify
 that the Matrix Profile works as intended.
 
 It is also worth pointing out that the time series is small, about 2600 data points
 recorded at one minute intervals, and any other, alternative tools can handle
 this analysis in a reasonable time.
-But what if the scale was increased to millions of data points?
+But what if the scale increased to millions of data points?
 This is possible with factory machines equipped with high-performance sensors
 that can record samples at KHz or MHz frequencies, for example.
 Since _Yeh_ published their implementation in 2017, it has seen further improvements
@@ -481,9 +488,9 @@ _Lu_ achieves this higher performance by calculating an approximate Matrix Profi
 from each subsequence's distance to all _previous ones only_, in a backwards
 processing manner.
 Only having to process previous data results in the space complexity of $O(n)$
-and the time complexity for the worst-cases would be $O(n log n)$, although _Lu_
-claims that the effective time complexity would be better in 99% of the cases due
-to the algorithm being able to quit early.
+and with the time complexity, for the worst-case, of $O(n log n)$.
+Although _Lu_ claims that the effective time complexity could be better in 99%
+of the cases due to the algorithm being able to quit early.
 
 @examplepattern shows an example of a time series based on simulated sensor data
 from a milling machine.
@@ -491,7 +498,7 @@ In this example it is harder to observe, by eyes only, the beginning of the
 anomalous pattern.
 More importantly, detection needs to be fast enough to stop the milling process
 sooner and avoid damaging the equipment.
-And although this was a simulated scenario, as provided by the paper by _Lu_,
+Although this was a simulated scenario provided by the paper by _Lu_,
 it serves as a good reference for later improvements of the DAMP algorithm.
 
 #figure(
@@ -516,7 +523,7 @@ of $t$ and the points afterwards.
 The training sequence acts as a warm up for the algorithm, so it does not produce
 erroneous values that might skew the following scores.
 The MASS v2 function finds the scores by calculating the Euclidean distances
-between the subsequences, it is shown later in @massv2.
+between the subsequences, as @massv2 shows in the next section.
 
 #figure(```go
 func DAMP(t []float64, m int, p int) []float64 {
@@ -552,8 +559,8 @@ $b s f$.
 To prevent reading non-existing data, the process has to consider the two special
 cases _one_ and _two_, which guards against reading data past either
 possible end of the time series.
-Case one will also end the loop despite what the current score would be, as there is
-simply no more data that needs to be process afterwards.
+Case one also ends the loop despite what the current score is currently, as there
+is simply no more data that needs to be process afterwards.
 
 The rest of the code is self explanatory.
 
@@ -594,15 +601,15 @@ func processBackward(t []float64, m int, i int, bsf float64)
 
 By halting the search as soon as a distance score is lower than the best-so-far,
 the algorithm also solves the "twin-freak" problem.
-An anomaly will cancel out itself if it appears more than once (hence the name
-"twin-freak", from _Lu et al._) as the nearest neighbour would be itself during
-the calculations of the distance scores.
+An anomaly cancels out itself if it appears more than once (hence the name
+"twin-freak", from _Lu et al._) as the nearest neighbour is itself during the
+calculations of the distance scores.
 
 
 == Distance between neighbours
 
 Searching for the nearest neighbours is originally done using MASS v2 function,
-which was created by _Zhong et al._ @mueen.
+created by _Zhong et al._ @mueen.
 @massv2 displays the core equation
 
 $
@@ -654,15 +661,14 @@ $ D(t,s) = sqrt(sum_(i=1)^n |t_i-s_i|^2 ) \ $<minkowski>
 
 and where $t = (t_1, t_2, ..., t_n)$ and $s = (s_1, s_2, ..., s_n)
 in RR^n$.
-It will also calculate the Euclidean distances more efficiently as the equation
-does not involve complex numbers or temporary arrays, which @benchmark will show
-later.
-The result will differ from MASS of course, as the distances are not normalised
+It also calculates the Euclidean distances more efficiently as the equation
+does not involve complex numbers or temporary arrays, which @benchmark shows later.
+The result differs from MASS of course, as the distances are not normalised
 anymore.
 
 The _processBackward_ function in @backproc can easily replace all its calls to
 MASS with this new distance function.
-As a later section will show, the loss of precision in the distance scores are
+As a later section shows, the loss of precision in the distance scores are
 negligible when detecting point anomalies and offers great improvements in
 performance.
 
@@ -671,9 +677,9 @@ performance.
 
 As _Chandola et al._ have noted @chandola, one difficulty with anomaly detection
 is choosing the most optimal size of subsequence for the analysis.
-Most other studies seem to pass over this problem.
-_Lu et al._ simply states that the size should be set according to domain
-knowledge of the analysed time series @lu.
+But most other studies seem to pass over this problem.
+_Lu et al._ simply states @lu that domain knowledge (of the time series) should
+determine the subsequence size.
 Though they do try to solve the problem in a later work @lu2, by analysing a time
 series using _multiple_ subsequence sizes and avoid having the user pick one
 themselves.
@@ -713,7 +719,7 @@ a stable environment and an alternative to Matlab.
 
 The Go implementation also includes a complementary test suite which verifies,
 against the reference data, the correctness of the implemented algorithm.
-@results will later go into details of these results and provide an expanded analysis.
+@results goes into details of these results and provide an expanded analysis.
 
 
 == Adapting the algorithm
@@ -727,8 +733,8 @@ Eventually the computer would either run out of memory, when it fills up with
 the arrays, or reprocessing the increasingly larger in-data array would consume
 too much time and energy to be of any practical use in a live scenario.
 
-In order to handle this scenario, the Go implementation must be adapted to handle
-continuously arriving data without running out of computing resources.
+In order to handle this scenario, the Go implementation must have adaptions to
+handle continuously arriving data without running out of computing resources.
 _Lan et al._ suggests @lan, as a basic strategy, to use a cache of any sort and
 limit the amount of data processed.
 
@@ -736,8 +742,9 @@ _Gillis_ offers a simple to use double-ended queue in Go @gillis and it can
 operate as an efficient first-in, first-out (FIFO) queue, as illustrated in @deque.
 It is worth noting that as it keeps track of both ends, it is able to operate in
 $O(1)$ time when pushing to or popping from respective end.
-And the internal buffer is always a power of two too, so this data structure fits
-in well with the MASS function and its requirements, as has been previously explained.
+With the internal buffer always being a power of two, the data structure should
+also fit in well with the MASS function and its requirements, as has been
+previously explained.
 
 // pkg source: https://typst.app/universe/package/fletcher
 #import "@preview/fletcher:0.5.7" as fletcher: diagram, node, edge
@@ -766,18 +773,18 @@ in well with the MASS function and its requirements, as has been previously expl
 ) <deque>
 
 By using this new data structure as a buffer in place of the previously used data
-arrays, an alternative implementation would be able to consume streaming data in
+arrays, an alternative implementation is able to consume streaming data in
 a continuously manner.
-@streamdamp shows how the queue can be utilised when calculating discord scores.
+@streamdamp shows the utilisation of the queue, when calculating discord scores.
 
 _StreamDAMP_ is a data structure that keeps two queues for the raw data and the
 Matrix Profile, and other associated values such as data sizes and a best-so-far
 score.
-The new function _Push_ will add a raw value to the data queue, making sure it
+The new function _Push_ adds a raw value to the data queue, making sure it
 does not overflow, and then call _processBackward_ to calculate the discord score
 in a similar manner as previously shown in @dampalgo.
-The score is kept in the internal Matrix Profile for future calculations
-and is then finally returned back to the user.
+The internal Matrix Profiles keeps the score future calculations and is then
+finally returned back to the user.
 
 #figure(```go
 func Push(sd *StreamDAMP, value float64) float64 {
@@ -804,13 +811,13 @@ func Push(sd *StreamDAMP, value float64) float64 {
 ```, caption: [Function for continuously pushing new data to DAMP.]) <streamdamp>
 // ```, caption: [The DAMP algorithm adapted to handle streaming data.]) <streamdamp>
 
-A user can now repeatedly call _Push_ whenever new data is collected, for example
-from a data stream from a sensor, and perform analysis and monitoring in real time.
-And thanks to the double-ended queue acting as a buffer, most Edge devices
+A user can now repeatedly call _Push_ whenever they want to collect new data,
+for example from a sensor's data stream, and analyse and monitor the stream in
+real time.
+Thanks to the double-ended queue acting as a buffer, most Edge devices
 (with limited computing resources) should be able to handle large amounts of data
 with ease.
-The following subsections will explore this and then @results will present the
-results.
+The following subsections explores this and then @results presents the results.
 
 == Setting up hardware environment
 
@@ -839,24 +846,25 @@ off-the-shelf and the bill of materials includes:
 Setting up the hardware required using some wires and a breadboard which is
 commonly used when prototyping electronic projects, as shown in @hatonrasp.
 @app-wiring have a wiring diagram that better illustrates the setup.
-The Raspberry Pi was then powered up and setup in a default way by following the
-getting started guide @raspberry and then connected to a locally available WIFI
-network.
+Powering up the Raspberry Pi, it was then setup in a default way by following
+the getting started guide @raspberry and connected to a locally available
+WIFI network.
 
 #figure(
 	block(clip: true, radius: 4pt, image("images/photo-rasp-sensor.jpg", width: 75%)),
 	caption: [Environment Sensor HAT wired to the Raspberry Pi.],
 ) <hatonrasp>
 
-InfluxDB was then installed in a similar way by following its setup guide @influxdb.
-InfluxDB is a simple to use time series database with a built in data explorer.
-It is a suitable choice for monitoring the Raspberry Pi's performance and logging
-both raw sensor data and corresponding Matrix Profiles.
+Next, the Raspberry Pi should monitor its performance and continuously log the
+raw sensor data and corresponding Matrix Profiles for later analysis.
+InfluxDB is a simple to use time series database with a built in data explorer
+and can do both tasks on the device.
+InfluxDB has its own setup guide @influxdb on how to install it as a service.
 
-Finally, Telegraf was installed @telegraf.
-It is a monitoring agent that can collect various statistics such as memory usage,
-CPU times and other performance-related data from the Raspberry Pi.
-The collected data is then sent to InfluxDB for logging and monitoring purposes.
+Collecting the raw performance data such as memory usage, CPU times, and other
+statistics requires a monitoring agent on the host device.
+Installing Telegraf @telegraf solved this task and it can send the collected
+statistics directly to InfluxDB.
 @app-telegraf shows the configuration file used for Telegraf.
 
 
@@ -868,7 +876,7 @@ start processing the sensor data.
 from the TSL25911 sensor.
 The code is running continuously on the Raspberry Pi in order to log the data
 for later analysis.
-Please note that any error handling was omitted for brevity.
+Please note that omitting all error handling was for brevity's sake.
 
 Line 06 sets up an instance of the streaming DAMP algorithm, which can continuously
 calculate the Matrix Profile of the sensor data.
@@ -963,7 +971,7 @@ for range time.Tick(1 * time.Second) {
 	pres := float64(env.Pressure) / float64(physic.Pascal)
 	humi := float64(env.Humidity) / float64(physic.PercentRH)
 
-	// And calculate new discord scores
+	// Calculate new discord scores
 	tempDiscord := sdampTemp.Push(temp)
 	presDiscord := sdampPres.Push(pres)
 	humiDiscord := sdampHumi.Push(humi)
@@ -989,22 +997,16 @@ available at the time.
 One important detail not mentioned before is how DAMP should handle
 fluctuating data and other problems associated with signal noise.
 The subject itself is a well-known problem and it is common knowledge that if a
-signal input contains noise, the output result will also contain noise or worse.
+signal input contains noise, the output result also contains noise or worse.
 This remains true for DAMP of course.
 
-As an example, a basic low-pass filter could filter the data before it is pushed
+As an example, a basic low-pass filter could filter the data before pushing it
 into DAMP and remove the noise in the higher frequencies.
-This was dismissed as being out of scope though, as it would require a lot more
-time and studies in advanced courses not available for a bachelor's degree.
-And as the results in the following section suggests, the noise might not affect
+This is out of the scope for this thesis though and was thus dismissed, as it
+would require a lot more time and studies in advanced courses not available for
+a bachelor's degree.
+As the results in the following section suggests, the noise might not affect
 DAMP too much anyway.
-
-// @book{vaseghi2008advanced,
-//   title={Advanced digital signal processing and noise reduction},
-//   author={Vaseghi, Saeed V},
-//   year={2008},
-//   publisher={John Wiley \& Sons}
-// }
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1015,8 +1017,9 @@ As was already mentioned in @method, the Matlab script authored by _Lu et al._
 served as a reference for the new implementations in this thesis.
 The datasets used to create the example plots in their paper @lu was also
 provided on their publishing page
-#footnote[https://sites.google.com/view/discord-aware-matrix-profile/dataset]
-and so could be reused as test data in this work.
+#footnote[https://sites.google.com/view/discord-aware-matrix-profile/dataset].
+A couple of datasets was then reused in this thesis as a way to validate the
+results here.
 
 In the following figures over the next few pages, the first plot at the top of
 each page shows the raw data of each analysed time series.
@@ -1027,7 +1030,7 @@ implementations used in this thesis.
 The discord peaks in these plots should ideally line up with the peaks in the
 reference plot above them.
 The peaks themselves should point out the anomalies in the time series data.
-All plots are kept together on a single page, to aid the comparison.
+To aid with the comparison, a single page (for each dataset) shows all plots together.
 
 @res-milling is a constructed example by _Lu_ @lu with synthetic data that simulates
 a vibration sensor on a milling machine.
@@ -1053,7 +1056,7 @@ but its relevance remains unconfirmed.
 This dataset served as an initial reference during prototyping and acted as a more
 difficult example for the discord analysis.
 
-A later section will analyse the results of these figures in more depth.
+A later section analyses the results of these figures in more depth.
 
 #figure(
 	image("images/analysis-2-machining.png", height: 95%),
@@ -1099,9 +1102,8 @@ better in limited computing environments.
 	caption: [Average runtimes for the analysis of each dataset.]
 ) <res-times>
 
-A proper benchmark was done afterwards on Stream DAMP and it highlights the
-differences in performance, depending strongly on the choice of method for
-calculating the subsequence distances.
+Running a benchmark on Stream DAMP highlights the differences in performance,
+depending strongly on the choice of method for calculating the subsequence distances.
 
 The benchmark used a randomly generated time series with 10240 data points.
 @app-benchmarks contains the full output of that benchmark, with the results
@@ -1188,7 +1190,7 @@ The anomaly is easily visible near the end but it is hard to determine when it
 begins with eyes only.
 A human operator would most likely not react fast enough to interrupt the milling
 machine before it had already started cutting into itself.
-Fast and early detection would be beneficial in this example.
+Fast and early detection is then beneficial in this example.
 
 As is then shown in the following plots, all methods could correctly identify the
 anomaly almost before it even started, illustrating the effectiveness of the
@@ -1207,7 +1209,7 @@ meaningful results.
 Turning off normalisation was the only way to correctly detect the anomalies,
 as shown in the last plot.
 
-And as the first sprawling plots suggest, the algorithm most likely had a hard
+As the first sprawling plots suggest, the algorithm most likely had a hard
 time to find any matching patterns and had to expand its search multiple times.
 The benchmark later on seems to confirm this theory, as the DAMP implementation
 had a large performance degradation when compared to the two other methods.
@@ -1244,8 +1246,8 @@ to be re-processed when looking for the nearest neighbours for each new data poi
 And finally, disabling normalisation allowed for using a more simpler and much
 more efficient distance calculation using Minkowski's method.
 In contrast to that, the MASS function was naively implemented, alongside with
-DAMP, and runs much heavier operations required for the normalisation.
-Obvious targets for optimisations would be the unnecessary re-allocations of the
+DAMP, and runs much heavier mathematical operations required for the normalisation.
+Obvious targets for optimisations is the unnecessary re-allocations of the
 arrays holding complex numbers, for example.
 
 This large difference between the two distance functions was then confirmed with
@@ -1258,7 +1260,7 @@ performance of:
 - or adapting Minkowski's method to also handle normalisation.
 
 The existing streaming adaptions were good enough though and could be easily run
-on the Raspberry Pi, which the following section will discuss.
+on the Raspberry Pi, which the following section discusses.
 
 
 == On the sensors <on-sensors>
@@ -1295,7 +1297,7 @@ sensor samples.
 The sensor drivers would also require some more work to get rid of the noisy
 spikes in the data, as the Matrix Profiles likes to point out these.
 A low-pass filter could solve this for example.
-A final suggestion would be to set up a threshold for the discord peaks, which
+A final suggestion is to set up a threshold for the discord peaks, which
 could filter out the lesser discords and make the other peaks more actionable.
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1313,7 +1315,7 @@ This confirms that the first question from @definition is highly feasible:
 
 Not only is it possible, but it is also easy to adapt to new scenarios or environments,
 and can run independently with minimal human oversight.
-It was surprisingly easy to run the algorithm and getting results quickly,
+It was unexpectedly easy to run the algorithm and getting results quickly,
 without having to do any pre-training of a model or fine tuning parameters
 (as is common for most machine learning models).
 Although, the results can be noisy at times and would require some fine tuning of,
@@ -1324,10 +1326,10 @@ analysed data.
 
 Another problem encountered was the appearance of flat, constant regions in the
 sensor data.
-As it is the nature of a plot, a group of points on a horizontal line will of
-course match perfectly with another group of points of the same amplitude.
-Any perfect matches would cause arithmetic errors from trying to divide by zero,
-and would break the algorithm.
+A group of points on a horizontal line has a perfect match with a neighbouring
+group that has the same exact amplitude.
+As such, any perfect matches would cause arithmetic errors from trying to divide
+by zero, and would break the algorithm.
 This was a regular problem for the light sensor during the night, for example,
 and an extra check had to catch the faulty results from the algorithm.
 Using a small buffer mitigated this issue somewhat, as there was a smaller chance
@@ -1429,7 +1431,7 @@ As mentioned in @on-bench near the end, one initial investigation could try
 to normalise Minkowski's method and, if possible, compare it to the MASS function.
 
 _Rakthanmanon et al._ suggest other interesting optimisations @rakthanmanon that
-would be worth to investigate for this work.
+are worth to investigate for this work.
 For example, calculating a square root is an expensive mathematical operation on
 a computer and unfortunately a required step when calculating exact Euclidean
 distances.
@@ -1484,8 +1486,8 @@ With a secondary mirror as a backup at:
 
 \
 
-The thesis is written using https://typst.app/ and can be compiled by running
-(while inside the repo's root directory):
+This thesis uses https://typst.app/ for typesetting and the following command
+can compile the final document (while inside the repository's root directory):
 
 ```sh
 typst compile thesis.typ
