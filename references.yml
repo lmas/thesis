@@ -94,6 +94,18 @@ lu:
   serial-number:
     doi: 10.1145/3534678.3539271
 
+dampdata:
+  type: Web
+  title: "DAMP - Dataset"
+  author:
+    - Yue Lu
+    - Renjie Wu
+    - Abdullah Mueen
+    - Maria A. Zuluaga
+    - Eamonn Keogh
+  date: 2022-08-14
+  url: https://sites.google.com/view/discord-aware-matrix-profile/dataset
+
 lu2:
   type: Article
   title: "Matrix Profile XXX: MADRID: A Hyper-Anytime and Parameter-Free Algorithm to Find Time Series Anomalies of all Lengths"
@@ -158,6 +170,18 @@ gillis:
   author: Andrew Gilis
   url: https://github.com/gammazero/deque
 
+raspspecs:
+  type: Web
+  title: "Raspberry Pi 4 Tech Specs"
+  author: Raspberry Pi contributors
+  url: https://www.raspberrypi.com/products/raspberry-pi-4-model-b/specifications/
+
+sensorhat:
+  type: Web
+  title: "Environment Sensor HAT"
+  author: Waveshare International Limited
+  url: https://www.waveshare.com/wiki/Environment_Sensor_HAT
+
 raspberry:
   type: Web
   title: "Getting started - Raspberry Pi Documentation"
@@ -197,6 +221,45 @@ rakthanmanon:
   date: 2012-08-12
   serial-number:
     doi: 10.1145/2339530.2339576
+
+tonga:
+  type: Web
+  title: "Tonga eruption: How its impact spread so widely and violently"
+  author: The Visual Journalism Team at BBC
+  date: 2022-01-18
+  url: https://www.bbc.co.uk/news/world-australia-60027360
+
+zscore:
+  type: Book
+  title: "Advanced Engineering Mathematics"
+  author: Erwin Kreyszig
+  date: 1979-03-21
+  serial-number:
+    isbn: 978-0-471-02140-7
+
+fourier:
+  type: Article
+  title: "Gauss and the history of the fast fourier transform"
+  author:
+    - Michael T. Heideman
+    - Don H. Johnson
+    - C. Sidney Burrus
+  date: 1984-10-31
+  serial-number:
+    doi: 10.1109/MASSP.1984.1162257
+
+manhattan:
+  type: Book
+  title: "Similarity Search: The Metric Space Approach"
+  author:
+    - Pavel Zezula
+    - Giuseppe Amato
+    - Vlastislav Dohnal
+    - Michal Batko
+  date: 2005-11-17
+  serial-number:
+    doi: 10.1007/0-387-29151-2
+    isbn: 978-0-387-29146-8
 
 ################################################################################
 # Surveys

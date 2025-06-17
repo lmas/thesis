@@ -451,6 +451,13 @@ The data used in this example is the atmospheric pressure recorded by IRF Kiruna
 @irf, during January the 15th in 2022, and it contains two noticeable pressure
 drops after the 1000'th and 1500'th marks.
 
+The cause of the two pressure drops originates from the passing pressure waves
+from the Hunga Tonga--Hunga Haʻapai eruption @tonga during the same day.
+The Matrix Profile was able to detect both events in the time series, as indicated
+by the two tallest discord peaks.
+As the two drops are observable by eye in this scenario it is easy to verify
+that the Matrix Profile works as intended.
+
 #figure(
 	image("images/example-point.png", width: 90%),
 	caption: [
@@ -459,21 +466,12 @@ drops after the 1000'th and 1500'th marks.
 	]
 ) <examplepoint>
 
-The cause of the two pressure drops originates from the passing pressure waves
-from the Hunga Tonga--Hunga Haʻapai eruption
-#footnote[https://en.wikipedia.org/wiki/2022_Hunga_Tonga%E2%80%93Hunga_Ha%CA%BBapai_eruption_and_tsunami]
-during the same day.
-The Matrix Profile was able to detect both events in the time series, as indicated
-by the two tallest discord peaks.
-As the two drops are observable by eye in this scenario it is easy to verify
-that the Matrix Profile works as intended.
-
 It is also worth pointing out that the time series is small, about 2600 data points
 recorded at one minute intervals, and any other, alternative tools can handle
 this analysis in a reasonable time.
 But what if the scale increased to millions of data points?
-This is possible with factory machines equipped with high-performance sensors
-that can record samples at KHz or MHz frequencies, for example.
+This is for example possible with factory machines equipped with high-performance
+sensors that can record samples at KHz or MHz frequencies.
 Since _Yeh_ published their implementation in 2017, it has seen further improvements
 and there are new alternatives that can handle larger scales of data,
 as discussed in the next section.
@@ -488,9 +486,10 @@ _Lu_ achieves this higher performance by calculating an approximate Matrix Profi
 from each subsequence's distance to all _previous ones only_, in a backwards
 processing manner.
 Only having to process previous data results in the space complexity of $O(n)$
-and with the time complexity, for the worst-case, of $O(n log n)$.
-Although _Lu_ claims that the effective time complexity could be better in 99%
-of the cases due to the algorithm being able to quit early.
+and with $O(n log n)$ time complexity for the worst-case.
+Although _Lu_ does not specify the average case complexity, they do make claims
+that the effective time complexity could be better in 99% of the cases due to
+the algorithm being able to quit early.
 
 @examplepattern shows an example of a time series based on simulated sensor data
 from a milling machine.
@@ -616,10 +615,9 @@ $
 	D(t, s) = sqrt(2*(m - (p_[m:n] - m * mu_y*mu_x[m:n]) / (sigma_y*sigma_x[m:n])))
 $ <massv2>
 
-which uses a standard score
-#footnote[https://en.m.wikipedia.org/wiki/Standard_score]
-to normalise the distances and where $t$ is the time series so search through,
-$s$ the investigated subsequence and (using common functions available in Matlab)
+which uses a standard score @zscore to normalise the distances and where $t$ is
+the time series so search through, $s$ the investigated subsequence and (using
+common functions available in Matlab)
 
 #align(center)[
 	$m &= "length"(s), && n &&= "length"(t) \
@@ -635,7 +633,7 @@ $s$ is then reversed and padded with zeroes until its the same size as $t$ using
 ]
 
 which is then multiplied with $t$ by the convolution of the fast Fourier
-transforms #footnote[https://en.wikipedia.org/wiki/Fast_Fourier_transform],
+transforms @fourier,
 
 #align(center)[
 $p &= "ifft"("fft"(t) convolve "fft"(q))$
@@ -655,7 +653,7 @@ near the beginning of the _processBackward_ function in @backproc.
 As a final note, normalised distances are not wanted in some cases, for example
 when trying to detect point anomalies.
 Rather than using MASS, it is possible to use a generalised method such as
-Minkowski's distance #footnote[https://en.wikipedia.org/wiki/Minkowski_distance]
+Minkowski's distance @manhattan
 
 $ D(t,s) = sqrt(sum_(i=1)^n |t_i-s_i|^2 ) \ $<minkowski>
 
@@ -709,8 +707,8 @@ Both the data for the time series and the corresponding Matrix Profile was then
 kept as a reference dataset used for verifying future implementations.
 @app-repo contains a link to the repository that stores this dataset.
 
-The original DAMP algorithm was then implemented in Go
-#footnote[https://go.dev/] as outlined in @dampalgo and @backproc.
+The original DAMP algorithm was then implemented in the Go programming language,
+as outlined in @dampalgo and @backproc.
 Go is famously known for its simple syntax and large standard library,
 which lends itself well to the purpose of making quick but production-ready prototypes.
 This, along with this author's previous experiences and familiarity, was the reason
@@ -825,17 +823,13 @@ a hardware environment.
 This thesis uses cheap, consumer-grade devices that can be commonly found
 off-the-shelf and the bill of materials includes:
 
-- *Raspberry Pi 4, model B with 1GB RAM
-#footnote[https://www.raspberrypi.com/products/raspberry-pi-4-model-b/specifications/]
-.* \
+- *Raspberry Pi 4, model B with 1GB RAM @raspspecs.* \
 	It is versatile enough and allows for running high-level programming languages,
 	thus not restricting the user to work with closer-to-the-metal environments such
 	as with assembly or plain C programming.
 	Running Raspbian Linux on the device saves a great amount of development time.
 
-- *Environment Sensor HAT, by Waveshare
-#footnote[https://www.waveshare.com/wiki/Environment_Sensor_HAT]
-.* \
+- *Environment Sensor HAT, by Waveshare @sensorhat.* \
 	This is an addon module equipped with a TSL25911 ambient light sensor, a BME280
 	temperature, humidity, and air pressure combination sensor, a ICM20948
 	gyroscopic motion sensor, an LTR390-UV-1 ultraviolet (UV) sensor, and finally
@@ -1015,8 +1009,7 @@ DAMP too much anyway.
 As was already mentioned in @method, the Matlab script authored by _Lu et al._
 served as a reference for the new implementations in this thesis.
 The datasets used to create the example plots in their paper @lu was also
-provided on their publishing page
-#footnote[https://sites.google.com/view/discord-aware-matrix-profile/dataset].
+provided on their publishing page @dampdata.
 A couple of datasets was then reused in this thesis as a way to validate the
 results here.
 
@@ -1049,8 +1042,8 @@ likely represents holiday events with accompanying increase of the foot traffic.
 _Lu_ provided this example along with their Matlab script,
 but it was missing exact details of the source, date and any other details that
 would explain the causes of the anomalies.
-A web search could identify a possible source page
-#footnote[https://www.pedestrian.melbourne.vic.gov.au/]
+A web search could identify a possible source page at
+https://www.pedestrian.melbourne.vic.gov.au/
 but its relevance remains unconfirmed.
 This dataset served as an initial reference during prototyping and acted as a more
 difficult example for the discord analysis.
