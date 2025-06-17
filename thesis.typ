@@ -87,19 +87,42 @@
 #heading(numbering: none, outlined: false, bookmarked: true, "Glossary")
 
 #set terms(separator: ": ")
-// Introduction
-/ Industry 4.0: #TODO("")
-/ Internet-of-Things: #TODO("")
-/ Edge: #TODO("")
-// Theory
-/ Anomaly: An unexpected, non-conforming point or pattern in data.
-/ Outlier: Common synonym for _anomaly_ in the context of data analysis.
-/ Discord: An anomalous subsequence with the largest distance to neighbours.
-/ Matrix Profile: A vector of calculated Euclidean distances between subsequence parts of a time series.
-/ DAMP: Discord Aware Matrix Profile, an efficient algorithm for calculating a Matrix Profile.
-// Method
-/ $I^2C$: Inter-integrated circuit, a simple, serial communication bus.
-/ VOC: Volatile organic compounds, microscopic particles from mold, plants, furniture, and cleaning supplies.
+/ Industry 4.0: \
+	The fourth industrial revolution, utilising automation and Internet-of-Things
+	devices in "smart factories".
+
+/ Internet-of-Things: \
+
+	Small, intelligent devices equipped with sensors, CPUs, and network connectivity.
+
+/ Edge computing: \
+	Computation model that runs on devices closer to the data sources, near the ends
+	of communication networks and closer to end users.
+
+/ Anomaly: \
+	An unexpected and non-conforming point, group, or pattern in data.
+
+/ Outlier: \
+	Common synonym for _anomaly_ in the context of data analysis.
+
+/ Discord: \
+	An anomalous subsequence with a large distance to its closest neighbours.
+
+/ Matrix Profile: \
+	A vector of calculated Euclidean distances between subsequence parts of a
+	time series.
+
+/ DAMP: \
+	Discord Aware Matrix Profile, an efficient algorithm for calculating a Matrix
+	Profile.
+
+/ $I^2C$: \
+	Inter-integrated circuit, a serial communication bus for connecting integrated
+	circuits.
+
+/ VOC: \
+	Volatile organic compounds, microscopic particles from mold, plants, furniture,
+	and cleaning supplies.
 
 #pagebreak()
 #heading(numbering: none, outlined: false, bookmarked: true, "Contents")
@@ -1443,25 +1466,43 @@ time, so it could better handle variations in the time series.
 #pagebreak()
 = Project repository <app-repo>
 
-#TODO("link to repo and any other instructions")
+This thesis, its associated source code, and data sets has a primary repository
+located at:
 
-- Generate @anomalies using:
+- https://code.larus.se/lmas/thesis
 
-	go run experiments/generate_anomalies.go \
-	./experiments/plot_anomalies.sh
+With a secondary mirror as a backup at:
 
-- Generate @examplepoint using:
+- https://github.com/lmas/thesis
 
-	#TODO("")
+\
 
-- Generate @examplepattern using:
+The thesis is written using https://typst.app/ and can be compiled by running
+(while inside the repo's root directory):
 
-	./experiments/plot_examples.sh
+```sh
+typst compile thesis.typ
+```
 
-- Generate "TODO: PLOTS IN RESULTS" using:
+Generate @anomalies by running:
 
-		go run experiments/generate_samples.go \
-		./experiments/plot_samples.sh
+```sh
+go run experiments/generate_anomalies.go
+./experiments/plot_anomalies.sh
+```
+
+Generate @examplepoint and @examplepattern by running:
+
+```sh
+./experiments/plot_examples.sh
+```
+
+Generate @res-milling, @res-tonga, @res-bourke, and @res-times by running:
+
+```sh
+go run experiments/generate_samples.go
+./experiments/plot_samples.sh
+```
 
 
 #pagebreak()
