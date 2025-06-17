@@ -62,18 +62,40 @@
 
 #heading(numbering: none, outlined: false, bookmarked: true, "Abstract")
 
-// The abstract is a mini thesis on its own. It should contain the briefest of
-// motivation and problem description, what was done, and summarize the results.
-// The purpose is to give the reader a quick view of the content, and encourage
-// the reader to read the rest of the thesis.
+The world is progressing towards increasingly large and complex networks
+of smart devices.
+The digital networks provides the infrastructure required to operate all of a
+society's most important and basic needs such as water and power.
+The smart devices themselves are highly autonomous units operating at the networks'
+edge and are able to generate or process all kinds of data and can operate other
+equipment as well.
+One common processing task is analysing large amounts of raw sensor data, looking
+for anomalous events or signals leaving their operating boundaries.
 
-// Offer a brief description of your thesis or dissertation and a concise summary
-// of its conclusions. Be sure to describe the subject and focus of your work with
-// clear details and avoid including lengthy explanations or opinions.
+Matrix Profile is a novel algorithm that can perform this data analysis.
+It is able to discover and flag both large events over time and singular points
+in a range of time series data.
+The algorithm can handle most kinds of data, without requiring extensive training
+or making large adjustments to parameters.
 
-TODO
+This work investigates a variant of the Matrix Profile, which runs with a small,
+internal buffer that allows the algorithm to handle streaming data.
+The purpose of the investigation is to measure the effectiveness of the algorithm
+and see if it can analyse sensor data while running on a smart device.
 
-*Keywords*: time series, anomaly detection, edge computing, matrix profile
+Once implemented, the algorithm analysed examples with well known outputs
+that could confirm the produced results as being valid.
+A Raspberry Pi equipped with a sensor board could then run the algorithm,
+mimicking a real scenario, and analysed live sensor data while measuring the
+performance too.
+
+This investigation could conclude that the Matrix Profile, once adapted, shows
+good indications at being efficient enough to run directly on small devices.
+This allows the possibility of offloading the centralised data analysis from
+the core of large networks and instead distribute the analysing tasks to the
+sensors themselves.
+
+*Keywords*: edge computing, matrix profile, anomaly detection, time series
 
 
 #heading(numbering: none, outlined: false, bookmarked: true, "Acknowledgements")
@@ -83,10 +105,9 @@ and #metadata.company, for allowing me to work on a project based on my own idea
 Extra thanks to the company for providing the hardware.
 
 It has been great bouncing ideas and getting grilled on the theory, guys. \
-I enjoyed working with you both.
 
-- #metadata.author, \
-	Luleå in July, 2025
+#metadata.author, \
+Luleå in August, 2025.
 
 
 #pagebreak()
@@ -1292,9 +1313,8 @@ A low-pass filter could solve this for example.
 A final suggestion is to set up a threshold for the discord peaks, which
 could filter out the lesser discords and make the other peaks more actionable.
 
-////////////////////////////////////////////////////////////////////////////////
 
-= Discussion <discussion>
+== Discussion <discussion>
 
 The performance results and analyses from previous sections gives strong indications
 that a small Edge device can detect anomalies live using a stream adapted
