@@ -95,9 +95,9 @@
 
 	Small, intelligent devices equipped with sensors, CPUs, and network connectivity.
 
-/ Edge computing: \
-	Computation model that runs on devices closer to the data sources, near the ends
-	of communication networks and closer to end users.
+/ Edge [computing]: \
+	Computation model that runs on devices closer to the data sources and end users,
+	near the ends of communication networks.
 
 / Anomaly: \
 	An unexpected and non-conforming point, group, or pattern in data.
@@ -838,7 +838,7 @@ network.
 
 #figure(
 	block(clip: true, radius: 4pt, image("images/photo-rasp-sensor.jpg", width: 75%)),
-	caption: [Environment sensor HAT mounted on Raspberry Pi.],
+	caption: [Environment Sensor HAT wired to the Raspberry Pi.],
 ) <hatonrasp>
 
 InfluxDB was then installed in a similar way by following its setup guide @influxdb.
@@ -1508,8 +1508,13 @@ go run experiments/generate_samples.go
 #pagebreak()
 = Hardware wiring setup <app-wiring>
 
-#TODO("")
-
+#figure(
+	block(clip: true, radius: 4pt, image("images/wiring.png", width: 75%)),
+	caption: [
+	The Environment Sensor HAT wired to the Raspberry Pi \
+	(mirroring the device orientation as shown in @hatonrasp).
+	],
+)
 
 #pagebreak()
 = Telegraf configuration <app-telegraf>
