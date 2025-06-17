@@ -127,7 +127,7 @@ I enjoyed working with you both.
 	circuits.
 
 / VOC: \
-	Volatile organic compounds, microscopic particles from mold, plants, furniture,
+	Volatile organic compounds, microscopic particles from mould, plants, furniture,
 	and cleaning supplies.
 
 
@@ -809,7 +809,6 @@ func Push(sd *StreamDAMP, value float64) float64 {
 	return score
 }
 ```, caption: [Function for continuously pushing new data to DAMP.]) <streamdamp>
-// ```, caption: [The DAMP algorithm adapted to handle streaming data.]) <streamdamp>
 
 A user can now repeatedly call _Push_ whenever they want to collect new data,
 for example from a sensor's data stream, and analyse and monitor the stream in
@@ -844,7 +843,7 @@ off-the-shelf and the bill of materials includes:
 	Many alternative sensors provided in a single package.
 
 Setting up the hardware required using some wires and a breadboard which is
-commonly used when prototyping electronic projects, as shown in @hatonrasp.
+commonly used when prototyping electronic projects, as shown in @hatwithrasp.
 @app-wiring have a wiring diagram that better illustrates the setup.
 Powering up the Raspberry Pi, it was then setup in a default way by following
 the getting started guide @raspberry and connected to a locally available
@@ -853,7 +852,7 @@ WIFI network.
 #figure(
 	block(clip: true, radius: 4pt, image("images/photo-rasp-sensor.jpg", width: 75%)),
 	caption: [Environment Sensor HAT wired to the Raspberry Pi.],
-) <hatonrasp>
+) <hatwithrasp>
 
 Next, the Raspberry Pi should monitor its performance and continuously log the
 raw sensor data and corresponding Matrix Profiles for later analysis.
@@ -1521,7 +1520,7 @@ go run experiments/generate_samples.go
 	block(clip: true, radius: 4pt, image("images/wiring.png", width: 75%)),
 	caption: [
 	The Environment Sensor HAT wired to the Raspberry Pi \
-	(mirroring the device orientation as shown in @hatonrasp).
+	(mirroring the device orientation as shown in @hatwithrasp).
 	],
 )
 
