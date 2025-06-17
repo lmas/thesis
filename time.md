@@ -2,6 +2,33 @@
 
 # Activity log
 
+## Week 13
+
+- 2025-08-05, 2.5 h:
+    2.5 h finally wrote the abstract, hurrah!
+
+## Week 12
+
+- 2025-07-31, 6 h:
+    6 h addressing all feedback from a supervisor, fixing all linter warnings,
+    spellchecks, and footnotes/references.
+
+- 2025-07-30, 3 h:
+    3 h drawing a wiring diagram and writing acknowledgements.
+
+- 2025-07-29, 6 h:
+    6 h writing the discussion, ethics, and conclusion sections, then fixed
+    a bunch of old TODOs.
+
+- 2025-07-28, 4 h:
+    Start working on the report again, updating code listing showing how to read
+    sensors and explanatory text around them, fixed influx plots missing units.
+
+## Week 11
+
+- 2025-06-05, 4 h:
+    Start addressing feedback on the report, made a long list.
+
 ## Week 10
 
 - 2025-06-01, 6 h:
@@ -49,7 +76,7 @@
     5 h cleaning up a lot of leftover comments and finishing the background section.
 
 - 2025-05-20, 5 h:
-    5 h running a longer benchmark and adding it's results to the report, then
+    5 h running a longer benchmark and adding its results to the report, then
     tried to clean up math examples.
 
 - 2025-05-19, 4 h:
@@ -217,7 +244,7 @@
 - 2025-04-10, 6 h:
     2 h running tests against another library (quick benchmark) and doing small
     refactors of the code,
-    3 h start writing the theory section, it's outline, and finding references
+    3 h start writing the theory section, its outline, and finding references
     for it.
     1 h watching the thesis writing/presentation lectures.
 
@@ -269,7 +296,7 @@
     6 h looking up the original DAMP implementation (in matlab) and then
     comparing it with an unofficial python version (their outputs match up to 9
     significant digits).
-    2 h looking at the previous STAMP algo, for it's streaming "online" properties,
+    2 h looking at the previous STAMP algo, for its streaming "online" properties,
     and comparing that against DAMP. Hard to find any reference implementations
     for STAMP.
 
