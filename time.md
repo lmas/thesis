@@ -1,83 +1,4 @@
 
-# Planned schedule
-
-```mermaid
-gantt
-    dateFormat  MM-DD
-    excludes saturday, sunday
-    weekday monday
-    tickInterval 1day
-    axisFormat %d
-
-%% BUG: can't use 1d events on fridays?? Had to use 23h instead
-
-section Thesis paper
-    Problem definition: 03-25, 4d
-
-    Background: 5d
-
-    Theory: 5d
-
-    Method: 10d
-
-    Analysis: 10d
-    
-    Results: 5d
-
-    Discussion:05-19, 5d
-    Conclusion: 05-19, 5d
-    Abstract: 05-19, 5d
-    Finalise report: milestone, 05-23, 23h
-
-    Handle any critiques: 05-26, 5d
-
-section Work week 1
-    <Weekend break>: 03-24, 1d
-    Literature study: 03-25, 4d
-    Document initial time plan: 03-27, 2d
-
-section Work week 2
-    Run Matlab/Python reference: 03-31, 1d
-    Ext. meeting: milestone, 04-01, 23h
-    Int. meeting: milestone, 04-04, 23h
-    Ext. meeting: milestone, 04-04, 23h
-
-section Work week 3
-    Develop prototype: 04-07, 5d
-    Verify against reference: milestone, 04-11, 23h
-    Develop benchmarks: 04-07, 5d
-
-section Work week 4
-    Setup HW: 04-14, 1d
-    Run prototype against simple sensors: 04-14, 5d
-
-section Work week 5
-    Run prototype against audio sensor: 04-21, 5d
-
-section Work week 6
-    Start analysis: 04-28, 5d
-    Check-in meeting: milestone, 04-30, 1d
-
-section Work week 7
-    Finish analysis: 05-05, 5d
-    Cleanup results: milestone, 05-09, 23h
-
-section Work week 8
-    Presentation signup: crit, milestone, 05-12, 1d
-    Check-in meeting: milestone, 05-14, 1d
-
-section Work week 9
-    Prepare oppositions: 05-19, 5d
-
-section Work week 10
-    Presentations: crit, 05-27, 2d
-    TODO: 05-26, 5d
-    Send draft: milestone, 05-30, 23h
-
-section TODO
-    Prepare presentation: 5d
-```
-
 
 # Activity log
 
@@ -152,7 +73,7 @@ section TODO
     About 2 h meetings with supervisors and checking in progress, 1 h social meeting,
     5 h started reworking plots and created new runtime diagram for comparing the
     different algo versions.
-    
+
 - 2025-05-13, 5 h:
     Had to lookup a typst pkg for drawing figures and finally redrew the last one,
     also updated result plots to highlight differences between normalised yes/no.
@@ -240,7 +161,7 @@ section TODO
 - 2025-04-22, 10 h:
     1 h looking up ring buffers, plotting in Go and thinking through the new changes.
     3 h added plotting util and refactored timeseries datatype into a ring buffer.
-    6 h creating new streaming alternative to the algo, which was surprisingly 
+    6 h creating new streaming alternative to the algo, which was surprisingly
     hard to have it plot a similar graph as the original algo! Had to settle with
     a close-but-not-perfect solution as this was eating up too much time.
 
@@ -262,7 +183,7 @@ section TODO
     light sensor.
 
 - 2025-04-17, 3 h:
-    1.5 h meeting with getting feedback and picking up equipment. 
+    1.5 h meeting with getting feedback and picking up equipment.
     1.5 h making corrections in previous sections and was then supposed to start
     working on the equipment (but missing power supply) so took early weekend.
 
@@ -273,7 +194,7 @@ section TODO
 - 2025-04-15, 7 h:
     2 h refining a matlab plot,
     5 h start writing up details of the core algorithm for this work and
-    adding yet another plot for it. 
+    adding yet another plot for it.
 
 - 2025-04-14, 5 h:
     Added paper metadata and code listings, added simplified and cleaned up
@@ -336,14 +257,14 @@ section TODO
     5 h coordinating meetings and struggling with the paper's introduction,
     looked up papers for "problems with increasing complexity with AI/ML models",
     and planning a better outline for the introduction.
- 
+
 - 2025-04-1, 6 h:
     1 h reflecting on the project and the planned work,
     2 h spent in meeting and mailing,
     1 h looking up signal processing modules for golang,
     2 h looking up raspberry pi and addon boards with sensors and DAC
     functionality.
-    
+
 - 2025-03-31, 8 h:
     6 h looking up the original DAMP implementation (in matlab) and then
     comparing it with an unofficial python version (their outputs match up to 9
@@ -364,14 +285,95 @@ section TODO
     2 h adjusting gantt chart,
     3 h sorting through last papers and looking up student theses as examples,
     2 h setting up thesis report with outline and grouping the papers.
- 
+
 - 2025-03-26, 8 h:
     Spent about 4 h sorting through and starting to read the papers,
     3 h looking for some easy planning tool with Gantt charts (eh nothing good..)
     and wrote initial gantt.
- 
+
 - 2025-03-25, 7 h:
     Read up on how to do a literature study and started searching for papers,
     using "time series anomaly detection using matrix profile".
     Tomorrow I have to sort through the 23 papers I've found.
 
+
+# Planned schedule
+
+This was the initial schedule, but it was ignored in the last two weeks.
+
+```mermaid
+gantt
+    dateFormat  MM-DD
+    excludes saturday, sunday
+    weekday monday
+    tickInterval 1day
+    axisFormat %d
+
+%% BUG: can't use 1d events on fridays?? Had to use 23h instead
+
+section Thesis paper
+    Problem definition: 03-25, 4d
+
+    Background: 5d
+
+    Theory: 5d
+
+    Method: 10d
+
+    Analysis: 10d
+
+    Results: 5d
+
+    Discussion:05-19, 5d
+    Conclusion: 05-19, 5d
+    Abstract: 05-19, 5d
+    Finalise report: milestone, 05-23, 23h
+
+    Handle any critiques: 05-26, 5d
+
+section Work week 1
+    <Weekend break>: 03-24, 1d
+    Literature study: 03-25, 4d
+    Document initial time plan: 03-27, 2d
+
+section Work week 2
+    Run Matlab/Python reference: 03-31, 1d
+    Ext. meeting: milestone, 04-01, 23h
+    Int. meeting: milestone, 04-04, 23h
+    Ext. meeting: milestone, 04-04, 23h
+
+section Work week 3
+    Develop prototype: 04-07, 5d
+    Verify against reference: milestone, 04-11, 23h
+    Develop benchmarks: 04-07, 5d
+
+section Work week 4
+    Setup HW: 04-14, 1d
+    Run prototype against simple sensors: 04-14, 5d
+
+section Work week 5
+    Run prototype against audio sensor: 04-21, 5d
+
+section Work week 6
+    Start analysis: 04-28, 5d
+    Check-in meeting: milestone, 04-30, 1d
+
+section Work week 7
+    Finish analysis: 05-05, 5d
+    Cleanup results: milestone, 05-09, 23h
+
+section Work week 8
+    Presentation signup: crit, milestone, 05-12, 1d
+    Check-in meeting: milestone, 05-14, 1d
+
+section Work week 9
+    Prepare oppositions: 05-19, 5d
+
+section Work week 10
+    Presentations: crit, 05-27, 2d
+    TODO: 05-26, 5d
+    Send draft: milestone, 05-30, 23h
+
+section TODO
+    Prepare presentation: 5d
+```
