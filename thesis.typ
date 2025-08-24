@@ -29,7 +29,7 @@
 	])
 
 	#align(horizon, text(size: 48pt, fill: red)[
-		`DRAFT #2`
+		`DRAFT #3`
 	])
 ])
 
@@ -100,8 +100,11 @@ sensors themselves.
 
 #heading(numbering: none, outlined: false, bookmarked: true, "Acknowledgements")
 
-I would like to thank my two supervisors from Luleå University of Technology
-and #metadata.company, for allowing me to work on a project based on my own ideas.
+I would like to thank my two supervisors;
+#metadata.super_company from #metadata.company
+and
+#metadata.super_uni from Luleå University of Technology,
+for allowing me to work on a project based on my own ideas.
 Extra thanks to the company for providing the hardware.
 
 It has been great bouncing ideas and getting grilled on the theory, guys. \
@@ -171,18 +174,23 @@ Luleå in August, 2025.
 
 = Introduction <introduction>
 
-With the shift towards Industry 4.0 @lasi, the manufacturing industries are
-facing new challenges as they move towards decentralised processes.
-This move is partly enabled by the advances with smart devices and the rise of
-the Internet-of-Things.
-These devices are most often operated near the Edge, at the ends of the communication
-networks and close to users or other machinery which might interact with the
-smart devices in one way or another.
+Today the world is experiencing its fourth industrial revolution.
+If the use of electricity and digitisation pushed the two previous revolutions
+in the manufacturing industry, then today's shift is mainly driven by the large
+amount of smart, modular, and highly connected devices that forms the so called
+Internet-of-Things.
+Dubbed as "Industry 4.0" by the team of german scientists, _Dr. Lasi et al._
+@lasi, this new revolution originated from the need of increased flexibility and
+better efficiency in production systems, in order to better handle quickly
+shifting market demands.
 By increasing the use of smart sensors, a manufacturer can better supervise the
 operation of their equipment and, for example, better predict equipment failure.
 
 _Khan et al._ notes that @khan sensors and programmable logic controllers (PLCs)
 are becoming the largest group of devices that generates the most data.
+These devices are most often operated near the Edge, at the ends of the
+communication networks and close to users or other machinery which might interact
+with the smart devices in one way or another.
 As the industries scales up their sensor networks there is an increasing need
 to be able to faster process the larger amounts of data, in order to provide
 real-time analysis.
@@ -192,34 +200,20 @@ series data, performed on hardware-limited devices closer to the Edge.
 This is an attempt at evaluating the possible usefulness of running data analysis
 directly on smart sensors.
 The method of anomaly detection revolves around the Matrix Profile, as introduced
-by _Yeh et al._ @yeh,
-which is a family of algorithms used for detecting discord anomalies,
-among other uses.
-They also note that "time series discords are known to be very competitive as
-novelty/anomaly detectors."
-
-The Matrix Profile is a simple algorithm with claims of being easily scale-able
-@yeh and as such might offer a more performant alternative to machine learning
-models or other artificial intelligence solutions that are popular as of today.
-Since it does not require a heavy processing model, it might be able to run
-on smaller devices and sensors that lacks the required processing power for
-running the heavier AI models.
+by _Yeh et al._ @yeh, which is a family of algorithms used for detecting discord
+anomalies, among other uses.
+Supposedly, it is easily scalable and as such might offer a more performant
+alternative to machine learning models, that fits better on smaller devices
+and sensors.
 
 
 == Motivation
 
-Today the world is experiencing its fourth industrial revolution.
-If the use of electricity and digitisation pushed the two previous revolutions
-in the manufacturing industry,
-then today's shift is mainly driven by the large amount of smart, modular, and
-highly connected devices that forms the so called Internet-of-Things.
-Dubbed as "Industry 4.0" by the team of german scientists _Dr. Lasi et al._
-@lasi,
-this new revolution originated from the need of increased flexibility and better
-efficiency in production systems, in order to better handle quickly shifting
-market demands.
-
-_Dr. Lasi et al._ continues in their article with, that technology is pushing
+With the shift towards Industry 4.0 @lasi, the manufacturing industries are
+facing new challenges as they move towards decentralised processes.
+This move is partly enabled by the advances with smart devices and the rise of
+the Internet-of-Things.
+_Dr. Lasi et al._ @lasi continues in their article with, that technology is pushing
 towards miniaturisation, digitisation, automation, and as a result,
 turning today's manufacturing plants into tomorrow's "smart factories".
 These factories are utilising a growing number of sensors and digital, decentralised
