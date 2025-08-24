@@ -2,6 +2,12 @@
 
 # Activity log
 
+# week 14
+
+- 2025-08-24, 3 h:
+    Fixed inconsistent use of citations, made some explanatory additions, and
+    switched up the introduction according to latest feedback from supervisors.
+
 ## Week 13
 
 - 2025-08-05, 2.5 h:
