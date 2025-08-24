@@ -240,8 +240,9 @@ Doing so also has the possible benefit of reducing signal interference, delays,
 and other anomalies, caused by faulty components or simply by the environment's
 wear and tear that degrades the sensors over time.
 In a later section, _Gungor_ continues with a simplified outline of a basic sensor
-and notes that "... local data processing is crucial in minimizing power
-consumption ...".
+and notes that "Compared to sensing and data processing, much more energy is
+required for data communication in a typical sensor node. Hence, local data
+processing is crucial in minimizing power consumption ..."
 This has the potential of extending the lifetime of the sensors that runs on
 battery, or similarly limited power sources, as well as reducing the operational
 costs.
@@ -369,8 +370,8 @@ literature @chandola, @gupta:
 	networks, for example, in order to detect the anomalies in a quicker manner.
 
 But detecting non-conforming patterns in data is a difficult problem.
-_Chandola_ have also noted a set of challenges associated with classifying any
-observed patterns:
+_Chandola_ @chandola have also noted a set of challenges associated with classifying
+any observed patterns:
 
 - It is hard to distinguish noise in the data from true anomalies, as they can
 	show similar-looking patterns.
@@ -459,7 +460,7 @@ _Yeh's_ paper contains more in-depth definitions and details of the original
 algorithm which is not repeated here for brevity, but later sections provides
 practical examinations of an improved algorithm.
 
-Lets instead take a look at what kind of results the Matrix Profile can produce.
+Let us instead take a look at what kind of results the Matrix Profile can produce.
 @examplepoint demonstrates the result after having run the algorithm on a time
 series.
 The data used in this example is the atmospheric pressure recorded by IRF Kiruna
@@ -534,8 +535,8 @@ at the end.
 The first loop calculates the initial scores for the first points in the time
 series, _after_ the split point between the "training sequence" in the beginning
 of $t$ and the points afterwards.
-The training sequence acts as a warm up for the algorithm, so it does not produce
-erroneous values that might skew the following scores.
+The _training data sequence_ acts as a warm up for the algorithm, so it does not
+produce erroneous values that might skew the following scores.
 The MASS v2 function finds the scores by calculating the Euclidean distances
 between the subsequences, as @massv2 shows in the next section.
 
@@ -660,7 +661,9 @@ neighbours in the time series $t$.
 
 It is also noteworthy that the MASS function operates more efficient if the
 amount of data points is a power of two, as mentioned by _Lu_ @lu.
-If not, the function would have a significant drop in performance.
+If not, the function would have a significant drop in performance, as the data
+would not align well with the Fourier transforms or with computer architecture
+in general (memory caches are always a power of two, for example).
 The DAMP algorithm avoids this issue by setting the size of the processed data
 to the next power of two that occurs after the subsequence size,
 near the beginning of the _processBackward_ function in @backproc.
@@ -1097,12 +1100,12 @@ The discord analysis also measured the time required to process each dataset for
 each implementation and stored the results.
 Plotting the runtimes resulted in @res-times which is, in hindsight, an unfair
 comparison.
-@analysis provides more details for each method and why they produce results
-that are unfair when compared to each other.
+@analysis provides more details for each method and @on-bench specifically
+explains why they produce results that are unfair when compared to each other.
 
-This plot serves better as a proof of validation, in that making adaptions to
-the original DAMP algorithm (to handle streaming data) would allow it to run
-better in limited computing environments.
+The plot in @res-times serves better as a proof of validation, in that making
+adaptions to the original DAMP algorithm (to handle streaming data) would allow
+it to run better in limited computing environments.
 
 #figure(
 	image("images/analysis-timings.png"),
@@ -1225,7 +1228,7 @@ With @res-bourke as the final example, a couple of spikes is easily seen in the
 foot traffic but no other obvious patterns are visible in the plot.
 All methods seems to agree on the point anomaly "spike" near the 8000'th time mark
 and also for the contextual "drop" after the 16000'th mark.
-A random remark is that turning of normalisation seemed to produce the most
+A random remark is that turning off normalisation seemed to produce the most
 confident result.
 
 It is hard to provide any more meaningful observations without access to the
@@ -1259,13 +1262,8 @@ arrays holding complex numbers, for example.
 
 This large difference between the two distance functions was then confirmed with
 the results in the benchmark table.
-Using this initial benchmark, further work could investigate and measure the
-performance of:
-
-- using other methods for calculating the distances
-- optimising existing methods
-- or adapting Minkowski's method to also handle normalisation.
-
+@future-work have further suggestions for optimising the performance that might
+be worth investigating.
 The existing streaming adaptions were good enough though and could be easily run
 on the Raspberry Pi, which the following section discusses.
 
@@ -1338,6 +1336,8 @@ As such, any perfect matches would cause arithmetic errors from trying to divide
 by zero, and would break the algorithm.
 This was a regular problem for the light sensor during the night, for example,
 and an extra check had to catch the faulty results from the algorithm.
+_Lu et al._ @lu simply had the algorithm refusing the data, but a less abrupt
+method could had skipped the constant regions and continue with the rest.
 Using a small buffer mitigated this issue somewhat, as there was a smaller chance
 of finding exact matches with the limited data sequence.
 
@@ -1422,7 +1422,7 @@ It also minimises the amount of sent and processed data traffic, benefiting the
 whole network where the device resides in.
 
 
-== Future work
+== Future work <future-work>
 
 The most obvious area that needs more work in this subject is how to pick an
 optimal subsequence size for a data source.
