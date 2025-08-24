@@ -186,7 +186,7 @@ shifting market demands.
 By increasing the use of smart sensors, a manufacturer can better supervise the
 operation of their equipment and, for example, better predict equipment failure.
 
-_Khan et al._ notes that @khan sensors and programmable logic controllers (PLCs)
+_Khan et al._ @khan note that sensors and programmable logic controllers (PLCs)
 are becoming the largest group of devices that generates the most data.
 These devices are most often operated near the Edge, at the ends of the
 communication networks and close to users or other machinery which might interact
@@ -213,14 +213,14 @@ With the shift towards Industry 4.0 @lasi, the manufacturing industries are
 facing new challenges as they move towards decentralised processes.
 This move is partly enabled by the advances with smart devices and the rise of
 the Internet-of-Things.
-_Dr. Lasi et al._ @lasi continues in their article with, that technology is pushing
+_Dr. Lasi et al._ @lasi continue in their article with, that technology is pushing
 towards miniaturisation, digitisation, automation, and as a result,
 turning today's manufacturing plants into tomorrow's "smart factories".
 These factories are utilising a growing number of sensors and digital, decentralised
 systems that allows the factories to become more autonomously monitored and
 controlled remotely.
 
-_Javaid et al._ @javaid also notes an increasing need of intelligent sensor
+_Javaid et al._ @javaid also note an increasing need of intelligent sensor
 systems and networks for the smart factories.
 By using autonomous sensors with higher processing capabilities,
 the industry can reduce their dependency on human operators and can thus reduce
@@ -234,7 +234,7 @@ thus reduce costly maintenance downtime during production.
 Of course, with increasingly larger sensor networks it also follows that there is
 an increasing amount of data, as mentioned by _Javaid_.
 More raw data requires communication networks with higher processing capacity, too.
-_Gungor et al._ @gungor suggests that the sensors should filter their data and
+_Gungor et al._ @gungor suggest that the sensors should filter their data and
 only send the processed data, as a step towards reducing the network overhead.
 Doing so also has the possible benefit of reducing signal interference, delays,
 and other anomalies, caused by faulty components or simply by the environment's
@@ -248,9 +248,8 @@ battery, or similarly limited power sources, as well as reducing the operational
 costs.
 
 Given that sensor readings are most often timestamped and thus temporal in nature
-as stated by _Gupta et al._ @gupta,
-the focus should be on ensuring that the time series maintains its "temporal
-continuity" during the data analysis.
+as stated by _Gupta et al._ @gupta, the focus should be on ensuring that the time
+series maintains its "temporal continuity" during the data analysis.
 It should flag any sudden anomalies or other kinds of observed outliers in the
 time series.
 
@@ -318,7 +317,7 @@ are then documented in @results.
 
 Anomaly detection is a broad area and there exists many, detailed studies on this
 subject from the last two decades @wang, @boniol.
-But what is anomaly detection? _Chandola et al._ @chandola offers a definition:
+But what is anomaly detection? _Chandola et al._ @chandola offer a definition:
 
 #quote[
 	Anomaly detection refers to the problem of ﬁnding patterns in data
@@ -382,7 +381,7 @@ any observed patterns:
 - Different application domains have different anomalous patterns and thus it is
 	not easy to apply a single set of normal patterns on multiple domains.
 
-_Gupta et al._ @gupta notes a few more challenges:
+_Gupta et al._ @gupta note a few more challenges:
 
 - The scale of the data can be large in streaming data scenarios, thus requiring
 	better processing capacity.
@@ -443,7 +442,7 @@ and summarised by _Lai et al._ @lai:
 == Detecting discord anomalies <detectdiscords>
 
 One way of detecting anomalies in time series data is possible by looking for
-*discords* in the time series, which _Yeh et al._ @yeh defines as
+*discords* in the time series, which _Yeh et al._ @yeh define as
 "the subsequences that has the maximum distance to its nearest neighbours."
 
 In their paper, _Yeh_ introduces a novel algorithm called the _Matrix Profile_
@@ -691,10 +690,10 @@ performance.
 
 == A note on subsequence and training sizes
 
-As _Chandola et al._ have noted @chandola, one difficulty with anomaly detection
+As _Chandola et al._ @chandola have noted, one difficulty with anomaly detection
 is choosing the most optimal size of subsequence for the analysis.
 But most other studies seem to pass over this problem.
-_Lu et al._ simply states @lu that domain knowledge (of the time series) should
+_Lu et al._ @lu simply state that domain knowledge (of the time series) should
 determine the subsequence size.
 Though they do try to solve the problem in a later work @lu2, by analysing a time
 series using _multiple_ subsequence sizes and avoid having the user pick one
@@ -717,8 +716,8 @@ be at least twice of that.
 
 = Method <method>
 
-_Lu et al._ have provided an example of their DAMP algorithm in the form of a
-Matlab file, as a complement to their paper @lu.
+_Lu et al._ @lu have provided an example of their DAMP algorithm in the form of
+a Matlab file, as a complement to their paper.
 Running that example produced the raw data used for creating the plot in
 @examplepattern, as shown previously.
 Both the data for the time series and the corresponding Matrix Profile was then
@@ -751,10 +750,10 @@ too much time and energy to be of any practical use in a live scenario.
 
 In order to handle this scenario, the Go implementation must have adaptions to
 handle continuously arriving data without running out of computing resources.
-_Lan et al._ suggests @lan, as a basic strategy, to use a cache of any sort and
+_Lan et al._ @lan suggest, as a basic strategy, to use a cache of any sort and
 limit the amount of data processed.
 
-_Gillis_ offers a simple to use double-ended queue in Go @gillis and it can
+_Gillis_ @gillis offer a simple to use double-ended queue in Go and it can
 operate as an efficient first-in, first-out (FIFO) queue, as illustrated in @deque.
 It is worth noting that as it keeps track of both ends, it is able to operate in
 $O(1)$ time when pushing to or popping from respective end.
@@ -870,7 +869,7 @@ Next, the Raspberry Pi should monitor its performance and continuously log the
 raw sensor data and corresponding Matrix Profiles for later analysis.
 InfluxDB is a simple to use time series database with a built in data explorer
 and can do both tasks on the device.
-InfluxDB has its own setup guide @influxdb on how to install it as a service.
+InfluxDB @influxdb has its own setup guide on how to install it as a service.
 
 Collecting the raw performance data such as memory usage, CPU times, and other
 statistics requires a monitoring agent on the host device.
@@ -1025,9 +1024,9 @@ DAMP too much anyway.
 = Results <results>
 
 As was already mentioned in @method, the Matlab script authored by _Lu et al._
-served as a reference for the new implementations in this thesis.
-The datasets used to create the example plots in their paper @lu was also
-provided on their publishing page @dampdata.
+@lu served as a reference for the new implementations in this thesis.
+The datasets used to create the example plots in their paper was also provided
+on their publishing page @dampdata.
 A couple of datasets was then reused in this thesis as a way to validate the
 results here.
 
@@ -1428,7 +1427,7 @@ The most obvious area that needs more work in this subject is how to pick an
 optimal subsequence size for a data source.
 This might be difficult though, as time series data and anomaly patterns varies
 greatly between the different types of data sources that are available.
-Alternatively, more studies could investigate _Lu's_ approach @lu2, where they
+Alternatively, more studies could investigate _Lu's_ @lu2 approach, where they
 simply analyse a large amount of subsequence sizes by default.
 
 Another area that lacks study is the choice of distance function and how it would
@@ -1436,7 +1435,7 @@ affect, performance wise, finding the nearest neighbours for a subsequence.
 As mentioned in @on-bench near the end, one initial investigation could try
 to normalise Minkowski's method and, if possible, compare it to the MASS function.
 
-_Rakthanmanon et al._ suggest other interesting optimisations @rakthanmanon that
+_Rakthanmanon et al._ @rakthanmanon suggest other interesting optimisations that
 are worth to investigate for this work.
 For example, calculating a square root is an expensive mathematical operation on
 a computer and unfortunately a required step when calculating exact Euclidean
