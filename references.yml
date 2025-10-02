@@ -8,12 +8,17 @@ lasi:
   type: Article
   title: "Industry 4.0"
   author:
-    - Dr. Heiner Lasi
-    - Prof. Dr. Hans-Georg Kemper
-    - Privatdozent Dr. Peter Fettke
-    - Dipl.-Inf. Thomas Feld
-    - Dipl.-Hdl. Michael Hoﬀmann
+    - Dr. Lasi, Heiner
+    - Prof. Dr. Kemper, Hans-Georg
+    - Privatdozent Dr. Fettke, Peter
+    - Dipl.-Inf. Feld, Thomas
+    - Dipl.-Hdl. Hoﬀmann, Michael
   date: 2014-06-19
+  page-range: 239-242
+  parent:
+    title: Business & Information Systems Engineering
+    volume: 6
+    # issue: UNKNOWN
   serial-number:
     doi: 10.1007/s12599-014-0334-4
 
@@ -21,12 +26,17 @@ javaid:
   type: Article
   title: "Signiﬁcance of sensors for industry 4.0: Roles, capabilities, and applications"
   author:
-    - Mohd Javaid
-    - Abid Haleem
-    - Ravi Pratap Singh
-    - Shanay Rab
-    - Rajiv Suman
+    - Javaid, Mohd
+    - Haleem, Abid
+    - Singh, Ravi Pratap
+    - Rab, Shanay
+    - Suman, Rajiv
   date: 2021-06-17
+  page-range: 100-110
+  parent:
+    title: Sensors International
+    volume: 2
+    issue: 2666-3511
   serial-number:
     doi: 10.1016/j.sintl.2021.100110
 
@@ -34,9 +44,14 @@ gungor:
   type: Article
   title: "Industrial Wireless Sensor Networks: Challenges, Design Principles, and Technical Approaches"
   author:
-    - Vehbi C. Gungor
-    - Gerhard P. Hancke
+    - Gungor, Vehbi C.
+    - Hancke, Gerhard P.
   date: 2009-09-16
+  page-range: 4258-4265
+  parent:
+    title: IEEE Transactions on Industrial Electronics
+    volume: 56
+    issue: 10
   serial-number:
     doi: 10.1109/TIE.2009.2015754
 
@@ -44,11 +59,16 @@ gupta:
   type: Article
   title: "Outlier Detection for Temporal Data: A Survey"
   author:
-    - Manish Gupta
-    - Jing Gao
-    - Charu C. Aggarwal
-    - Jiawei Han
+    - Gupta, Manish
+    - Gao, Jing
+    - Aggarwal, Charu C.
+    - Han, Jiawei
   date: 2013-12-16
+  page-range: 2250-2267
+  parent:
+    title: IEEE Transactions on Knowledge and Data Engineering
+    volume: 26
+    issue: 9
   serial-number:
     doi: 10.1109/TKDE.2013.184
 
@@ -56,11 +76,16 @@ khan:
   type: Article
   title: "Big Data Challenges and Opportunities in the Hype of Industry 4.0"
   author:
-    - Maqbool Khan
-    - Xiaotong Wu
-    - Xiaolong Xu
-    - Wanchun Dou
+    - Khan, Maqbool
+    - Wu, Xiaotong
+    - Xu, Xiaolong
+    - Dou, Wanchun
   date: 2017-07-31
+  page-range: 1-6
+  parent:
+    title: 2017 IEEE International Conference on Communications
+    # volume: UNKNOWN
+    # issue: UNKNOWN
   serial-number:
     doi: 10.1109/ICC.2017.7996801
 
@@ -68,16 +93,21 @@ yeh:
   type: Article
   title: "Matrix Profile I: All Pairs Similarity Joins for Time Series: A Unifying View that Includes Motifs, Discords and Shapelets"
   author:
-    - Chin-Chia Michael Yeh
-    - Yan Zhu
-    - Liudmila Ulanova
-    - Nurjahan Begum
-    - Yifei Ding
-    - Hoang Anh Dau
-    - Diego Furtado Silva
-    - Abdullah Mueen
-    - Eamonn Keogh
+    - Yeh, Chin-Chia Michael
+    - Zhu, Yan
+    - Ulanova, Liudmila
+    - Begum, Nurjahan
+    - Ding, Yifei
+    - Dau, Hoang Anh
+    - Silva, Diego Furtado
+    - Mueen, Abdullah
+    - Keogh, Eamonn
   date: 2017-02-02
+  page-range: 1317-1322
+  parent:
+    title: IEEE 16th International Conference on Data Mining
+    # volume: UNKNOWN
+    # issue: UNKNOWN
   serial-number:
     doi: 10.1109/ICDM.2016.0179
 
@@ -85,12 +115,17 @@ lu:
   type: Article
   title: "Matrix Profile XXIV: Scaling Time Series Anomaly Detection to Trillions of Datapoints and Ultra-fast Arriving Data Streams"
   author:
-    - Yue Lu
-    - Renjie Wu
-    - Abdullah Mueen
-    - Maria A. Zuluaga
-    - Eamonn Keogh
+    - Lu, Yue
+    - Wu, Renjie
+    - Mueen, Abdullah
+    - Zuluaga, Maria A.
+    - Keogh, Eamonn
   date: 2022-08-14
+  page-range: 1173-1182
+  parent:
+    title: Proceedings of the 28th ACM SIGKDD Conference on Knowledge Discovery and Data Mining
+    # volume: UNKNOWN
+    # issue: UNKNOWN
   serial-number:
     doi: 10.1145/3534678.3539271
 
@@ -98,11 +133,11 @@ dampdata:
   type: Web
   title: "DAMP - Dataset"
   author:
-    - Yue Lu
-    - Renjie Wu
-    - Abdullah Mueen
-    - Maria A. Zuluaga
-    - Eamonn Keogh
+    - Lu, Yue
+    - Wu, Renjie
+    - Mueen, Abdullah
+    - Zuluaga, Maria A.
+    - Keogh, Eamonn
   date: 2022-08-14
   url: https://sites.google.com/view/discord-aware-matrix-profile/dataset
 
@@ -110,12 +145,17 @@ lu2:
   type: Article
   title: "Matrix Profile XXX: MADRID: A Hyper-Anytime and Parameter-Free Algorithm to Find Time Series Anomalies of all Lengths"
   author:
-    - Yue Lu
-    - Thirumalai Vinjamoor Akhil Srinivas
-    - Takaaki Nakamura
-    - Makoto Imamura
-    - Eamonn Keogh
+    - Lu, Yue
+    - Srinivas, Thirumalai Vinjamoor Akhil
+    - Nakamura, Takaaki
+    - Imamura, Makoto
+    - Keogh, Eamonn
   date: 2023-12-01
+  page-range: 1199-1204
+  parent:
+    title: 2023 IEEE International Conference on Data Mining
+    # volume: UNKNOWN
+    # issue: UNKNOWN
   serial-number:
     doi: 10.1109/ICDM58522.2023.00148
 
@@ -123,9 +163,14 @@ mueen:
   type: Article
   title: "MASS: distance profile of a query over a time series"
   author:
-    - Sheng Zhong
-    - Abdullah Mueen
+    - Zhong, Sheng
+    - Mueen, Abdullah
   date: 2024-02-05
+  page-range: 1466-1492
+  parent:
+    title: Data Mining and Knowledge Discovery
+    volume: 38
+    issue: 3
   serial-number:
     doi: 10.1007/s10618-024-01005-2
 
@@ -133,10 +178,15 @@ chandola:
   type: Article
   title: "Anomaly Detection: A Survey"
   author:
-    - Varun Chandola
-    - Arindam Banerjee
-    - Vipin Kumar
+    - Chandola, Varun
+    - Banerjee, Arindam
+    - Kumar, Vipin
   date: 2009-07
+  page-range: 1-58
+  parent:
+    title: ACM Comput. Surv.
+    volume: 41
+    issue: 3
   serial-number:
     doi: 10.1145/1541880.1541882
 
@@ -144,30 +194,40 @@ lai:
   type: Article
   title: "Revisiting Time Series Outlier Detection: Deﬁnitions and Benchmarks"
   author:
-    - Kwei-Herng Lai
-    - Daochen Zha
-    - Junjie Xu
-    - Yue Zhao
-    - Guanchu Wang
-    - Xia Hu
+    - Lai, Kwei-Herng
+    - Zha, Daochen
+    - Xu, Junjie
+    - Zhao, Yue
+    - Wang, Guanchu
+    - Hu, Xia
   date: 2021-07-29
+  # page-range: UNKNOWN
+  parent:
+    title: 35th Conference on Neural Information Processing Systems (NeurIPS 2021) Track on Datasets and Benchmarks
+    # volume: UNKNWON
+    # issue: UNKNOWN
   url: https://openreview.net/forum?id=r8IvOsnHchr
 
 lan:
   type: Article
   title: "Anomaly Detection on IT Operation Series via Online Matrix Profile"
   author:
-    - Shi-Ying Lan
-    - Run-Qing Chen
-    - Wan-Lei Zhao
+    - Lan, Shi-Ying
+    - Chen, Run-Qing
+    - Zhao, Wan-Lei
   date: 2021-09-06
+  # page-range: UNKNWON
+  parent:
+    title: arXiv preprint
+    # volume: UNKNOWN
+    # issue: UNKNOWN
   serial-number:
-    arxiv: 2108.12093v2
+    doi: 10.48550/arXiv.2108.12093
 
 gillis:
   type: Web
   title: "deque"
-  author: Andrew Gilis
+  author: Gilis, Andrew
   url: https://github.com/gammazero/deque
 
 raspspecs:
@@ -210,15 +270,20 @@ rakthanmanon:
   type: Article
   title: "Searching and mining trillions of time series subsequences under dynamic time warping"
   author:
-    - Thanawin Rakthanmanon
-    - Bilson Campana
-    - Abdullah Mueen
-    - Gustavo Batista
-    - Brandon Westover
-    - Qiang Zhu
-    - Jesin Zakaria
-    - Eamonn Keogh
+    - Rakthanmanon, Thanawin
+    - Campana, Bilson
+    - Mueen, Abdullah
+    - Batista, Gustavo
+    - Westover, Brandon
+    - Zhu, Qiang
+    - Zakaria, Jesin
+    - Keogh, Eamonn
   date: 2012-08-12
+  page-range: 262-270
+  parent:
+    title: Proceedings of the 18th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining
+    # volume: UNKNOWN
+    # issue: UNKNOWN
   serial-number:
     doi: 10.1145/2339530.2339576
 
@@ -232,8 +297,10 @@ tonga:
 zscore:
   type: Book
   title: "Advanced Engineering Mathematics"
-  author: Erwin Kreyszig
+  author: Kreyszig, Erwin
   date: 1979-03-21
+  publisher: Wiley
+  edition: 4
   serial-number:
     isbn: 978-0-471-02140-7
 
@@ -241,10 +308,15 @@ fourier:
   type: Article
   title: "Gauss and the history of the fast fourier transform"
   author:
-    - Michael T. Heideman
-    - Don H. Johnson
-    - C. Sidney Burrus
+    - Heideman, Michael T.
+    - Johnson, Don H.
+    - Burrus, C. Sidney
   date: 1984-10-31
+  page-range: 14-21
+  parent:
+    title: IEEE ASSP Magazine
+    volume: 1
+    issue: 4
   serial-number:
     doi: 10.1109/MASSP.1984.1162257
 
@@ -252,11 +324,13 @@ manhattan:
   type: Book
   title: "Similarity Search: The Metric Space Approach"
   author:
-    - Pavel Zezula
-    - Giuseppe Amato
-    - Vlastislav Dohnal
-    - Michal Batko
+    - Zezula, Pavel
+    - Amato, Giuseppe
+    - Dohnal, Vlastislav
+    - Batko, Michal
   date: 2005-11-17
+  publisher: Springer
+  edition: 2005
   serial-number:
     doi: 10.1007/0-387-29151-2
     isbn: 978-0-387-29146-8
@@ -268,10 +342,15 @@ wang:
   type: Article
   title: "Progress in Outlier Detection Techniques: A Survey"
   author:
-    - Hongzhi Wang
-    - Mohamed Jaward Bah
-    - Mohamed Hammad
+    - Wang, Hongzhi
+    - Jaward , Mohamed Bah
+    - Hammad, Mohamed
   date: 2019-08-02
+  page-range: 107964-108000
+  parent:
+    title: IEEE Access
+    volume: 7
+    # issue: UNKNOWN
   serial-number:
     doi: 10.1109/ACCESS.2019.2932769
 
@@ -279,14 +358,19 @@ boniol:
   type: Article
   title: "Dive into Time-Series Anomaly Detection: A Decade Review"
   author:
-    - Paul Boniol
-    - Qinghua Liu
-    - Mingyi Huang
-    - Themis Palpanas
-    - John Paparrizos
+    - Boniol, Paul
+    - Liu, Qinghua
+    - Huang, Mingyi
+    - Palpanas, Themis
+    - Paparrizos, John
   date: 2024-12-29
+  # page-range: UNKNOWN
+  parent:
+    title: arXiv preprint
+    # volume: UNKNWON
+    # issue: UNKNWON
   serial-number:
-    arxiv: 2412.20512v1
+    doi: 10.48550/arXiv.2412.20512
 
 ################################################################################
 # Documentation and other sites

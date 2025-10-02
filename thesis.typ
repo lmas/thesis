@@ -29,7 +29,7 @@
 	])
 
 	#align(horizon, text(size: 48pt, fill: red)[
-		`DRAFT #3`
+		`DRAFT #4`
 	])
 ])
 
@@ -99,15 +99,18 @@ sensors themselves.
 
 
 #heading(numbering: none, outlined: false, bookmarked: true, "Acknowledgements")
+I want to thank #metadata.boss_company at #metadata.company for listening to my
+pitch in the first place, and then inviting me to the company where I could work
+on this thesis.
+I also appreciate the company for providing me with the equipment used in this work.
 
-I would like to thank my two supervisors;
-#metadata.super_company from #metadata.company
+Next I want to thank my two supervisors;
+#metadata.super_company at #metadata.company
 and
-#metadata.super_uni from Luleå University of Technology,
-for allowing me to work on a project based on my own ideas.
-Extra thanks to the company for providing the hardware.
-
-It has been great bouncing ideas and getting grilled on the theory, guys. \
+#metadata.super_uni at Luleå University of Technology.
+// for allowing me to work on a project based on my own ideas.
+It has been great bouncing ideas and getting grilled on the theory, guys.
+Thanks again for allowing me to work on this project and with my own ideas. \
 
 #metadata.author, \
 Luleå in August, 2025.
@@ -627,7 +630,7 @@ created by _Zhong et al._ @mueen.
 @massv2 displays the core equation
 
 $
-	D(t, s) = sqrt(2*(m - (p_[m:n] - m * mu_y*mu_x[m:n]) / (sigma_y*sigma_x[m:n])))
+	D(t, s) = sqrt(2*(m - (p_[m:n] - m * mu_s*mu_t[m:n]) / (sigma_s*sigma_t[m:n])))
 $ <massv2>
 
 which uses a standard score @zscore to normalise the distances and where $t$ is
@@ -704,7 +707,7 @@ noticeable lack of suggestions in the existing literature.
 Although the size of the training data might have a lesser impact on the results,
 in comparison with the effects of subsequence sizes.
 
-This thesis have not investigated these parameters any further, to limit the
+This thesis has not investigated these parameters any further, to limit the
 scope and to remain on topic, but future works might want to study the impacts
 of these parameters.
 For now though, the subsequence size should be "large enough" to cover the
@@ -890,7 +893,7 @@ Please note that omitting all error handling was for brevity's sake.
 
 Line 06 sets up an instance of the streaming DAMP algorithm, which can continuously
 calculate the Matrix Profile of the sensor data.
-Lines 12 and 18 creates instances for the readable sensor driver and the writable
+Line 12 and 18 create an instance for the readable sensor driver and the writable
 client for InfluxDB, respectively.
 An infinite loop is then started on line 22, where "time.Tick(...)" adjusts the
 loop's iteration time to an even second.
@@ -951,7 +954,7 @@ variable $ e n v$.
 The raw values are then, on lines 20-22, converted and normalised into celsius,
 kPa, and %rH for each respective sensor.
 
-Lines 25-27 calculates the discord scores as usual, but using individual instances
+The lines 25-27 calculate the discord scores as usual, but using individual instances
 of the streaming DAMP algorithm.
 The initialisation of these instances was similar to the setup done in @lightsensor,
 but was again omitted for the sake of brevity.
@@ -992,7 +995,7 @@ for range time.Tick(1 * time.Second) {
 ```, caption: [Example for collecting multiple values from the BME280 combination sensor.],
 ) <bmesensor>
 
-Both examples was then merged into a single utility, the sensor "logger".
+Both examples were then merged into a single utility, the sensor "logger".
 It could then run in the background on the Raspberry Pi and continuously
 collect the sensor samples and discord scores for InfluxDB.
 
@@ -1283,7 +1286,7 @@ the system, as suggested from the top of the process list:
 	root    		 0.0		 1.4		00:04:10		NetworkManager
 ```
 
-The resource usage numbers does not match exactly with the plot though, as the
+The resource usage numbers do not match exactly with the plot though, as the
 telegraf data was missing some system overhead in the reported statistics.
 The list does however highlight that InfluxDB have used the most memory and is
 the most likely cause for the periodic drops in the RAM load.
@@ -1358,7 +1361,7 @@ thus answering the final question:
 	enough? A comparison with a reference should validate the results.
 
 It was difficult to achieve exact results as the Matlab implementation though,
-since Go is missing a large number of mathematical utility functions that is
+since Go is missing a large number of mathematical utility functions which is
 commonly found in Matlab.
 Working with complex numbers during the fast Fourier transforms was also complicated
 and the naive re-implementations would cause bad performance degradation.
